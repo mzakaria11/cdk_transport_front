@@ -1,0 +1,31 @@
+.datatable-header-cell {
+  color: rgba(0,165,255,0.75) !important;
+}
+
+.ngx-datatable .datatable-body-cell {
+  transition: background-color 0.3s ease;
+
+  .price-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;/* Make the link fill the cell for a larger hover area */
+    height: 100%; /* Take full height of the cell */
+    width: 100%; /* Add some padding for visual comfort */
+    color: inherit; /* Optional: ensures the text color doesn't change on hover */
+  }
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* Darken cell background on hover */
+  }
+}
+
+.datatable-container {
+  max-height: 1100px;
+  overflow-y: auto;
+
+  .ngx-datatable {
+    display: block;
+    overflow-x: auto;
+    width: 100%;
+  }
+}

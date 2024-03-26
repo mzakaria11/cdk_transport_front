@@ -1,0 +1,36 @@
+<div class="card card-revenue-budget">
+    <div class="row mx-0">
+        <div class="col-md-12 col-12 revenue-report-wrapper">
+            <div class="d-sm-flex justify-content-between align-items-center mb-3">
+                <h4 class="card-title mb-50 mb-sm-0">Colis</h4>
+            </div>
+            <div class="spinner-grow" style="width: 3rem; height: 3rem; align-self: center; margin: auto;" role="status"
+                *ngIf="!data"></div>
+            <div id="revenue-report-chart" #colisChartRef>
+                <apx-chart [series]="[
+                        {
+                            name: 'Colis livré',
+                            data: livre
+                        },
+                        {
+                            name: 'Colis non livré',
+                            data: nonLivre
+                        }
+                    ]
+                " [chart]="{
+                  height: 300,
+                  width:
+                    isMenuToggled === false
+                      ? colisChartRef.offsetWidth
+                      : colisChartoptions.chart.width,
+                  stacked: true,
+                  type: 'bar',
+                  toolbar: { show: false }
+                }" [plotOptions]="colisChartoptions.plotOptions" [colors]="colisChartoptions.colors"
+                    [dataLabels]="colisChartoptions.dataLabels" [legend]="colisChartoptions.legend"
+                    [grid]="colisChartoptions.grid" [xaxis]="colisChartoptions.xaxis"
+                    [yaxis]="colisChartoptions.yaxis"></apx-chart>
+            </div>
+        </div>
+    </div>
+</div>

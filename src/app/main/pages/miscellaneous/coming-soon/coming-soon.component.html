@@ -1,0 +1,23 @@
+<!-- Coming soon page-->
+<div class="misc-wrapper">
+  <a class="brand-logo" href="javascript:void(0);">
+    <img src="{{ coreConfig.app.appLogoImage }}" alt="brand-logo" height="28" />
+    <h2 class="brand-text text-primary ml-1">{{ coreConfig.app.appName }}</h2></a
+  >
+  <div class="misc-inner p-2 p-sm-3">
+    <div class="w-100 text-center">
+      <h2 class="mb-1">Nous lançons bientôt 🚀</h2>
+      <p class="mb-3">Nous sommes en train de créer quelque chose de génial. Revenez plus tard quand ce sera prêt !</p>
+      <img
+        class="img-fluid"
+        [src]="
+          coreConfig.layout.skin === 'dark'
+            ? 'assets/images/pages/coming-soon-dark.svg'
+            : 'assets/images/pages/coming-soon.svg'
+        "
+        alt="Coming soon page"
+      />
+    </div>
+  </div>
+</div>
+<!-- / Coming soon page-->

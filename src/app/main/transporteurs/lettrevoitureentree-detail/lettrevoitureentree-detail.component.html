@@ -1,0 +1,368 @@
+<div class="content-wrapper container-xxl p-0">
+  <app-content-header [contentHeader]="contentHeader"></app-content-header>
+  <div class="content-body">
+    <section class="invoice-preview-wrapper">
+      <div class="row invoice-preview">
+        <div class="col-xl-10 col-md-8 col-12">
+          <div class="card">
+            <div class="card-body">
+              <ul ngbNav #nav="ngbNav" class="nav nav-pills">
+                <li ngbNavItem>
+                  <a ngbNavLink class="d-flex align-items-center"
+                    ><i data-feather="box" class="mr-sm-50"></i><span class="d-none d-sm-block">{{ edit ? 'Modifier' : 'Détail lettre de voiture ' + data.numeroRecepisse }}</span></a
+                  >
+                  <ng-template ngbNavContent>
+                    <div class="tab-pane active" id="account" aria-labelledby="account-tab" role="tabpanel">
+  
+                      <form class="form-validate">
+                        <div class="row">
+  
+                          <div class="col-md-6">
+                            <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                              <label for="numero">Numéro récepisse</label>
+                              <input
+                                  type="text"
+                                  id="numero"
+                                  class="form-control"
+                                  placeholder="numero"
+                                  name="numero"
+                                  [(ngModel)]="data.numeroRecepisse"
+                              />
+                            </div>
+                          </div>
+  
+                          <div class="col-md-6" style="margin-bottom: 2px;" *ngIf="!hasRole.includes('Client')">
+                            <label for="transporteur">transporteur</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="btn btn-outline-primary" *ngIf="data.transporteur" routerLink="/transporteurs/detail/{{data.transporteur.id}}">
+                                        <i data-feather="eye"></i>
+                                    </div>
+                                </div>
+                                <input 
+                                    id="transporteur"
+                                    name="transporteur"  
+                                    type="text" 
+                                    class="form-control pointer-events-none" 
+                                    placeholder="transporteur" 
+                                    [ngModel]="data?.transporteur?.nom" 
+                                />
+                                <div class="input-group-append">
+                                    <div class="btn btn-outline-primary" *ngIf="data.transporteur" routerLink="/transporteurs/detail/{{data.transporteur.id}}">Consulter !</div>
+                                </div>
+                            </div>
+                          </div> 
+
+                          <div class="col-md-6" style="margin-bottom: 2px;" *ngIf="hasRole.includes('Client')">
+                            <label for="transporteur">transporteur</label>
+                            <div class="input-group">
+                                <input 
+                                    id="transporteur"
+                                    name="transporteur"  
+                                    type="text" 
+                                    class="form-control pointer-events-none" 
+                                    placeholder="transporteur" 
+                                    [ngModel]="data?.transporteur?.nom" 
+                                />
+                            </div>
+                          </div> 
+  
+                          <div class="col-12 col-md-4">                              
+                            <label for="dateReception">Date de réception</label>
+                            <fieldset class="form-group" [ngClass]="{'pointer-events-none': (!edit)}">
+                              <div class="input-group">
+                                <input
+                                  class="form-control"
+                                  ngbDatepicker
+                                  #dateReceptionDP="ngbDatepicker"    
+                                  [(ngModel)]="dateReception"                            
+                                  name="dateReception"
+                                  id="dateReception"
+                                />
+                                <div class="input-group-append">
+                                  <button
+                                    class="btn btn-outline-secondary feather icon-calendar"
+                                    (click)="dateReceptionDP.toggle()"
+                                    type="button"
+                                    rippleEffect
+                                  ></button>
+                                </div>
+                                <!-- <div
+                                  *ngIf="umsForm.submitted && ums.dateReception == null" 
+                                  class="invalid-feedback"
+                                >
+                                  <div>Date d'expédition est requis</div>
+                                </div>                               -->
+                              </div>
+                            </fieldset>
+                          </div>
+  
+                          <div class="col-md-4">
+                            <div class="form-group"  [ngClass]="{'pointer-events-none': !edit}">
+                              <label for="quantitePalette">Quantité Palette</label>
+                              <input
+                                  type="text"
+                                  id="quantitePalette"
+                                  class="form-control"
+                                  placeholder="quantité Palette"
+                                  name="quantitePalette"
+                                  [(ngModel)]="data.quantitePalette"
+                              />
+                            </div>
+                          </div>
+  
+                          <div class="col-md-4">
+                            <div class="form-group"  [ngClass]="{'pointer-events-none': !edit}">
+                              <label for="quantiteColis">Quantité Colis</label>
+                              <input
+                                  type="text"
+                                  id="quantiteColis"
+                                  class="form-control"
+                                  placeholder="quantité Colis"
+                                  name="quantiteColis"
+                                  [(ngModel)]="data.quantiteColis"
+                              />
+                            </div>
+                          </div>
+
+                          <div class="col-md-4 mb-1" *ngIf="data.fichier">
+                            <div class="media-body">
+                              <small class="text-muted">fichier importé.</small>
+                              <p class="my-50">
+                                <a class="text-primary" (click)="openFile()" id="blog-image-text">{{data.fichier}}</a>
+                              </p>
+                            </div>
+                          </div>  
+
+                          <div class="col-12">
+                            <h4 class="mb-1">
+                                <i data-feather="feather" [size]="16" class="mr-75 font-medium-5"></i>
+                                <span class="align-middle">Réclamations</span>
+                            </h4>
+                          </div>
+
+                          <div class="col-md-4">
+                            <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                              <label for="reclamationQuantitecolis">Réclamation quantité colis</label>
+                              <input
+                                  type="text"
+                                  id="reclamationQuantitecolis"
+                                  class="form-control"
+                                  placeholder="réclamation quantite colis"
+                                  name="reclamationQuantitecolis" 
+                                  [ngClass]="{'pointer-events-none': !edit}"
+                                  [(ngModel)]="data.reclamationQuantitecolis"
+                              />
+                            </div>
+                          </div>
+  
+                          <div class="col-md-4">
+                            <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                              <label for="reclamationQuantitepalette">Réclamation quantité palette</label>
+                              <input
+                                  type="text"
+                                  id="reclamationQuantitepalette"
+                                  class="form-control"
+                                  placeholder="réclamation quantité palette"
+                                  name="reclamationQuantitepalette" 
+                                  [(ngModel)]="data.reclamationQuantitepalette"
+                              />
+                            </div>
+                          </div>
+  
+                          <div class="col-12" [ngClass]="{'pointer-events-none': !edit}">
+                            <label for="reclamationCommentaire">Réclamation commentaire</label>
+                            <fieldset class="form-group">
+                              <textarea 
+                                class="form-control" 
+                                id="reclamationCommentaire" 
+                                rows="3" 
+                                name="reclamationCommentaire" 
+                                placeholder="Réclamation commentaire"                                 
+                                [(ngModel)]="data.reclamationCommentaire"
+                              ></textarea>
+                            </fieldset>
+                          </div>
+  
+                          <!-- <div class="col-12 d-flex flex-sm-row flex-column mt-2" >
+                              <button
+                                type="submit"
+                                class="btn btn-success mb-1 mb-sm-0 mr-0 mr-sm-1"
+                                rippleEffect
+                              >
+                                Modifier
+                              </button>
+                              <button (click)="modalOpenForm(modalForm)" class="btn btn-outline-danger" rippleEffect>
+                                Supprimer
+                              </button>
+                            </div> -->
+                        </div>
+                      </form>
+                    </div>
+                  </ng-template>
+                </li>
+              </ul>
+              <div [ngbNavOutlet]="nav" class="mt-2"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-2 col-md-4 col-12 mt-md-0 mt-2" *ngIf="!hasRole.includes('Client')">
+          <div class="card">
+            <div class="card-body">
+              <button
+                class="btn btn-success btn-block mb-75"
+                routerLink="/ble/new/{{data.id}}"
+                rippleEffect
+                *ngIf="data.bles.length == 0"
+              >
+                Ajouter BL
+              </button>
+              <a 
+                class="btn btn-outline-danger btn-block mb-75 text-danger" 
+                rippleEffect
+                *ngIf="edit && hasRole.includes('Super_admin')"
+                (click)="modalOpenForm(modalForm)" 
+                >
+                Supprimer
+              </a>
+              <!-- <a
+                class="btn btn-outline-success btn-block mb-75 text-success"
+                rippleEffect
+                *ngIf="edit && hasRole.includes('Super_admin')  || hasRole.includes('Admin')"
+                (click)="submit(accountForm)"
+              >
+                Modifier
+              </a> -->
+              <a
+                class="btn btn-outline-primary btn-block mb-75"
+                routerLink="/lve/new"
+                rippleEffect
+              >
+                Ajouter nouveau LV
+              </a>
+            </div>
+          </div>
+          <div class="card" *ngIf="!data.fichier">
+            <div class="card-body">
+              <label class="form-label" for="lveFichier">Importer Fichier</label>
+              <div class="custom-file">
+                <input
+                  type="file"
+                  class="custom-file-input"
+                  type="file"
+                  ng2FileSelect
+                  [uploader]="lveFichier"
+                  id="lveFichier"
+                  name="lveFichier"
+                  (change)="onLveFileSelected()"
+                />
+                <label class="custom-file-label font-small-2">{{ lveFileName }}</label>
+              </div>
+              <div *ngIf="!lveFileName.includes('choisir')">
+                <span class="text-success font-small-3 float-right mt-1"> <a (click)="upload()">Importer</a></span>
+                <span class="text-danger font-small-3 float-right mt-1 mr-1"> <a (click)="vider()">Vider</a></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="content-body" *ngIf="data.bles.length > 0">
+    <div class="card">
+      <div class="card-body">
+        <a class="d-flex align-items-center">
+            <span class="d-none d-sm-block">Bon de livraison entrée</span>
+        </a>
+        <br>
+        <ngx-datatable
+          [rows]="rows"
+          [rowHeight]="50"
+          class="bootstrap core-bootstrap"
+          [limit]="selectedOption"
+          [columnMode]="ColumnMode.force"
+          [headerHeight]="50"
+          [footerHeight]="50"
+          [scrollbarH]="true"
+        > 
+          <ngx-datatable-column name="N° BL" prop="numeroBonLivraison" [width]="200">
+              <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+              <div class="d-flex align-items-center">
+                  <div class="cell-line-height">
+                    <a class="font-medium-1 d-block" routerLink="/ble/detail/{{row.id}}">
+                      <span class="font-weight-bold">{{ row.numeroBonLivraison }}</span>
+                    </a>
+                  </div>
+              </div>
+              </ng-template>
+          </ngx-datatable-column>
+  
+          <ngx-datatable-column name="Date réception" prop="dateReception" [width]="100">
+              <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+              <div class="d-flex align-items-center">
+                  <div class="cell-line-height">
+                    <span class="font-medium-1">{{ row.dateReception | date: 'dd-MM-yyyy HH:mm:ss' }}</span>
+                  </div>
+              </div>
+              </ng-template>
+          </ngx-datatable-column>
+  
+          <ngx-datatable-column name="Quantité palette" prop="quantitePalette" [width]="100">
+              <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+              <div class="d-flex align-items-center">
+                  <div class="cell-line-height">
+                    <span class="text-muted font-medium-1 badge badge-pill">{{ row.quantitePalette }}</span>
+                  </div>
+              </div>
+              </ng-template>
+          </ngx-datatable-column>
+  
+        </ngx-datatable>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="login-form"> 
+  <ng-template #modalForm let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="myModalLabel1">Confirmation de suppression</h4>
+      <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body" tabindex="0" ngbAutofocus>
+      <form class="form-validate" [formGroup]="ReactivePasswordConfirmationForm" (ngSubmit)="ReactiveCPFormOnSubmit()">
+        <div class="row">
+
+          <div class="col-md-12">
+            <div class="form-group">
+              <div class="form-group">
+                  <label for="password">Mot de passe</label>
+                  <input
+                    type="password"
+                    id="password"
+                    formControlName="password"
+                    class="form-control"
+                    [ngClass]="{ 'is-invalid': ReactiveCPFormSubmitted && ReactiveCPForm.password.errors }"
+                  />
+                  <div
+                    *ngIf="ReactiveCPFormSubmitted && ReactiveCPForm.password.errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="ReactiveCPForm.password.errors.required">Mot de passe est requis</div>
+                    <div *ngIf="ReactiveCPForm.password.errors.minlength">Mot de passe doit comporter au moins 6 caractères</div>
+                  </div>
+                </div>
+            </div>
+          </div>
+          <div class="modal-footer" style="width: 100%;">
+            <button class="btn btn-primary" rippleEffect>
+              Confirmer
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+</div>

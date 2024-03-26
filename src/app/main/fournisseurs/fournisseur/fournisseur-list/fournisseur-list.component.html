@@ -1,0 +1,156 @@
+<div class="content-wrapper container-xxl p-0">
+    <app-content-header [contentHeader]="contentHeader"></app-content-header>
+
+    <div class="content-body">
+      <section id="knowledge-base-search">
+        <div class="row">
+          <div class="col-12">
+            <div
+              class="card knowledge-base-bg text-center"
+              style="background-image: url('assets/images/banner/banner.png')"
+            >
+              <div class="card-body">
+                <h2 class="text-primary">Fournisseurs</h2>
+                <p class="card-text mb-2">
+                  <button 
+                    type="button" 
+                    class="btn btn-icon btn-outline-primary" 
+                    data-toggle="modal"
+                    data-target="#add-fournisseur-sidebar"
+                    (click)="toggleSidebar('add-fournisseur-sidebar')"
+                    rippleEffect
+                    *ngIf="hasRole.includes('Super_admin') || hasRole.includes('Admin')"
+                  >
+                    <span [data-feather]="'plus'"></span> 
+                    Ajouter
+                  </button>
+                </p>
+                <form class="kb-search-input">
+                  <div class="input-group input-group-merge">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i data-feather="search"></i></span>
+                    </div>
+                    <input
+                      type="text"
+                      class="form-control"
+                      [(ngModel)]="searchText"
+                      id="searchbar"
+                      name="searchbar"
+                      placeholder="Rechercher..."
+                    />
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <section id="knowledge-base-content">
+        <div class="row kb-search-content-info match-height">
+          <div
+            *ngFor="let row of data | filter: searchText:'nom'"
+            class="col-md-4 col-sm-6 col-12 kb-search-content"
+          >
+            <div class="card">
+              <div 
+                class="row" 
+                *ngIf="hasRole.includes('Super_admin') || hasRole.includes('Admin')"
+              >
+                <div class="col-12">
+                  <button 
+                    *ngIf="hasRole.includes('Super_admin')"
+                    (click)="modalOpenForm(modalForm, row.id)"
+                    type="button" 
+                    class="btn btn-icon btn-danger float-right mt-1 mr-1" 
+                    rippleEffect
+                  >
+                    <span [data-feather]="'trash'"></span>
+                  </button>
+
+                  <button 
+                    routerLink="/fournisseurs/edit/{{row.id}}"
+                    type="button" 
+                    class="btn btn-icon btn-success float-right mt-1 mr-1" 
+                    rippleEffect
+                  >
+                    <span [data-feather]="'edit'"></span>
+                  </button>
+                </div>
+              </div>
+              <a routerLink="/fournisseurs/detail/{{row.id}}">
+                <img 
+                  src="../../../../../assets/images/illustration/marketing.svg" 
+                  class="card-img-top" 
+                  alt="" 
+                />
+                <div class="card-body text-center">
+                  <h4>{{ row.nom }}</h4>
+                </div>
+              </a>
+            </div>
+          </div>
+  
+          <!-- no result -->
+          <ng-container *ngIf="(data | filter: searchText:'nom').length; else noResults"></ng-container>
+          <ng-template #noResults>
+            <div class="col-12 text-center no-result">
+              <h4 class="mt-4">Aucun fournisseur trouvé avec ce nom <b>{{ searchText }}</b> !!</h4>
+            </div>
+          </ng-template>
+        </div>
+      </section>
+    </div>
+  <core-sidebar
+    class="modal modal-slide-in sidebar-todo-modal fade"
+    name="add-fournisseur-sidebar"
+    overlayClass="modal-backdrop"
+    hideOnEsc="true"
+  >
+    <app-add-fournisseur-sidebar></app-add-fournisseur-sidebar>
+  </core-sidebar>
+</div>
+
+<div class="login-form"> 
+  <ng-template #modalForm let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="myModalLabel1">Confirmation de suppression</h4>
+      <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body" tabindex="0" ngbAutofocus>
+      <form class="form-validate" [formGroup]="ReactivePasswordConfirmationForm" (ngSubmit)="ReactiveCPFormOnSubmit()">
+        <div class="row">
+
+          <div class="col-md-12">
+            <div class="form-group">
+              <div class="form-group">
+                  <label for="password">Mot de passe</label>
+                  <input
+                    type="password"
+                    id="password"
+                    formControlName="password"
+                    class="form-control"
+                    [ngClass]="{ 'is-invalid': ReactiveCPFormSubmitted && ReactiveCPForm.password.errors }"
+                  />
+                  <div
+                    *ngIf="ReactiveCPFormSubmitted && ReactiveCPForm.password.errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="ReactiveCPForm.password.errors.required">Mot de passe est requis</div>
+                    <div *ngIf="ReactiveCPForm.password.errors.minlength">Mot de passe doit comporter au moins 6 caractères</div>
+                  </div>
+                </div>
+            </div>
+          </div>
+          <div class="modal-footer" style="width: 100%;">
+            <button class="btn btn-primary" rippleEffect>
+              Confirmer
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+</div>

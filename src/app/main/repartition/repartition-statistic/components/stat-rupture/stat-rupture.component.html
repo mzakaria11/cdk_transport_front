@@ -1,0 +1,25 @@
+<div class="card card-transaction">
+    <div class="card-header">
+        <h4 class="card-title">Article en rupture</h4>
+    </div>
+
+    <div class="spinner-grow" style="width: 3rem; height: 3rem; align-self: center; margin: auto;" role="status"
+        *ngIf="!data"></div>
+
+    <div class="card-body scrollable-container" *ngIf="data">
+        <div class="transaction-item" *ngFor="let art of data">
+            <div class="media">
+                <div class="avatar bg-light-danger rounded">
+                    <div class="avatar-content">
+                        <i data-feather="box" class="avatar-icon font-medium-3"></i>
+                    </div>
+                </div>
+                <div class="media-body">
+                    <h6 class="transaction-title font-small-3">{{ art.article }}</h6>
+                    <small>{{ art.totalCmd}} commandes</small>
+                </div>
+            </div>
+            <div class="font-weight-bolder text-danger font-small-3">{{ art.colisNonLivre }} Colis</div>
+        </div>
+    </div>
+</div>

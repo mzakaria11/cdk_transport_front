@@ -1,0 +1,29 @@
+@import '@core/scss/angular/libs/flatpickr.component.scss';
+@import '@core/scss/angular/libs/datatables.component.scss';
+@import '@core/scss/angular/libs/select.component.scss';
+@import '@core/scss/angular/libs/date-time-picker.component.scss';
+
+.container-xxl {
+	max-width: 1900px;
+}
+
+.pl-20 {
+	padding-left: 20px;
+}
+
+.pt-20 {
+	padding-top: 20px;
+}
+
+.floating-btn {
+	position: fixed;
+	bottom: 5%;
+	right: 79px;
+	z-index: 1031;
+	.btn {
+	  box-shadow: 0 1px 20px 1px $primary !important;
+	  &:hover {
+		box-shadow: none !important;
+	  }
+	}
+}

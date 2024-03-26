@@ -1,0 +1,52 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <section class="users-list-wrapper">
+            <div class="card">
+                <div class="d-flex flex-row flex-wrap align-items-center justify-content-between m-1" >
+                    <div>
+                        <label class="d-flex align-items-center">Afficher
+                            <select id="select" class="form-control mx-2" [(ngModel)]="selectedOption">
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div>{{ name }}</div>
+                    <div>
+                        <button class="btn btn-primary" rippleEffect routerLink="/tarifaff/new">
+                            <i data-feather="plus" class="d-sm-none d-inline-block mr-0 mr-sm-1"></i>
+                            <span class="d-none d-sm-inline-block">Nouveau TarifAff</span>
+                        </button>
+                    </div>
+                </div>
+
+
+
+                <ngx-datatable
+                        class="bootstrap"
+                        [rows]="rows"
+                        [columnMode]="'force'"
+                        [rowHeight]="'auto'"
+                        [headerHeight]="50"
+                        [footerHeight]="50"
+                        [limit]="selectedOption"
+                        [scrollbarH]="true"
+                        [messages]="{emptyMessage: 'Aucun tarifAff n\'a été trouvé', totalMessage: 'tarifAffs'}"
+                >
+                    <ngx-datatable-column name="Nom du departement" prop="departementName" [width]="150">
+                    </ngx-datatable-column>
+
+                    <!-- Dynamically generated columns for each nbrPalette -->
+                    <ngx-datatable-column *ngFor="let num of uniqueNbrPalettes"
+                                          [name]="'Palette ' + num"
+                                          [prop]="'palette' + num + 'Price'"
+                                          [width]="120">
+                    </ngx-datatable-column>
+
+                </ngx-datatable>
+            </div>
+        </section>
+    </div>
+</div>

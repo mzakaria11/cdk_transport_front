@@ -1,0 +1,233 @@
+
+<div class="content-wrapper container-xxl p-0">
+  <div class="content-body">
+    <app-content-header [contentHeader]="contentHeader"></app-content-header>
+    <section class="app-user-edit">
+      <div class="card">
+        <div class="card-body">
+          <ul ngbNav #nav="ngbNav" class="nav nav-pills">
+            <li ngbNavItem>
+              <a ngbNavLink class="d-flex align-items-center"
+                ><i data-feather="box" class="mr-sm-50"></i><span class="d-none d-sm-block">Ajouter Lettre de voiture entrée</span></a
+              >
+              <ng-template ngbNavContent>
+                <div class="tab-pane active" id="account" aria-labelledby="account-tab" role="tabpanel">
+
+                  <form class="form-validate" [formGroup]="ReactiveLveForm" (ngSubmit)="ReactiveLveFormOnSubmit()">
+
+                    <div class="row">
+                      <div class="col-12">
+                          <h4 class="mb-1">
+                              <i data-feather="feather" [size]="16" class="mr-75 font-medium-5"></i>
+                              <span class="align-middle">Identification LV</span>
+                          </h4>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <div class="form-group">
+                              <label for="LVNumeroRecepisse">Numéro Recepisse</label>
+                              <input
+                                type="text"
+                                id="LVnumeroRecepisse"
+                                formControlName="numeroRecepisse"
+                                class="form-control"
+                                [ngClass]="{ 'is-invalid': ReactiveLveFormSubmitted && GetReactiveLveForm.numeroRecepisse.errors }"
+                              />
+                              <div
+                                *ngIf="ReactiveLveFormSubmitted && GetReactiveLveForm.numeroRecepisse.errors"
+                                class="invalid-feedback"
+                              >
+                                <div *ngIf="GetReactiveLveForm.numeroRecepisse.errors.required">Numéro Recepisse est requis</div>
+                              </div>
+                            </div>
+                        </div>
+                      </div>
+                      
+                      <div class="col-12 col-md-6">                              
+                        <label for="expedition">Date de reception</label>
+                        <fieldset class="form-group">
+                          <div class="input-group">
+                            <input
+                              class="form-control"
+                              id="dateReception"
+                              name="dateReception"
+                              [(ngModel)]="dateReception"                            
+                              formControlName="dateReception"
+                              [ngClass]="{ 'is-invalid': ReactiveLveFormSubmitted && GetReactiveLveForm.dateReception.errors }"
+                              ngbDatepicker
+                              #dateExpeditionDP="ngbDatepicker"  
+                            />
+                            <div class="input-group-append">
+                              <button
+                                class="btn btn-outline-secondary feather icon-calendar"
+                                (click)="dateExpeditionDP.toggle()"
+                                type="button"
+                                rippleEffect
+                              ></button>
+                            </div>
+                            <div
+                              *ngIf="ReactiveLveFormSubmitted && GetReactiveLveForm.dateReception.errors"
+                              class="invalid-feedback"
+                            >
+                              <div *ngIf="GetReactiveLveForm.dateReception.errors.required">Date de réception est requis</div>
+                            </div>
+                          </div>
+                        </fieldset>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <div class="form-group">
+                              <label for="LVquantiteColis">Quantité Colis</label>
+                              <input
+                                type="number"
+                                id="LVquantiteColis"
+                                formControlName="quantiteColis"
+                                class="form-control"
+                                [ngClass]="{ 'is-invalid': ReactiveLveFormSubmitted && GetReactiveLveForm.quantiteColis.errors }"
+                              />
+                              <div
+                                *ngIf="ReactiveLveFormSubmitted && GetReactiveLveForm.quantiteColis.errors"
+                                class="invalid-feedback"
+                              >
+                                <div *ngIf="GetReactiveLveForm.quantiteColis.errors.required">Quantité Colis est requis</div>
+                              </div>
+                            </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <div class="form-group">
+                              <label for="LVquantitePalette">Quantité Palette</label>
+                              <input
+                                type="number"
+                                id="LVquantitePalette"
+                                formControlName="quantitePalette"
+                                class="form-control"
+                                [ngClass]="{ 'is-invalid': ReactiveLveFormSubmitted && GetReactiveLveForm.quantitePalette.errors }"
+                              />
+                              <div
+                                *ngIf="ReactiveLveFormSubmitted && GetReactiveLveForm.quantitePalette.errors"
+                                class="invalid-feedback"
+                              >
+                                <div *ngIf="GetReactiveLveForm.quantitePalette.errors.required">Quantité Palette est requis</div>
+                              </div>
+                            </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="LVTransporteur">Transporteur</label>
+                          <select
+                            id="LVTransporteur"
+                            formControlName="transporteur"
+                            class="form-control"
+                            [ngClass]="{ 'is-invalid': ReactiveLveFormSubmitted && GetReactiveLveForm.transporteur.errors }"
+                          >
+                            <option value="">Tous</option>
+                            <option *ngFor="let option of transporteurs" [value]="option.id">{{option.nom}}</option>
+                          </select>
+                          <div
+                            *ngIf="ReactiveLveFormSubmitted && GetReactiveLveForm.transporteur.errors"
+                            class="invalid-feedback"
+                          >
+                            <div *ngIf="GetReactiveLveForm.transporteur.errors.required">Transporteur est requis</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <fieldset class="form-group">
+                            <label for="file-upload-single">Fichier:</label>
+                            <div class="custom-file">
+                              <input
+                                type="file"
+                                class="custom-file-input"
+                                type="file"
+                                ng2FileSelect
+                                [uploader]="uploader"
+                                id="file-upload-single"
+                              />
+                              <label class="custom-file-label">choisir un fichier</label>
+                            </div>
+                          </fieldset>
+                        </div>
+                      </div>
+
+                      <div class="col-12">
+                        <h4 class="mb-1 mt-2">
+                          <i data-feather="thumbs-down" [size]="16" class="mr-75 font-medium-5"></i>
+                          <span class="align-middle">Réclamations</span>
+                        </h4>
+                      </div>
+                      
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <div class="form-group">
+                              <label for="LVReclamationQte">Réclamation Quantité colis</label>
+                              <input
+                                type="number"
+                                id="LVReclamationQte"
+                                formControlName="reclamationQuantitecolis"
+                                class="form-control"
+                              />
+                            </div>
+                        </div>
+                      </div>
+                      
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <div class="form-group">
+                              <label for="LVreclamationQuantitepalette">Réclamation Quantité Palette</label>
+                              <input
+                                type="number"
+                                id="LVreclamationQuantitepalette"
+                                formControlName="reclamationQuantitepalette"
+                                class="form-control"
+                              />
+                            </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-12 pd-12">
+                        <fieldset class="form-label-group mb-0">
+                          <textarea
+                            #reclamationCommentaire
+                            [maxlength]="255"
+                            class="form-control char-textarea"
+                            id="reclamationCommentaire"
+                            formControlName="reclamationCommentaire"
+                            rows="4"
+                            placeholder="Réclamation Commentaire"
+                          ></textarea>
+                          <label for="reclamationCommentaire">Réclamation Commentaire</label>
+                        </fieldset>
+                        <small class="textarea-counter-value float-right"
+                          ><span *ngIf="reclamationCommentaire" class="char-count">{{ reclamationCommentaire.value.length }}</span>
+                          <span *ngIf="!reclamationCommentaire" class="char-count">0 </span> / 255
+                        </small>
+                      </div>
+
+
+                      
+                      <div class="col-12 d-flex flex-sm-row flex-column mt-2">
+                          <button class="btn btn-outline-success" rippleEffect>
+                            Ajouter
+                          </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </ng-template>
+            </li>
+          </ul>
+          <div [ngbNavOutlet]="nav" class="mt-2"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

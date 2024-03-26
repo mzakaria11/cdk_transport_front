@@ -1,0 +1,289 @@
+<script src="tarif-mss-new.component.ts"></script>
+<app-content-header [contentHeader]="contentHeader"></app-content-header>
+
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <section class="app-user-edit">
+            <div class="card">
+                <div class="card-body">
+                    <ul ngbNav #nav="ngbNav" class="nav nav-pills">
+                        <li ngbNavItem>
+                            <a ngbNavLink class="d-flex align-items-center"
+                            ><i data-feather="truck" class="mr-sm-50"></i><span class="d-none d-sm-block">Ajouter Tarif Messagerie</span></a
+                            >
+                            <ng-template ngbNavContent>
+                                <div class="tab-pane active" id="account" aria-labelledby="account-tab" role="tabpanel">
+
+                                    <form class="form-validate" [formGroup]="ReactiveTarifMssForm" (ngSubmit)="ReactiveTmssFormOnSubmit()">
+                                        <div class="row">
+
+                                            <!--transporteur-->
+                                            <div class="col-md-4">
+
+
+                                                    <div class="form-group">
+                                                        <label for="UDTransporteur">Transporteur</label>
+                                                        <ng-select
+                                                                id="UDTransporteur"
+                                                                formControlName="transporteur"
+
+                                                                [ngClass]="{ 'is-invalid': ReactiveTmssFormSubmitted && ReactiveTmssForm.transporteur.errors }"
+
+                                                                [items]="transporteurs"
+                                                                bindLabel="name"
+                                                                bindValue="id">
+                                                        </ng-select>
+                                                        <div
+                                                                *ngIf="ReactiveTmssFormSubmitted && ReactiveTmssForm.minKg.errors"
+                                                                class="invalid-feedback"
+                                                        >
+                                                            <div *ngIf="ReactiveTmssForm.minKg.errors.required">min Kg est requis</div>
+                                                        </div>
+                                                    </div>
+
+
+                                            </div>
+                                            <!--transporteur-->
+
+                                            <!--departement-->
+                                            <div class="col-md-4" >
+
+                                                    <div class="form-group">
+                                                        <label for="UDDepartement">Departement</label>
+                                                        <ng-select
+                                                                id="UDDepartement"
+                                                                formControlName="departement"
+
+                                                                [ngClass]="{ 'is-invalid': ReactiveTmssFormSubmitted && ReactiveTmssForm.departement.errors }"
+
+                                                                [items]="departements"
+                                                                bindLabel="name"
+                                                                bindValue="id"
+                                                                placeholder="Select Departement">
+                                                        </ng-select>
+
+
+                                                        <div
+                                                                *ngIf="ReactiveTmssFormSubmitted && ReactiveTmssForm.departement.errors"
+                                                                class="invalid-feedback"
+                                                        >
+                                                            <div *ngIf="ReactiveTmssForm.departement.errors.required">Departement est requis</div>
+                                                        </div>
+                                                    </div>
+
+                                            </div>
+
+                                            <!--departement-->
+
+                                            <!--minKg-->
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="form-group">
+                                                        <label for="UDMinKg">MinKg</label>
+                                                        <input
+                                                                type="text"
+                                                                id="UDMinKg"
+                                                                formControlName="minKg"
+                                                                class="form-control"
+                                                                [ngClass]="{ 'is-invalid': ReactiveTmssFormSubmitted && ReactiveTmssForm.minKg.errors }"
+                                                        />
+                                                        <div
+                                                                *ngIf="ReactiveTmssFormSubmitted && ReactiveTmssForm.minKg.errors"
+                                                                class="invalid-feedback"
+                                                        >
+                                                            <div *ngIf="ReactiveTmssForm.minKg.errors.required">min Kg est requis</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--minKg-->
+
+                                            <!--maxKg-->
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="form-group">
+                                                        <label for="UDMaxKg">MaxKg</label>
+                                                        <input
+                                                                type="text"
+                                                                id="UDMaxKg"
+                                                                formControlName="maxKg"
+                                                                class="form-control"
+                                                                [ngClass]="{ 'is-invalid': ReactiveTmssFormSubmitted && ReactiveTmssForm.maxKg.errors }"
+                                                        />
+                                                        <div
+                                                                *ngIf="ReactiveTmssFormSubmitted && ReactiveTmssForm.maxKg.errors"
+                                                                class="invalid-feedback"
+                                                        >
+                                                            <div *ngIf="ReactiveTmssForm.maxKg.errors.required">max Kg est requis</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!--maxKg-->
+
+                                            <!--prix-->
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="form-group">
+                                                        <label for="UDPrice">Prix</label>
+                                                        <input
+                                                                type="text"
+                                                                id="UDPrice"
+                                                                formControlName="prix"
+                                                                class="form-control"
+                                                                [ngClass]="{ 'is-invalid': ReactiveTmssFormSubmitted && ReactiveTmssForm.prix.errors }"
+                                                        />
+                                                        <div
+                                                                *ngIf="ReactiveTmssFormSubmitted && ReactiveTmssForm.prix.errors"
+                                                                class="invalid-feedback"
+                                                        >
+                                                            <div *ngIf="ReactiveTmssForm.prix.errors.required">Prix est requis</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!--price-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                        <div class="col-12 d-flex flex-sm-row flex-column mt-2">
+                                                <button class="btn btn-outline-success" rippleEffect>
+                                                    Ajouter
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </ng-template>
+                        </li>
+                    </ul>
+                    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <div class="card">
+            <div class="card-body pb-0">
+                <div class="divider divider-primary">
+                    <div class="divider-text font-medium-3">Importation de fichier Excel des Tarifs</div>
+                </div>
+            </div>
+
+            <div class="content-wrapper container-xxl p-0">
+                <div class="content-body">
+                    <!-- Simplified File Uploader UI with Transporteur Selection -->
+                    <section id="file-upload">
+                        <div class="card">
+                            <div class="card-body">
+                                <!-- Drag and Drop area for file upload -->
+                                <div class="row justify-content-center">
+                                    <div class="col-md-8">
+                                        <div
+                                                ng2FileDrop
+                                                [ngClass]="{ 'file-drop-over': hasBaseDropZoneOver }"
+                                                (fileOver)="fileOverBase($event)"
+                                                [uploader]="uploader"
+                                                class="py-5 mb-3 text-center font-medium-5 text-uppercase file-drop-zone"
+                                                (click)="document.getElementById('file-input').click()">
+                                            Drop File Here To Upload or Click to Select
+                                        </div>
+                                        <!-- Hidden file input for click-to-select -->
+                                        <input
+                                                type="file"
+                                                ng2FileSelect
+                                                [uploader]="uploader"
+                                                (change)="onFileChange($event)"
+                                                style="display: none;"
+                                                id="file-input"
+                                        />
+                                    </div>
+                                </div>
+                                <!-- File Name Display -->
+                                <div class="row justify-content-center mt-2">
+                                    <div class="col-md-8 text-center">
+                                        <span *ngIf="selectedFileName">{{ selectedFileName }}</span>
+                                    </div>
+                                </div>
+                                <!-- Transporteur Selection Dropdown -->
+                                <div class="row justify-content-center mt-3">
+                                    <div class="col-md-8">
+                                        <select class="form-control" id="basicSelect" [(ngModel)]="selectedTransporteur" name="unique">
+                                            <option value="" disabled selected>Select a Transporteur</option>
+                                            <option *ngFor="let transporteur of transporteurs" [ngValue]="transporteur">
+                                                {{ transporteur.name }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- Upload Button -->
+                                <div class="row justify-content-center mt-3">
+                                    <div class="col-md-8 text-center">
+                                        <button
+                                                type="button"
+                                                class="btn btn-success"
+                                                (click)="uploadFile()"
+                                                [disabled]="!uploader.getNotUploadedItems().length"
+                                        >
+                                            Upload File
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Table -->
+
+            <!-- Table Ends -->
+        </div>
+    </div>
+</div>

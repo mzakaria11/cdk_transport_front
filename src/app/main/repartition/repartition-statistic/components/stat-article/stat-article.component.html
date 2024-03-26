@@ -1,0 +1,137 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <div class="card">
+            <div class="divider divider-primary mx-1 mb-0">
+                <div class="divider-text font-medium-2"> <b>Stat Stock Article</b> </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-12">
+                    <div class="d-flex justify-content-between align-items-center m-2">
+                        <label class="d-flex align-items-center">Afficher
+                            <select id="select" class="form-control mx-25" [(ngModel)]="selectedOption">
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end">
+                    <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                        <button class="btn btn-outline-success ml-1" rippleEffect (click)="exportToExcel()">
+                            <i data-feather="printer" class="d-sm-none d-inline-block mr-0 mr-sm-1"></i>
+                            <span class="d-none d-sm-inline-block">Exporter</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center mb-2">
+                <!-- N° cmd Input -->
+                <div class="col-md-3">
+                    <label for="article">N° Commande</label>
+                    <input type="text" class="form-control" id="article" name="article" placeholder="N° commande"
+                        [(ngModel)]="cmd" (blur)="search()" (keyup.enter)="search()" />
+                </div>
+                <!-- N° cmd Input Ends -->
+
+                <!-- Article Filter Input -->
+                <div class="col-md-3">
+                    <label for="article">Articles :</label>
+                    <ng-select name="stock" id="stock" [items]="dropDown" [(ngModel)]="selectedArticle" bindLabel="name"
+                        bindValue="id" (change)="search()">
+                        <ng-template ng-option-tmp let-item="item">
+                            {{item.name}}
+                        </ng-template>
+                    </ng-select>
+                </div>
+                <!-- Article Filter Input Ends -->
+            </div>
+
+            <ngx-datatable [rows]="articles" rowHeight="auto" [headerHeight]="50" [footerHeight]="50"
+                [scrollbarH]="true" [columnMode]="ColumnMode.force" [limit]="selectedOption"
+                [messages]="{emptyMessage: 'Aucun article n\'a été trouvée', totalMessage:'Articles'}"
+                class="bootstrap core-bootstrap">
+                <ngx-datatable-column name="article" prop="codeClient" [width]="150">
+                    <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                        <div class="d-flex align-items-center">
+                            <div class="cell-line-height">
+                                <a class="font-medium-1 d-block" routerLink="/articles/detail/{{row.id}}">
+                                    <span class="font-weight-bold">{{ row.designationClient }}</span>
+                                </a>
+                                <span class="text-muted font-small-2"> {{ row.codeClient }}</span>
+                            </div>
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="stock avant répartition" *ngIf="!(cmd || selectedArticle)"
+                    prop="stockBeforeRep" [width]="100">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div class="d-flex align-items-center">
+                            <div class="cell-line-height">
+                                <span class="font-weight-bold">{{ row.stockBeforeRep }} colis</span>
+                                <span class="text-muted font-small-3"> ( {{ row.uniteBeforeRep}} U)</span>
+                            </div>
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="qté commandée en cours" prop="quantiteUniteManutentionSortie" [width]="100">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div class="d-flex align-items-center">
+                            <div class="cell-line-height">
+                                <span class="font-weight-bold">{{ row.quantiteUniteManutentionSortie }} colis</span>
+                                <span class="text-muted font-small-3"> ( {{ row.qteProduitLivre}} U)</span>
+                            </div>
+                        </div>
+                        <!-- <div class="cell-line-height">
+                            {{ row.quantiteUniteManutentionSortie }}
+                        </div> -->
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="stock" prop="quantiteColisStockComplet" [width]="150">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div class="d-flex align-items-center">
+                            <div class="cell-line-height">
+                                <span class="font-weight-bold"> <b *ngIf="cmd || selectedArticle">Stock actuel :</b> {{
+                                    row.quantiteColisStockComplet +
+                                    row.quantiteColisStockIncomplet }} colis </span>
+                                <span class="text-muted font-small-3"> ( {{ row.quantiteProduitStockComplet +
+                                    row.quantiteProduitStockIncomplet}} U)</span>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mt-25" *ngIf="cmd || selectedArticle">
+                            <div class="cell-line-height">
+                                <span class="font-weight-bold"> <b>Stock avant répartition :</b> {{ row.stockBeforeRep
+                                    }} colis</span>
+                                <span class="text-muted font-small-3"> ( {{ row.uniteBeforeRep}} U)</span>
+                            </div>
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column *ngIf="cmd || selectedArticle" name="code um" prop="codeUM" [width]="50">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div class="cell-line-height">
+                            <span class="font-weight-bold"> {{ row.codeUM }} </span>
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column *ngIf="cmd || selectedArticle" name="n° commande" prop="numeroCommande"
+                    [width]="50">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div class="cell-line-height">
+                            <a class="font-medium-1 d-block" routerLink="/bcs/detail/{{row.idBonCommandeSortie}}">
+                                <span class="font-weight-bold"> {{ row.numeroCommande }} </span>
+                            </a>
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+            </ngx-datatable>
+        </div>
+    </div>
+</div> 

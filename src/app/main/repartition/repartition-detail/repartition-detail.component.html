@@ -1,0 +1,683 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <app-content-header [contentHeader]="contentHeader"></app-content-header>
+        <section class="users-list-wrapper">
+
+            <div class="card">
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <div class="d-flex justify-content-between align-items-center m-2">
+                            <label class="d-flex align-items-center">
+                                <select 
+                                    class="form-control mx-25 pr-3" 
+                                    (change)="onSizeChange($event.target.value)"
+                                >
+                                    <option
+                                      *ngFor="let option of pageLimitOptions"
+                                      [value]="option.value"
+                                      [selected]="option.value == currentPageLimit"
+                                    >
+                                      {{ option.value }}
+                                    </option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end">
+                        <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                            <label class="d-flex align-items-center ml-1 ml-md-0">
+                                Recherche:
+                                <input
+                                    [(ngModel)]="searchValue"
+                                    name="searchValue"
+                                    type="search"
+                                    placeholder="Code UM"
+                                    class="form-control ml-25"
+                                    (keyup)="filterUpdate($event)"
+                                    (search)="filterUpdate($event)"
+                                />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-1" style="width: 100%; margin: auto; justify-content: center;">      
+                    <!-- Buttons documents -->
+                    <div class="col-md-10 col-12 d-flex justify-content-start justify-content-md-end" style="justify-content: center !important">
+                        <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                            <button 
+                                type="button" 
+                                class="btn btn-primary" 
+                                rippleEffect
+                                (click)="sendMail()"
+                            >
+                                <span 
+                                    [data-feather]="'mail'" 
+                                    [class]="'mr-25'"
+                                ></span>
+                                Mail
+                            </button>
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                            <button 
+                                type="button" 
+                                class="btn btn-outline-success" 
+                                rippleEffect
+                                (click)="pdf('ticket')"
+                            >
+                                <span 
+                                    [data-feather]="'printer'" 
+                                    [class]="'mr-25'"
+                                ></span>
+                                Etiquette
+                            </button>
+                        </div>
+        
+                        <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                            <button 
+                                type="button" 
+                                class="btn btn-outline-primary" 
+                                rippleEffect
+                                (click)="pdf('bls')"
+                            >
+                                <span 
+                                    [data-feather]="'printer'" 
+                                    [class]="'mr-25'"
+                                ></span>
+                                Bon de livraisons
+                            </button>
+                        </div>
+            
+                        <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                            <button 
+                                type="button" 
+                                class="btn btn-outline-secondary" 
+                                rippleEffect
+                                (click)="pdf('volumepoid')"
+                            >
+                                <span 
+                                    [data-feather]="'printer'" 
+                                    [class]="'mr-25'"
+                                ></span>
+                                Volume et poids
+                            </button>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                            <button 
+                                type="button" 
+                                class="btn btn-outline-success" 
+                                rippleEffect
+                                (click)="volume()"
+                            >
+                                <span 
+                                    [data-feather]="'download'" 
+                                    [class]="'mr-25'"
+                                ></span>
+                                Volume (excel)
+                            </button>
+                        </div>
+            
+                        <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                            <button 
+                                type="button" 
+                                class="btn btn-outline-warning" 
+                                rippleEffect
+                                (click)="pdf('colisage')"
+                            >
+                                <span 
+                                    [data-feather]="'printer'" 
+                                    [class]="'mr-25'"
+                                ></span>
+                                Colisage
+                            </button>
+                        </div>
+            
+                        <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                            <button 
+                                type="button" 
+                                class="btn btn-outline-info" 
+                                rippleEffect
+                                (click)="pdf('stock')"
+                            >
+                                <span 
+                                    [data-feather]="'printer'" 
+                                    [class]="'mr-25'"
+                                ></span>
+                                Stock
+                            </button>
+                        </div>
+                       
+                        <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                            <button 
+                                type="button" 
+                                class="btn btn-success" 
+                                rippleEffect
+                                (click)="modalConfirm(dateExpeditionModal)"
+                            >
+                                <span 
+                                    [data-feather]="'file-plus'" 
+                                    [class]="'mr-25'"
+                                ></span>
+                                Générer BL
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Buttons documents Ends -->
+                </div>
+  
+                <ngx-datatable
+                    [rows]="repartition"
+                    rowHeight="auto"
+                    [headerHeight]="50"
+                    [footerHeight]="50"
+                    [scrollbarH]="false"
+                    [columnMode]="ColumnMode.force"
+                    [externalPaging]="true"
+                    [limit]="request.page.limit"
+                    [count]="request.page.count"
+                    [offset]="request.page.offset"
+                    (page)="pageCallback($event)"
+                    [externalSorting]="true"
+                    (sort)="onSort($event)"
+                    [messages]="{emptyMessage: 'Aucun Bcs n\'a été trouvé', totalMessage:'Bcs'}"
+                    class="bootstrap core-bootstrap"
+                >
+
+                    <ngx-datatable-column 
+                        name="n° commande" 
+                        prop="numeroCommande" 
+                        [width]="200"
+                    >
+                        <ng-template 
+                            let-row="row" 
+                            let-name="value" 
+                            ngx-datatable-cell-template
+                        >
+                            <div class="d-flex align-items-center">
+                                <div class="cell-line-height">
+                                    <a 
+                                        class="font-medium-1 d-block" 
+                                        routerLink="/bcs/detail/{{row.id}}"
+                                    >
+                                        <span class="font-weight-bold">{{ row.numeroCommande }}</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+        
+                    <ngx-datatable-column 
+                        name="Destinataire" 
+                        prop="destinataire.codeUM" 
+                        [width]="400"
+                    >
+                        <ng-template 
+                            let-row="row" 
+                            let-name="value" 
+                            ngx-datatable-cell-template
+                        >
+                            <div class="d-flex align-items-center">
+                                <div class="cell-line-height">
+                                    <span class="font-weight-bold font-medium-1">{{ row?.destinataire?.codeUM  ?? '' }} - {{ row?.destinataire?.nom }}</span>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+        
+                    <ngx-datatable-column name="Statut" prop="termine" [width]="150">
+                        <ng-template let-termine="value" ngx-datatable-cell-template>
+                          <div
+                            class="badge badge-pill"
+                            [ngClass]="{
+                            'badge-light-success': termine == 1,
+                            'badge-light-secondary': termine == 0
+                            }"
+                          >
+                            {{termine == 0 ? 'Ouvert' : 'Terminé'}}
+                          </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Actions" [width]="50" [sortable]="false">
+                        <ng-template ngx-datatable-cell-template let-row="row">
+                            <div class="d-flex align-items-center col-actions">
+                                <a
+                                    class="mr-1 text-success"
+                                    container="body"
+                                    placement="top"
+                                    ngbTooltip="Imprimer Etiquette"
+                                    (click)="pdfById('ticketBcs', row.id)"
+                                >
+                                    <i size="18" data-feather="printer"></i>
+                                </a>
+            
+                                <a
+                                    class="mr-1 text-primary"
+                                    container="body"
+                                    placement="top"
+                                    ngbTooltip="Imprimer BL"
+                                    (click)="blsByBcs(row.id)"
+                                >
+                                    <i size="18" data-feather="truck"></i>
+                                </a>
+            
+                                <a
+                                    class="mr-1 text-warning"
+                                    container="body"
+                                    placement="top"
+                                    ngbTooltip="Imprimer Colisage"
+                                    (click)="pdfById('colisageBcs', row.id)"
+                                >
+                                    <i size="18" data-feather="file-text"></i>
+                                </a>
+            
+                                <a 
+                                    class="mr-1 text-info" 
+                                    container="body" 
+                                    placement="top" 
+                                    ngbTooltip="Imprimer Stock"
+                                    (click)="pdfById('stockBcs', row.id)"
+                                >
+                                    <i size="18" data-feather="layers"></i>
+                                </a>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+    
+                </ngx-datatable>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+    
+        <div class="row match-height">
+            <!-- Count Ums fermee -->
+            <div class="col-lg-4 col-md-6 col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4 class="card-title">État Palette</h4>
+                    </div>
+                    <div class="card-body p-0">
+                        <div id="goalChartoptions" class="mb-1 mt-1 pt-1" #goalChartRef>
+                            <apx-chart
+                            [chart]="{
+                                height: 245,
+                                type: 'radialBar',
+                                sparkline: {
+                                    enabled: true
+                                },
+                                dropShadow: {
+                                    enabled: true,
+                                    blur: 3,
+                                    left: 1,
+                                    top: 1,
+                                    opacity: 0.1
+                                }
+                            }"
+                            [colors]="goalChartoptions.colors"
+                            [plotOptions]="goalChartoptions.plotOptions"
+                            [fill]="goalChartoptions.fill"
+                            [series]="[UmsPercent]"
+                            [stroke]="goalChartoptions.stroke"
+                            [grid]="goalChartoptions.grid"
+                            ></apx-chart>
+                        </div>
+                        <div class="row border-top text-center mx-0">
+                            <div class="col-6 border-right py-1">
+                                <p class="card-text text-muted mb-0">Ouvert</p>
+                                <h3 class="font-weight-bolder mb-0">{{umsStat.umsOuvert}}</h3>
+                            </div>
+                            <div class="col-6 py-1">
+                                <p class="card-text text-muted mb-0">Fermée</p>
+                                <h3 class="font-weight-bolder mb-0">{{umsStat.umsFermee}}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/ Count Ums fermee -->
+
+            <!-- Article out of stock-->
+            <div class="col-lg-4 col-md-6 col-12">
+                <div class="card card-browser-states">
+                    <div class="card-header">
+                        <div class="broweser-states-header">
+                            <div class="broweser-states-heade">
+                                <h4 class="card-title">Article en Rupture</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body scrollable-container">
+                        <div class="browser-states" *ngFor="let article of articleOutStock">
+                            <div class="media">
+                                <img src="assets/images/icons/dropbox.png" class="rounded mr-1" height="30" alt="Google Chrome" />
+                                <h6 class="align-self-center mb-0"> {{ article.idArticle }} -> {{ article.designation }}</h6>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="font-weight-bold text-body-heading text-danger">{{ article.qte }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Article out of stock-->
+
+            <!-- Articles insuffisant -->
+            <div class="col-lg-4 col-md-6 col-12">
+                <div class="card card-browser-states">
+                    <div class="card-header">
+                        <div class="broweser-states-header">
+                            <div class="broweser-states-heade">
+                                <h4 class="card-title">Article avec stock insuffisant</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body scrollable-container">
+                        <div class="browser-states" *ngFor="let article of articleInsStock">
+                            <div class="media">
+                                <img src="assets/images/icons/dropbox.png" class="rounded mr-1" height="30" alt="Google Chrome" />
+                                <h6 class="align-self-center mb-0">{{ article.idArticle }} -> {{ article.designation }} </h6>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="font-weight-bold text-body-heading text-warning">{{ article.qte }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Articles insuffisant -->
+        </div>
+    </div>
+</div>
+
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <section class="users-list-wrapper">
+
+            <div class="card">
+                <div class="divider divider-warning mx-1 mb-1">
+                    <div class="divider-text font-medium-2"> Articles Commandée </div>
+                </div>
+       
+                <div class="row justify-content-center m-2">
+                    <div class="d-flex justify-content-between align-items-center m-2">
+                        <label class="d-flex align-items-center"
+                        >Afficher
+                        <select id="select" class="form-control mx-25" [(ngModel)]="selectedOption">
+                          <option value="10">10</option>
+                          <option value="25">25</option>
+                          <option value="50">50</option>
+                          <option value="100">100</option>
+                        </select>
+                      </label>
+                    </div>
+
+                    <!-- Article Filter Input -->
+                    <div class="col-md-3">
+                        <label for="article">Article</label>
+                        <ng-select 
+                            name="article"
+                            id="article"
+                            [items]="articles" 
+                            [(ngModel)]="SelectedArticle"
+                            bindLabel="name"  
+                            bindValue="id"
+                            (change)="search()"
+                        ></ng-select>
+                    </div> 
+                    <!-- Article Filter Input Ends -->
+
+                    <!-- Article Filter Input -->
+                    <div class="col-md-3">
+                        <label for="destinataire">Destinataire :</label>
+                        <ng-select 
+                            name="destinataire"
+                            id="destinataire"
+                            [items]="destinataires" 
+                            [(ngModel)]="selectedDestinataire"
+                            bindLabel="name"  
+                            bindValue="id"
+                            (change)="search()"
+                        >
+                            <ng-template ng-option-tmp let-item="item">
+                            {{item.name}}
+                            </ng-template>
+                        </ng-select>
+                    </div> 
+                    <!-- Article Filter Input Ends -->
+
+                    <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                        <button 
+                            type="button" 
+                            class="btn btn-danger" 
+                            rippleEffect
+                            (click)="pdf('outStock')"
+                        >
+                            <span 
+                                [data-feather]="'printer'" 
+                                [class]="'mr-25'"
+                            ></span>
+                            Rupture
+                        </button>
+                    </div>
+                </div>
+  
+                <ngx-datatable
+                    [rows]="articlesByRep"
+                    [rowHeight]="'auto'"
+                    class="bootstrap core-bootstrap"
+                    [limit]="selectedOption"
+                    [columnMode]="ColumnMode.force"
+                    [headerHeight]="50"
+                    [footerHeight]="50"
+                    [scrollbarH]="true"
+                >
+                    <ngx-datatable-column 
+                        name="code um" 
+                        prop="codeUm" 
+                        [width]="50"
+                    >
+                        <ng-template 
+                            let-row="row" 
+                            let-name="value" 
+                            ngx-datatable-cell-template
+                        >
+                            <div class="d-flex align-items-center">
+                                <div class="cell-line-height">
+                                    <span class="font-weight-bold">{{ selectedDestinataire || SelectedArticle ? row.codeUm : '- ' }}</span>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column 
+                        name="Article" 
+                        prop="article" 
+                        [width]="500"
+                    >
+                        <ng-template 
+                            let-row="row" 
+                            let-name="value" 
+                            ngx-datatable-cell-template
+                        >
+                            <div class="d-flex align-items-center">
+                                <div class="cell-line-height">
+                                    <a 
+                                        class="font-medium-1 d-block" 
+                                        routerLink="/articles/detail/{{row.idArticle}}"
+                                    >
+                                        <span class="font-weight-bold">{{ row.article }}</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column 
+                        name="total commande" 
+                        prop="totalCmd" 
+                        [width]="100"
+                    >
+                        <ng-template 
+                            let-row="row" 
+                            let-name="value" 
+                            ngx-datatable-cell-template
+                        >
+                            <div class="d-flex align-items-center">
+                                <div class="cell-line-height">
+                                    <span class="font-weight-bold">
+                                        {{ row.totalCmd }}
+                                    </span>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column 
+                        name="colis commandée" 
+                        prop="colisCmd" 
+                        [width]="100"
+                    >
+                        <ng-template 
+                            let-row="row" 
+                            let-name="value" 
+                            ngx-datatable-cell-template
+                        >
+                            <div class="d-flex align-items-center">
+                                <div class="cell-line-height">
+                                    <span class="font-weight-bold">
+                                        {{ row.colisCmd }}
+                                    </span>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column 
+                        name="colis asignée" 
+                        prop="colisAsigne" 
+                        [width]="100"
+                    >
+                        <ng-template 
+                            let-row="row" 
+                            let-name="value" 
+                            ngx-datatable-cell-template
+                        >
+                            <div class="d-flex align-items-center">
+                                <div class="cell-line-height">
+                                    <span 
+                                        [ngClass]="{
+                                            'badge-light-success': row.colisAsigne == row.colisCmd,
+                                            'badge-light-warning': row.colisAsigne < row.colisCmd && row.colisAsigne > 0,
+                                            'badge-light-danger': row.colisAsigne == 0
+                                        }"
+                                        class="font-weight-bold badge badge-pill"
+                                    >
+                                        {{ row.colisAsigne }}
+                                    </span>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column 
+                        name="colis livrée" 
+                        prop="colisLivre" 
+                        [width]="100"
+                    >
+                        <ng-template 
+                            let-row="row" 
+                            let-name="value" 
+                            ngx-datatable-cell-template
+                        >
+                            <div class="d-flex align-items-center">
+                                <div class="cell-line-height">
+                                    <span 
+                                        [ngClass]="{
+                                            'badge-light-success': row.colisLivre == row.colisCmd,
+                                            'badge-light-warning': row.colisLivre < row.colisCmd && row.colisLivre > 0,
+                                            'badge-light-danger': row.colisLivre == 0
+                                        }"
+                                        class="font-weight-bold badge badge-pill"
+                                    >
+                                        {{ row.colisLivre }}
+                                    </span>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column 
+                        name="colis non livrée" 
+                        prop="colisNonLivre" 
+                        [width]="100"
+                    >
+                        <ng-template 
+                            let-row="row" 
+                            let-name="value" 
+                            ngx-datatable-cell-template
+                        >
+                            <div class="d-flex align-items-center">
+                                <div class="cell-line-height">
+                                    <span 
+                                        [ngClass]="{
+                                            'badge-light-success': row.colisLivre == row.colisCmd,
+                                            'badge-light-warning': row.colisLivre < row.colisCmd && row.colisLivre > 0,
+                                            'badge-light-danger': row.colisLivre == 0
+                                        }"
+                                        class="font-weight-bold badge badge-pill"
+                                    >
+                                        {{ row.colisNonLivre }}
+                                    </span>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+        
+                </ngx-datatable>
+            </div>
+        </section>
+    </div>
+</div>
+<!-- Modal Date expedition -->
+
+<ng-template #dateExpeditionModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel1">Confirmation date d'expédition</h4>
+        <button type="button" class="close" (click)="modal.dismiss('Cross click'); dateExpedition = null" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body pb-0" tabindex="0" ngbAutofocus>
+        <p>Séléctionner <code>une date</code> pour clôturé les Ums.</p>
+        <div class="col-12">
+            <fieldset class="form-group">
+                <div class="input-group">
+                    <input
+                        [(ngModel)]="dateExpedition"
+                        class="form-control"
+                        placeholder="Date Expédition"
+                        name="dateExpedition"
+                        id="dateExpedition"
+                        type="date"
+                        [min]="currDate"
+                    />
+                </div>
+            </fieldset>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="genererBl()" rippleEffect>
+            Confirmer
+        </button>
+    </div>
+</ng-template>
+
+<!-- Modal Date expedition End -->
+
+<div *ngIf="qrCode">
+    <img [src]="qrCode" alt="QR Code" />
+</div>

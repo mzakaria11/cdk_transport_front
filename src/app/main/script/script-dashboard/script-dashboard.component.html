@@ -1,0 +1,588 @@
+<app-content-header [contentHeader]="contentHeader"></app-content-header>
+
+<div class="content-wrapper container-xxl p-0" *ngIf="hasRole.includes('Super_admin') || hasRole.includes('Admin')">
+  <!-- switch button to start repartition script -->
+  <div class="text-center font-medium-5">
+    <h6 
+      class="mr-1 font-medium-1" 
+      *ngIf="rows.length > 0"
+    >
+      Lancer le script
+    </h6>
+    <div 
+      class="custom-control custom-switch mb-1" 
+      *ngIf="rows.length > 0"
+    >
+      <input
+        id="priceSwitch"
+        name="priceSwitch"
+        type="checkbox"
+        class="custom-control-input"
+        [checked]="start"
+        [(ngModel)]="start"
+        (change)="repartir()"
+      />
+      <label 
+        class="custom-control-label" 
+        for="priceSwitch"
+      >
+      </label>
+    </div>
+
+  </div>
+  <!-- switch button to start repartition script ends -->
+
+  <!-- table for bcs Before repartition -->
+  <div class="content-body">
+    <section class="users-list-wrapper">
+      <div class="card">
+        <div class="row">
+          <!-- limit rows dropdown -->
+          <div class="col-md-6 col-12">
+            <div class="d-flex justify-content-between align-items-center m-1">
+              <label class="d-flex align-items-center">
+                Afficher
+                <select 
+                  class="form-control mx-25" 
+                  [(ngModel)]="selectedOption"
+                >
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+              </label>
+            </div>
+          </div>
+          <!-- limit rows dropdown ends -->
+
+          <!-- search in bcs table -->
+          <div class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end">
+            <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+              <label class="d-flex align-items-center ml-1 ml-md-0">
+                Recherche:
+                <input
+                  name="searchValue"
+                  type="search"
+                  placeholder="Numero commande"
+                  class="form-control ml-25"
+                  (keyup)="filterUpdate($event)"
+                  (search)="filterUpdate($event)"
+                />
+              </label>
+            </div>
+          </div>
+          <!-- search in bcs table ends -->
+        </div>
+        <!-- Bcs table -->
+        <ngx-datatable
+          [rows]="rows"
+          [rowHeight]="50"
+          class="bootstrap core-bootstrap"
+          [limit]="selectedOption"
+          [columnMode]="ColumnMode.force"
+          [headerHeight]="50"
+          [footerHeight]="50"
+          [scrollbarH]="false"
+          [messages]="{emptyMessage: 'Aucun commande n\'a été trouvé', totalMessage:'Commandes'}"
+        >
+          <!-- Numero commande -->
+          <ngx-datatable-column 
+            name="Numéro commande" 
+            prop="numeroCommande" 
+            [width]="50"
+          >
+            <ng-template 
+              let-row="row" 
+              let-name="value" 
+              ngx-datatable-cell-template
+            >
+              <div class="d-flex align-items-center">
+                <div class="cell-line-height">
+                  <a 
+                    class="font-medium-1 d-block" 
+                    routerLink="/bcs/detail/{{row.id}}"
+                  >
+                    <span class="font-weight-bold"> {{ row.numeroCommande }} </span>
+                  </a>
+                </div>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <!-- Numero commande ends -->
+
+          <!-- Date commande -->
+          <ngx-datatable-column 
+            name="Date commande" 
+            prop="dateCommande" 
+            [width]="50"
+          >
+            <ng-template 
+              let-row="row" 
+              let-name="value" 
+              ngx-datatable-cell-template
+            >
+              <div class="d-flex align-items-center">
+                <div class="cell-line-height">
+                  <a class="font-medium-1 d-block">
+                    <span class="font-weight-bold"> {{ row.dateCommande | date: 'dd-MM-yyyy' }} </span>
+                  </a>
+                </div>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <!-- Date commande ends-->
+
+          <!-- Code Um -->
+          <ngx-datatable-column 
+            name="Destinataire" 
+            prop="destinataire.codeUM" 
+            [width]="50"
+          >
+            <ng-template 
+              let-row="row" 
+              ngx-datatable-cell-template
+            >
+              <div>
+                <a 
+                  class="font-medium-1 d-block" 
+                  routerLink="/destinataires/detail/{{row.destinataire.id}}"
+                >
+                    <span class="font-weight-bold"> {{ row.destinataire ? row.destinataire.codeUM : '-' }} </span>
+                </a>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Date d'ajout" prop="chorodatage" [width]="50">
+            <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+              <div class="d-flex align-items-center">
+                <div class="cell-line-height">
+                  <a class="font-medium-1 d-block"
+                    ><span class="font-weight-bold">{{ row.chorodatage | date: 'dd-MM-yyyy HH:mm' }}</span></a
+                  >
+                </div>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <!-- Code Um ends -->
+        </ngx-datatable>
+        <!-- Bcs table ends -->
+      </div>
+    </section>
+  </div>
+  <!-- table for bcs Before repartition ends -->
+</div>
+
+<div class="card" *ngIf="result">
+  <div class="card-body pb-0">
+    <div class="divider divider-primary">
+      <div class="divider-text font-medium-3">Dernières répartition</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4 col-12">
+      <div class="d-flex justify-content-between align-items-center m-1">
+        <label class="d-flex align-items-center">
+          Afficher
+          <select 
+            class="form-control mx-25" 
+            [(ngModel)]="selectedOptionBcs"
+          >
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+        </label>
+      </div>
+    </div>
+  </div>
+  <!-- Table -->
+  <ngx-datatable
+    [rows]="result"
+    [rowHeight]="'auto'"
+    class="bootstrap core-bootstrap"
+    [limit]="selectedOptionBcs"
+    [columnMode]="ColumnMode.force"
+    [headerHeight]="50"
+    [footerHeight]="50"
+    [scrollbarH]="true"
+    [messages]="{emptyMessage: 'Aucun répartition n\'a été trouvé', totalMessage:'répartitions'}"
+  >
+    <!-- Date -->
+    <ngx-datatable-column 
+      name="Date" 
+      prop="dateC" 
+      [width]="100"
+    >
+      <ng-template 
+        let-row="row" 
+        let-name="value" 
+        ngx-datatable-cell-template
+      >
+        <div class="d-flex align-items-center">
+          <div class="cell-line-height">
+            <a 
+              class="font-medium-1 d-block"
+              routerLink="/repartition/history/{{row.dateC}}"
+            >
+              <span class="font-weight-bold"> {{ row.dateC | date: 'dd-MM-yyyy HH:mm' }} </span>
+            </a>
+          </div>
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <!-- Date Ends -->
+
+    <!-- Statut -->
+    <ngx-datatable-column 
+      name="statut" 
+      prop="statut"
+      [width]="50"
+    >
+      <ng-template 
+        let-row="row" 
+        let-name="value" 
+        ngx-datatable-cell-template
+      >
+        <div
+          class="avatar avatar-status"
+          [ngClass]="{
+            'bg-light-secondary': row.statut == 0,
+            'bg-light-success': row.statut == 1
+          }"
+        >
+          <ng-template #tipContent>
+            <span>
+              <span class="font-weight-bold">Etat:</span> {{ row.statut == 1 ? 'En cours' : 'Terminé' }}<br />
+            </span>
+          </ng-template>
+          <span class="avatar-content" placement="top" [ngbTooltip]="tipContent" container="body">
+            <i
+              class="feather avatar-icon font-medium-1"
+              [ngClass]="{
+                'icon-refresh-ccw': row.statut == 1,
+                'icon-check-circle': row.statut == 0
+              }"
+            ></i
+          ></span>
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <!-- Statut ends -->
+
+    <!-- Total article -->
+    <ngx-datatable-column 
+      name="Total articles" 
+      prop="totalQteLigne" 
+      [width]="50"
+    >
+      <ng-template 
+        let-row="row" 
+        let-name="value" 
+        ngx-datatable-cell-template
+      >
+        <div class="d-flex align-items-center">
+          <div class="cell-line-height">
+            <a 
+              class="font-medium-1 d-block" 
+            >
+              <span class="font-weight-bold"> {{ row.totalQteLigne }} </span>
+            </a>
+          </div>
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <!-- Total article ends -->
+
+    <!-- Colis assigne -->
+    <ngx-datatable-column 
+      name="Colis assigné" 
+      prop="totalQteColis" 
+      [width]="50"
+    >
+      <ng-template 
+        let-row="row" 
+        ngx-datatable-cell-template
+      >
+        <div>
+          <a 
+            class="font-medium-1 d-block" 
+          >
+              <span class="font-weight-bold"> {{ row.totalQteColis }} </span>
+          </a>
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <!-- Colis assigne ends -->
+
+    <!-- Qté exist -->
+    <ngx-datatable-column 
+      name="Article en stock" 
+      prop="qteLigneRep" 
+      [width]="50"
+    >
+      <ng-template 
+        let-row="row" 
+        ngx-datatable-cell-template
+      >
+        <div>
+          <a 
+            class="font-medium-1 d-block" 
+          >
+              <span class="font-weight-bold text-success"> {{ row.qteLigneRep }} </span>
+          </a>
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <!-- Qté exist Ends -->
+
+    <!-- rupture stock -->
+    <ngx-datatable-column 
+      name="Article en ruprture" 
+      prop="qteLigneNotRep" 
+      [width]="50"
+    >
+      <ng-template 
+        let-row="row" 
+        ngx-datatable-cell-template
+      >
+        <div>
+          <a class="font-medium-1 d-block" (click)="etatStock('out', row.dateC, modalArticle)">
+              <span 
+              class="font-weight-bold text-success"
+              [ngClass]="{'text-danger': row.qteLigneNotRep > 0 }"
+              > {{ row.qteLigneNotRep }} </span>
+          </a>
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <!-- rupture stock Ends -->
+
+    <!-- qte total en stock  -->
+    <ngx-datatable-column 
+      name="Qté total en stock" 
+      prop="qteLigneDiffEZero" 
+      [width]="50"
+    >
+      <ng-template 
+        let-row="row" 
+        ngx-datatable-cell-template
+      >
+        <div>
+          <a 
+            class="font-medium-1 d-block" 
+            (click)="etatStock('on', row.dateC, modalArticle)"
+          >
+              <span class="font-weight-bold text-success"> {{ row.qteLigneDiffEZero }} </span>
+          </a>
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <!-- qte total en stock Ends -->
+
+    <!-- qte insuffisante  -->
+    <ngx-datatable-column 
+      name="Qté insuffisante" 
+      prop="qteLigneDiffMZero" 
+      [width]="50"
+    >
+      <ng-template 
+        let-row="row" 
+        ngx-datatable-cell-template
+      >
+        <div>
+          <a 
+            class="font-medium-1 d-block" 
+            (click)="etatStock('inf', row.dateC, modalArticle)"
+          >
+              <span class="font-weight-bold text-warning"> {{ row.qteLigneDiffMZero }} </span>
+          </a>
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <!-- qte insuffisante Ends -->
+
+    <!-- Actions -->
+    <ngx-datatable-column 
+      name="Actions" 
+      [width]="40" 
+      [sortable]="false"
+    >
+      <ng-template ngx-datatable-cell-template let-row="row">
+        <div class="d-flex align-items-center col-actions">
+          <a
+            (click)="bl(row.dateC)"
+            class="mr-1 text-primary"
+            container="body"
+            placement="top"
+            ngbTooltip="Imprimer Bon de Livraison"
+          >
+            <i size="18" data-feather="truck"></i>
+          </a>
+
+          <a
+            (click)="volume(row.dateC)"
+            class="mr-1 text-secondary"
+            container="body"
+            placement="top"
+            ngbTooltip="Imprimer Liste de volume et poids"
+          >
+            <i size="18" data-feather="package"></i>
+          </a>
+
+          <a
+            (click)="colisage(row.dateC)"
+            class="mr-1 text-warning"
+            container="body"
+            placement="top"
+            ngbTooltip="Imprimer Colisage"
+          >
+            <i size="18" data-feather="file-text"></i>
+          </a>
+
+          <a 
+            (click)="stock(row.dateC)"
+            class="mr-1 text-info" 
+            container="body" 
+            placement="top" 
+            ngbTooltip="Imprimer Stock"
+          >
+            <i size="18" data-feather="layers"></i>
+          </a>
+
+          <a 
+            (click)="modalConfirm(modalConfirmAll, row.dateC)"
+            class="mr-1 text-success" 
+            container="body" 
+            placement="top" 
+            ngbTooltip="Générer BLS"
+          >
+            <i size="18" data-feather="file-plus"></i>
+          </a>
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
+  <!-- Table Ends -->
+</div>
+
+<ng-template #modalConfirmAll let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="myModalLabel1">Confirmation date expédition</h4>
+    <button type="button" class="close" (click)="modal.dismiss('Cross click'); dateExpedition = null" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body pb-0" tabindex="0" ngbAutofocus>
+    <p>Séléctionner <code>une date</code> pour clôturé les Ums.</p>
+    <div class="col-12">
+      <fieldset class="form-group">
+        <div class="input-group">
+          <input
+            [(ngModel)]="dateExpedition"
+            class="form-control"
+            placeholder="Date Expédition"
+            name="searchValue"
+            ngbDatepicker
+            #dateExpeditionDP="ngbDatepicker"
+            [footerTemplate]="footerTemplate"
+          />
+          <div class="input-group-append">
+            <button
+              class="btn btn-outline-secondary feather icon-calendar"
+              (click)="dateExpeditionDP.toggle()"
+              type="button"
+              rippleEffect
+            ></button>
+          </div>
+        </div>
+
+        <ng-template #footerTemplate>
+          <hr class="my-0" />
+          <button
+            class="btn btn-primary btn-sm m-2 float-left"
+            (click)="dateExpedition = today; dateExpeditionDP.close()"
+            rippleEffect
+          >
+            Aujourd'hui
+          </button>
+          <button class="btn btn-secondary btn-sm m-2 float-right" (click)="dateExpeditionDP.close(); dateExpedition = null" rippleEffect>
+            Fermer
+          </button>
+        </ng-template>
+      </fieldset>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="genererBl()" rippleEffect>
+      Confirmer
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #modalArticle let-modal>
+  <div class="modal-header">
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" tabindex="0" ngbAutofocus>
+
+    <div class="row">
+      <div class="col-md-6 col-12">
+        <div class="d-flex justify-content-between align-items-center m-1">
+          <label class="d-flex align-items-center"
+            >Afficher
+            <select class="form-control mx-25" [(ngModel)]="selectedOption">
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </label
+          >
+        </div>
+      </div>
+    </div>
+
+    <ngx-datatable
+      #articleTable
+      [rows]="articles"
+      [rowHeight]="'auto'"
+      class="bootstrap core-bootstrap"
+      [limit]="selectedOption"
+      [columnMode]="ColumnMode.force"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [scrollbarH]="false"
+      [messages]="{emptyMessage: 'Aucun Article n\'a été trouvé pour ce fournisseur', totalMessage:'articles'}"
+    >
+      <ngx-datatable-column name="Code" prop="codeClient" [width]="50">
+        <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+          <div class="d-flex align-items-center">
+            <div class="cell-line-height">
+              <a class="font-medium-1 d-block"
+                ><span class="font-weight-bold">{{ row.codeClient }}</span></a
+              >
+            </div>
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="Désignation" prop="designationClient" [width]="300">
+        <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+          <div class="d-flex align-items-center">
+            <div class="cell-line-height">
+              <a class="font-medium-1 d-block"
+                ><span class="font-weight-bold">{{ row.designationClient }}</span></a
+              >
+            </div>
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+  </div>
+</ng-template>

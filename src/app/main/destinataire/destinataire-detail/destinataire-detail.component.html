@@ -1,0 +1,567 @@
+ <div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+      <section class="app-user-edit">
+        <div class="card">
+          <div class="card-body">
+            <ul ngbNav #nav="ngbNav" class="nav nav-pills">
+              <li ngbNavItem>
+                <a ngbNavLink class="d-flex align-items-center">
+                  <i data-feather="info" class="mr-sm-50"></i><span class="d-none d-sm-block"> {{ data.nom }} </span></a
+                >
+                <ng-template ngbNavContent>
+                  <div class="tab-pane" id="information" aria-labelledby="information-tab" role="tabpanel">
+                    <form class="form-validate" (ngSubmit)="(destinataireForm.form.valid)" #destinataireForm="ngForm">
+                      <div class="row mt-1">
+                        <div class="col-12">
+                          <h4 class="mb-1">
+                            <i data-feather="user" [size]="16" class="mr-75 font-medium-4"></i>
+                            <span class="align-middle">Information</span>
+                          </h4>
+                        </div>
+
+                        <div class="col-lg-4 col-md-6">
+                          <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                            <label for="email">Email</label>
+                            <input id="email" type="text" class="form-control" [(ngModel)]="data.email" name="email" />
+                          </div>
+                        </div>
+
+                        <div class="col-lg-4 col-md-6">
+                          <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                            <label for="mobile">Telephone</label>
+                            <input id="mobile" type="text" class="form-control" [(ngModel)]="data.telephone" name="phone" />
+                          </div>
+                        </div>
+
+                        <div class="col-lg-4 col-md-6">
+                          <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                            <label for="contact">Contact</label>
+                            <input id="contact" type="text" class="form-control" [(ngModel)]="data.commentaire" name="contact" />
+                          </div>
+                        </div>
+
+                        <div class="col-lg-4 col-md-6">
+                          <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                            <label for="codeUm">Code UM</label>
+                            <input id="codeUm" type="text" class="form-control" [(ngModel)]="data.codeUM" name="codeUm" />
+                          </div>
+                        </div>
+
+                        <div class="col-lg-4 col-md-6">
+                          <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                            <label for="delai">Délai péremption</label>
+                            <input id="delai" type="text" class="form-control" [(ngModel)]="data.delaiPeremption" name="delai" />
+                          </div>
+                        </div>
+
+
+
+                        <div class="col-12">
+                          <h4 class="mb-1 mt-2">
+                            <i data-feather="map-pin" [size]="16" class="mr-75 font-medium-4"></i>
+                            <span class="align-middle">Adresse</span>
+                          </h4>
+                        </div>
+                        <div class="col-lg-8 col-md-6">
+                          <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                            <label for="address-1">Adresse</label>
+                            <input
+                              id="address-1"
+                              type="text"
+                              class="form-control"
+                              [(ngModel)]="data.adresselivraisonRue + ',  ' + data.adresselivraisonCodepostal + ',  ' + data.adresselivraisonLocalite"
+                              name="address"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                          <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                            <label for="departement">Département</label>
+                            <input id="departement" type="text" class="form-control" (ngModel)="data.departement || '-'" placeholder="T-78, rue micheal" />
+                          </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                          <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                            <label for="postcode">Code postal</label>
+                            <input id="postcode" type="text" class="form-control" [(ngModel)]="data.adresselivraisonCodepostal" placeholder="597626" name="zip" />
+                          </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                          <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                            <label for="ville">Ville</label>
+                            <input id="ville" type="text" class="form-control" [(ngModel)]="data.adresselivraisonLocalite" value="Paris" name="ville" />
+                          </div>
+                        </div>
+
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label for="UDpays">Pays</label>
+                            <select
+                              id="UDpays"
+                              name="pays"
+                              class="form-control"
+                              [(ngModel)]="data.pays.nom"
+                            >
+                              <option value="">Tous</option>
+                              <option [value]="data.pays.nom">{{data.pays.nom}}</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="col-12 d-flex flex-sm-row flex-column mt-2" *ngIf="edit">
+                          <button
+                            type="submit"
+                            (click)="submit(destinataireForm)"
+                            class="btn btn-success mb-1 mb-sm-0 mr-0 mr-sm-1"
+                            rippleEffect
+                          >
+                            Modifier
+                          </button>
+
+                          <button (click)="modalOpenForm(modalForm)" class="btn btn-outline-danger" rippleEffect>
+                            Supprimer
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </ng-template>
+              </li>
+            </ul>
+            <div [ngbNavOutlet]="nav" class="mt-2"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+</div>
+
+<app-content-header [contentHeader]="contentHeader"></app-content-header>
+
+<div class="content-wrapper container-xxl p-0">
+  <div class="content-body">
+    <section class="app-user-edit">
+      <div class="card">
+        <div class="card-body">
+          <ul ngbNav #nav="ngbNav" class="nav nav-pills">
+            <li ngbNavItem>
+              <a ngbNavLink class="d-flex align-items-center"
+                ><i data-feather="box" class="mr-sm-50"></i><span class="d-none d-sm-block">{{ edit ? 'Modifier' : 'Détail' }}</span></a
+              >
+              <ng-template ngbNavContent>
+                <div class="tab-pane active" id="account" aria-labelledby="account-tab" role="tabpanel">
+
+                  <form class="form-validate" (ngSubmit)="(destinataireForm.form.valid)" #destinataireForm="ngForm">
+
+                    <div class="row">
+                      <div class="col-12">
+                          <h4 class="mb-1">
+                              <i data-feather="user" [size]="16" class="mr-75 font-medium-4"></i>
+                              <span class="align-middle">Information</span>
+                          </h4>
+                      </div>
+
+                      <div class="col-md-4">
+                        <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                          <label for="nom">Nom</label>
+                          <input
+                            type="text"
+                            id="nom"
+                            class="form-control"
+                            placeholder="nom"
+                            name="nom"
+                            [(ngModel)]="data.nom"
+                            [class.error]="destinataireForm.submitted && NomRef.invalid"
+                            #NomRef="ngModel"
+                            required
+                          />
+                          <span *ngIf="destinataireForm.submitted && NomRef.invalid" class="invalid-form">
+                            <small class="form-text text-danger" *ngIf="NomRef.errors.required"
+                              >Nom est requis!</small
+                            >
+                          </span>
+                        </div>
+                      </div>
+
+                      <div class="col-md-4">
+                        <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                          <label for="email">E-mail</label>
+                          <input
+                            type="email"
+                            id="email"
+                            class="form-control"
+                            placeholder="Email"
+                            name="email"
+                            [(ngModel)]="data.email"
+                            [class.error]="destinataireForm.submitted && EmailRef.invalid"
+                            #EmailRef="ngModel"
+                            required
+                            autocomplete="email"
+                          />
+                          <span *ngIf="destinataireForm.submitted && EmailRef.invalid" class="invalid-form">
+                            <small class="form-text text-danger" *ngIf="EmailRef.errors.required"
+                              >Email est requis!</small
+                            >
+                          </span>
+                        </div>
+                      </div>
+
+                      <div class="col-md-4">
+                        <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                          <label for="telephone">Telephone</label>
+                          <input
+                            type="text"
+                            id="telephone"
+                            class="form-control"
+                            placeholder="telephone"
+                            name="telephone"
+                            [(ngModel)]="data.telephone"
+                            [class.error]="destinataireForm.submitted && TelephoneRef.invalid"
+                            #TelephoneRef="ngModel"
+                            required
+                          />
+                          <span *ngIf="destinataireForm.submitted && TelephoneRef.invalid" class="invalid-form">
+                            <small class="form-text text-danger" *ngIf="TelephoneRef.errors.required"
+                              >Telephone est requis!</small
+                            >
+                          </span>
+                        </div>
+                      </div>
+
+                      <div class="col-md-4">
+                        <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                          <label for="commentaire">Contact</label>
+                          <input
+                            type="text"
+                            id="commentaire"
+                            class="form-control"
+                            placeholder="contact"
+                            name="commentaire"
+                            [(ngModel)]="data.commentaire"
+                            #CommentaireRef="ngModel"
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col-md-4">
+                        <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                          <label for="delaiPeremption">délai Péremption</label>
+                          <input
+                            type="text"
+                            id="delaiPeremption"
+                            class="form-control"
+                            placeholder="délai péremption"
+                            name="delaiPeremption"
+                            [(ngModel)]="data.delaiPeremption"
+                            [class.error]="destinataireForm.submitted && DelaiPeremptionRef.invalid"
+                            #DelaiPeremptionRef="ngModel"
+                            required
+                          />
+                          <span *ngIf="destinataireForm.submitted && DelaiPeremptionRef.invalid" class="invalid-form">
+                            <small class="form-text text-danger" *ngIf="DelaiPeremptionRef.errors.required"
+                              >délai Péremption est requis!</small
+                            >
+                          </span>
+                        </div>
+                      </div>
+
+                      <div class="col-md-4">
+                        <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                          <label for="codeUM">Code UM</label>
+                          <input
+                            type="text"
+                            id="codeUM"
+                            class="form-control"
+                            placeholder="code UM"
+                            name="codeUM"
+                            [(ngModel)]="data.codeUM"
+                            [class.error]="destinataireForm.submitted && CodeUMRef.invalid"
+                            #CodeUMRef="ngModel"
+                            required
+                          />
+                          <span *ngIf="destinataireForm.submitted && CodeUMRef.invalid" class="invalid-form">
+                            <small class="form-text text-danger" *ngIf="CodeUMRef.errors.required"
+                              >Code UM est requis!</small
+                            >
+                          </span>
+                        </div>
+                      </div>
+
+                      <div class="col-12">
+                        <h4 class="mb-1 mt-2">
+                          <i data-feather="map-pin" [size]="16" class="mr-75 font-medium-4"></i>
+                          <span class="align-middle">Adresse</span>
+                        </h4>
+                      </div>
+
+                      <div class="col-md-4">
+                        <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                          <label for="adresselivraisonNumero">Numéro</label>
+                          <input
+                            type="text"
+                            id="adresselivraisonNumero"
+                            class="form-control"
+                            placeholder="Numéro"
+                            name="adresselivraisonNumero"
+                            [(ngModel)]="data.adresselivraisonNumero"
+                            #AdresselivraisonNumeroRef="ngModel"
+                          />
+                        </div>
+                      </div>
+
+                      <!-- <div class="col-md-4">
+                        <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                          <label for="adresselivraisonNumero">Numéro</label>
+                          <input
+                            type="text"
+                            id="adresselivraisonNumero"
+                            class="form-control"
+                            placeholder="Numéro"
+                            name="adresselivraisonNumero"
+                            [(ngModel)]="data.adresselivraisonNumero"
+                            [class.error]="destinataireForm.submitted && AdresselivraisonNumeroRef.invalid"
+                            #AdresselivraisonNumeroRef="ngModel"
+                            required
+                          />
+                          <span *ngIf="destinataireForm.submitted && AdresselivraisonNumeroRef.invalid" class="invalid-form">
+                            <small class="form-text text-danger" *ngIf="AdresselivraisonNumeroRef.errors.required"
+                              >Numéro est requis!</small
+                            >
+                          </span>
+                        </div>
+                      </div> -->
+
+                      <div class="col-md-4">
+                        <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                          <label for="adresselivraisonRue">Rue</label>
+                          <input
+                            type="text"
+                            id="adresselivraisonRue"
+                            class="form-control"
+                            placeholder="Rue"
+                            name="adresselivraisonRue"
+                            [(ngModel)]="data.adresselivraisonRue"
+                            #AdresselivraisonRueRef="ngModel"
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col-md-4">
+                        <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                          <label for="adresselivraisonLocalite">Ville</label>
+                          <input
+                            type="text"
+                            id="adresselivraisonLocalite"
+                            class="form-control"
+                            placeholder="ville"
+                            name="adresselivraisonLocalite"
+                            [(ngModel)]="data.adresselivraisonLocalite"
+                            [class.error]="destinataireForm.submitted && AdresselivraisonLocaliteRef.invalid"
+                            #AdresselivraisonLocaliteRef="ngModel"
+                            required
+                          />
+                          <span *ngIf="destinataireForm.submitted && AdresselivraisonLocaliteRef.invalid" class="invalid-form">
+                            <small class="form-text text-danger" *ngIf="AdresselivraisonLocaliteRef.errors.required"
+                              >Ville est requis!</small
+                            >
+                          </span>
+                        </div>
+                      </div>
+
+                      <div class="col-md-4">
+                        <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                          <label for="departement">Département</label>
+                          <input
+                            type="text"
+                            id="departement"
+                            class="form-control"
+                            placeholder="Département"
+                            name="departement"
+                            [(ngModel)]="data.departement"
+                            #DepartementRef="ngModel"
+                          />
+                          <!-- <span *ngIf="destinataireForm.submitted && DepartementRef.invalid" class="invalid-form">
+                            <small class="form-text text-danger" *ngIf="DepartementRef.errors.required"
+                              >Département est requis!</small
+                            >
+                          </span> -->
+                        </div>
+                      </div>
+
+                      <div class="col-md-4">
+                        <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                          <label for="adresselivraisonCodepostal">Code postal</label>
+                          <input
+                            type="text"
+                            id="adresselivraisonCodepostal"
+                            class="form-control"
+                            placeholder="Code postal"
+                            name="adresselivraisonCodepostal"
+                            [(ngModel)]="data.adresselivraisonCodepostal"
+                            [class.error]="destinataireForm.submitted && AdresselivraisonCodepostalRef.invalid"
+                            #AdresselivraisonCodepostalRef="ngModel"
+                            required
+                          />
+                          <span *ngIf="destinataireForm.submitted && AdresselivraisonCodepostalRef.invalid" class="invalid-form">
+                            <small class="form-text text-danger" *ngIf="AdresselivraisonCodepostalRef.errors.required"
+                              >Code postal est requis!</small
+                            >
+                          </span>
+                        </div>
+                      </div>
+
+                      <div class="col-md-4">
+                        <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                          <label for="pays">Pays</label>
+                          <select class="form-control" [(ngModel)]="data.pays.id" name="pays" id="pays">
+                            <option [value]="-1">Tous</option>
+                            <option [value]="data.pays.id">France</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6 pd-12">
+                        <fieldset class="form-label-group mb-0">
+                          <textarea
+                            #adresse1
+                            [maxlength]="120"
+                            class="form-control char-textarea"
+                            id="adresselivraisonComplement1"
+                            name="adresselivraisonComplement1"
+                            rows="2"
+                            [readOnly]="!edit"
+                            placeholder="adresse livraison Complement 1"
+                            [(ngModel)]="data.adresselivraisonComplement1"
+                          ></textarea>
+                          <label for="adresselivraisonComplement1">adresse livraison Complement 1</label>
+                        </fieldset>
+                        <small class="textarea-counter-value float-right"
+                          ><span *ngIf="adresse1" class="char-count">{{ adresse1.value.length }}</span>
+                          <span *ngIf="!adresse1" class="char-count">0 </span> / 120
+                        </small>
+                      </div>
+
+                        <div class="col-md-6 pd-12">
+                          <fieldset class="form-label-group mb-0" >
+                            <textarea
+                              #adresse2
+                              [maxlength]="120"
+                              class="form-control char-textarea"
+                              id="adresselivraisonComplement2"
+                              name="adresselivraisonComplement2"
+                              rows="2"
+                              [readOnly]="!edit"
+                              placeholder="adresse livraison Complement 2"
+                              [(ngModel)]="data.adresselivraisonComplement2"
+                            ></textarea>
+                            <label for="adresselivraisonComplement2">adresse livraison Complement 2</label>
+                          </fieldset>
+                          <small class="textarea-counter-value float-right"
+                            ><span *ngIf="adresse2" class="char-count">{{ adresse2.value.length }}</span>
+                            <span *ngIf="!adresse2" class="char-count">0 </span> / 120
+                          </small>
+                        </div>
+
+                        <div class="col-md-12 pd-12">
+                          <fieldset class="form-label-group mb-0">
+                            <textarea
+                              #facturation
+                              [maxlength]="120"
+                              class="form-control char-textarea"
+                              id="adresseFacturation"
+                              name="adresseFacturation"
+                              rows="2"
+                              [readOnly]="!edit"
+                              placeholder="Adresse de commande"
+                              [(ngModel)]="data.adresseFacturation"
+                            ></textarea>
+                            <label for="adresseFacturation">Adresse de commande</label>
+                          </fieldset>
+                          <small class="textarea-counter-value float-right"
+                            ><span *ngIf="facturation" class="char-count">{{ facturation.value.length }}</span>
+                            <span *ngIf="!facturation" class="char-count">0 </span> / 120
+                          </small>
+                        </div>
+
+                        <div class="col-md-12 pd-12">
+                          <fieldset class="form-label-group mb-0" >
+                            <textarea
+                              class="form-control char-textarea"
+                              id="adresseLivraison"
+                              name="adresseLivraison"
+                              rows="2"
+                              [readOnly]="true"
+                              [value]="data.nom + '  ' + data.adresselivraisonNumero  + '  ' + data.adresselivraisonRue+ '  ' + data.adresselivraisonComplement1  + '  ' + data.adresselivraisonCodepostal + '  ' + data.adresselivraisonLocalite"
+                            ></textarea>
+                            <label for="adresseLivraison">Adresse de livraison</label>
+                          </fieldset>
+                        </div>
+
+                        <div class="col-12 d-flex flex-sm-row flex-column mt-2" *ngIf="edit">
+                          <button
+                            type="submit"
+                            (click)="submit(destinataireForm)"
+                            class="btn btn-success mb-1 mb-sm-0 mr-0 mr-sm-1"
+                            rippleEffect
+                          >
+                            Modifier
+                          </button>
+                          <button *ngIf="hasRole.includes('Super_admin')" (click)="modalOpenForm(modalForm)" class="btn btn-outline-danger" rippleEffect>
+                            Supprimer
+                          </button>
+                        </div>
+                    </div>
+                  </form>
+                </div>
+              </ng-template>
+            </li>
+          </ul>
+          <div [ngbNavOutlet]="nav" class="mt-2"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="login-form">
+  <ng-template #modalForm let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="myModalLabel1">Confirmation de suppression</h4>
+      <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body" tabindex="0" ngbAutofocus>
+      <form class="form-validate" [formGroup]="ReactivePasswordConfirmationForm" (ngSubmit)="ReactiveCPFormOnSubmit()">
+        <div class="row">
+
+          <div class="col-md-12">
+            <div class="form-group">
+              <div class="form-group">
+                  <label for="password">Mot de passe</label>
+                  <input
+                    type="password"
+                    id="password"
+                    formControlName="password"
+                    class="form-control"
+                    [ngClass]="{ 'is-invalid': ReactiveCPFormSubmitted && ReactiveCPForm.password.errors }"
+                  />
+                  <div
+                    *ngIf="ReactiveCPFormSubmitted && ReactiveCPForm.password.errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="ReactiveCPForm.password.errors.required">Mot de passe est requis</div>
+                    <div *ngIf="ReactiveCPForm.password.errors.minlength">Mot de passe doit comporter au moins 6 caractères</div>
+                  </div>
+                </div>
+            </div>
+          </div>
+          <div class="modal-footer" style="width: 100%;">
+            <button class="btn btn-primary" rippleEffect>
+              Confirmer
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+</div>

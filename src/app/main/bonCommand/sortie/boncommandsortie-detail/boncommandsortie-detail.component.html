@@ -1,0 +1,591 @@
+<div class="content-wrapper container-xxl p-0">
+    <!-- Breadcrumbs -->
+    <app-content-header [contentHeader]="contentHeader"></app-content-header>
+    <!-- details bcs form -->
+    <div class="content-body">
+        <section class="app-user-edit">
+            <div class="card">
+                <div class="card-body">
+                    <ul ngbNav #nav="ngbNav" class="nav nav-pills">
+                        <li ngbNavItem>
+                            <a ngbNavLink class="d-flex align-items-center">
+                                <i data-feather="box" class="mr-sm-50"></i>
+                                <span class="d-none d-sm-block">
+                                    {{ edit ? 'Modifier' : 'Détail Bon commande ' + bcs.numeroCommande }}
+                                </span>
+                            </a>
+                            <ng-template ngbNavContent>
+                                <div class="tab-pane active" id="account" aria-labelledby="account-tab" role="tabpanel">
+                                    <form class="form-validate">
+                                        <div class="row">
+                                            <!-- order number || numero commande -->
+                                            <div class="col-md-4">
+                                                <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                                                    <label for="numero">Numéro Commande</label>
+                                                    <input
+                                                        type="text"
+                                                        id="numero"
+                                                        class="form-control"
+                                                        placeholder="numero"
+                                                        name="numero"
+                                                        [(ngModel)]="bcs.numeroCommande"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <!-- order date || date commande -->
+                                            <div class="col-12 col-md-4">                              
+                                                <label for="expedition">Date de commande</label>
+                                                <fieldset class="form-group" [ngClass]="{'pointer-events-none': (!edit)}">
+                                                  <div class="input-group">
+                                                    <input
+                                                      class="form-control"
+                                                      ngbDatepicker
+                                                      #dateCommandeDP="ngbDatepicker"    
+                                                      [(ngModel)]="dateCommande"                            
+                                                      name="dateCommande"
+                                                    />
+                                                    <div class="input-group-append">
+                                                      <button
+                                                        class="btn btn-outline-secondary feather icon-calendar"
+                                                        (click)="dateCommandeDP.toggle()"
+                                                        type="button"
+                                                        rippleEffect
+                                                      ></button>
+                                                    </div>
+                                                    <!-- <div
+                                                      *ngIf="umsForm.submitted && ums.dateCommande == null" 
+                                                      class="invalid-feedback"
+                                                    >
+                                                      <div>Date de commande est requis</div>
+                                                    </div>                               -->
+                                                  </div>
+                                                </fieldset>
+                                            </div>
+                                            <!-- Code UM related to destinataire object-->
+                                            <div class="col-md-4">
+                                                <div class="form-group"  [ngClass]="{'pointer-events-none': !edit}">
+                                                    <label for="codeUM">code UM</label>
+                                                    <input
+                                                        type="text"
+                                                        id="codeUM"
+                                                        class="form-control"
+                                                        placeholder="codeUM"
+                                                        name="codeUM"
+                                                        [(ngModel)]="bcs.destinataire.codeUM"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <!-- Destinataire -->
+                                            <div class="col-md-4 mb-2p">
+                                                <label for="destinataire">Destinataire</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend" *ngIf="!hasRole.includes('Client')">
+                                                        <div class="btn btn-outline-primary" *ngIf="bcs.destinataire" routerLink="/destinataires/detail/{{bcs.destinataire.id}}">
+                                                            <i data-feather="eye"></i>
+                                                        </div>
+                                                    </div>
+                                                    <input 
+                                                        id="destinataire"
+                                                        name="destinataire"  
+                                                        type="text" 
+                                                        class="form-control" 
+                                                        placeholder="destinataire" 
+                                                        [ngClass]="{'pointer-events-none': !edit}" 
+                                                        [ngModel]="bcs?.destinataire?.nom" 
+                                                    />
+                                                    <div class="input-group-append" *ngIf="!hasRole.includes('Client')">
+                                                        <div class="btn btn-outline-primary" *ngIf="bcs.destinataire" routerLink="/destinataires/detail/{{bcs.destinataire.id}}">Consulter !</div>
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                            <!-- Transporteur -->
+                                            <div class="col-md-4 mb-2p">
+                                                <label for="transporteur">transporteur</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend" *ngIf="!hasRole.includes('Client')">
+                                                        <div class="btn btn-outline-primary" *ngIf="bcs.transporteur" routerLink="/transporteurs/detail/{{bcs.transporteur.id}}">
+                                                            <i data-feather="eye"></i>
+                                                        </div>
+                                                    </div>
+                                                    <input 
+                                                        id="transporteur"
+                                                        name="transporteur"  
+                                                        type="text" 
+                                                        class="form-control" 
+                                                        placeholder="transporteur" 
+                                                        [ngClass]="{'pointer-events-none': !edit}" 
+                                                        [ngModel]="bcs?.transporteur?.nom" 
+                                                    />
+                                                    <div class="input-group-append" *ngIf="!hasRole.includes('Client')">
+                                                        <div class="btn btn-outline-primary" *ngIf="bcs.transporteur" routerLink="/transporteurs/detail/{{bcs.transporteur.id}}">Consulter !</div>
+                                                    </div>
+                                                </div>
+                                            </div> 
+
+                                            <!-- BLS -->
+                                            <div class="col-md-4 mb-2p">
+                                                <label for="destinataire">BLS</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend" *ngIf="!hasRole.includes('Client')">
+                                                        <div class="btn btn-outline-primary" *ngIf="rowsBls?.length > 0" routerLink="/bls/detail/{{rowsBls[0].id}}">
+                                                            <i data-feather="eye"></i>
+                                                        </div>
+                                                    </div>
+                                                    <input 
+                                                        id="bls"
+                                                        name="bls"  
+                                                        type="text" 
+                                                        class="form-control" 
+                                                        placeholder="bls" 
+                                                        [ngClass]="{'pointer-events-none': !edit}" 
+                                                        [ngModel]="rowsBls[0]?.numeroBonLivraison" 
+                                                    />
+                                                    <div class="input-group-append" *ngIf="!hasRole.includes('Client')">
+                                                        <div class="btn btn-outline-primary" *ngIf="rowsBls?.length > 0" routerLink="/bls/detail/{{rowsBls[0].id}}">Consulter !</div>
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                            <div class="col-12 d-flex flex-sm-row flex-column mt-2" *ngIf="edit && (hasRole.includes('Super_admin') || hasRole.includes('Admin'))">
+                                                <button
+                                                    type="submit"
+                                                    (click)="submit(accountForm)"
+                                                    class="btn btn-success mb-1 mb-sm-0 mr-0 mr-sm-1"
+                                                    rippleEffect
+                                                >
+                                                    Modifier
+                                                </button>
+                                                <button 
+                                                    (click)="modalOpenForm(modalForm)" 
+                                                    class="btn btn-outline-danger" 
+                                                    rippleEffect
+                                                    *ngIf="hasRole.includes('Super_admin')"
+                                                >
+                                                    Supprimer
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </ng-template>
+                        </li>
+                    </ul>
+                    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- Datatables => Lignes BCS & UMS -->
+    <div class="content-body">
+        <!-- Section datatable of lignes BCS -->
+        <section class="app-user-edit">
+            <div class="card">
+                <div class="divider divider-warning mx-1 mb-0">
+                    <div class="divider-text font-medium-2">Lignes du bon de commande sortie</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <div class="d-flex justify-content-between align-items-center m-1">
+                            <label class="d-flex align-items-center">
+                                Afficher
+                                <select class="form-control mx-25" [(ngModel)]="selectedOption">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end" *ngIf="bcs.termine == 0 && !hasRole.includes('Client')">
+                        <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                            <button class="btn btn-outline-info ml-1" (click)="stock()" *ngIf="rowsUms.length > 0" rippleEffect>
+                                <span 
+                                    [data-feather]="'printer'" 
+                                    [class]="'mr-25'"
+                                ></span> Stock
+                            </button>
+                            <button class="btn btn-primary ml-1" *ngIf="rowsUms.length > 0" (click)="openModalLigne(modalLigne)" rippleEffect>
+                                <span 
+                                    [data-feather]="'plus'" 
+                                    [class]="'mr-25'"
+                                ></span> Ajouter Ligne
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <ngx-datatable
+                    [rows]="rows"
+                    [rowHeight]="'auto'"
+                    class="bootstrap core-bootstrap"
+                    [limit]="selectedOption"
+                    [columnMode]="ColumnMode.force"
+                    [headerHeight]="50"
+                    [footerHeight]="50"
+                    [scrollbarH]="false"
+                    [messages]="{emptyMessage: 'Aucun Ligne n\'a été trouvé', totalMessage:'Lignes'}"
+                >                                         
+                    <!-- designation -->
+                    <ngx-datatable-column 
+                        name="Désigantion" 
+                        prop="article.designationClient"
+                        [width]="150"
+                    >
+                        <ng-template 
+                            let-row="row" 
+                            let-name="value" 
+                            ngx-datatable-cell-template
+                        >
+                            <div class="d-flex align-items-center">
+                                <div 
+                                    class="cell-line-height" 
+                                    *ngIf="row.article"
+                                >
+                                    <a 
+                                        class="font-medium-1 d-block" 
+                                        routerLink="/articles/detail/{{row.article.id}}"
+                                    >
+                                        <span class="font-weight-bold">{{ row.article ? row.article.designationClient : '-'}}</span>
+                                    </a>
+                                    <span class="text-muted font-small-4">code : {{ row.article ? row.article.codeFournisseur : '-' }}</span>
+                                </div>
+
+                                <div 
+                                    class="cell-line-height" 
+                                    *ngIf="!row.article"
+                                >
+                                    <a class="font-medium-1 d-block">
+                                        <span class="font-weight-bold">{{ row.article ? row.article.designationClient : '-'}}</span>
+                                    </a>
+                                    <span class="text-muted font-small-4"> code : {{ row.article ? row.article.codeFournisseur : '-' }}</span>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <!-- quantité demmandée -->
+                    <ngx-datatable-column 
+                        name="Qté commandée / colis" 
+                        prop="quantiteProduitCommande" 
+                        [width]="120"
+                    >
+                        <ng-template 
+                            let-row="row" 
+                            let-name="value" 
+                            ngx-datatable-cell-template
+                        >
+                            <div class="d-flex align-items-center">
+                                <div class="cell-line-height">
+                                    <a class="font-medium-1 d-block">
+                                        <span class="font-weight-bold">{{ row.quantiteColisCommande | number: '1.0-0' }} Colis</span>
+                                    </a>
+                                    <span class="text-muted font-small-4"> {{ row.quantiteProduitCommande}} Produit</span>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <!-- diffrence qte potentielle / qte confirmé -->
+                    <ngx-datatable-column 
+                        name="Diff" 
+                        prop="differenceCommandePotentiel" 
+                        [width]="30"
+                    >
+                        <ng-template 
+                            let-row="row"
+                            ngx-datatable-cell-template
+                        >
+                            <div
+                                class="badge badge-pill"
+                                [ngClass]="{
+                                    'badge-light-success': row.differenceCommandePotentiel == 0,
+                                    'badge-light-warning': row.differenceCommandePotentiel >= row.differenceCommandeLivre && row.differenceCommandePotentiel < 0,
+                                    'badge-light-danger': row.differenceCommandePotentiel < 0 && row.differenceCommandePotentiel == row.differenceCommandeLivre
+                                }"
+                            >
+                                {{ row.differenceCommandePotentiel }}
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <!-- qte potentielle -->
+                    <ngx-datatable-column 
+                        name="Qté potentielle" 
+                        prop="quantiteProduitPotentielle" 
+                        [width]="60"
+                    >
+                        <ng-template 
+                            let-row="row" 
+                            let-name="value" 
+                            ngx-datatable-cell-template
+                        >
+                            <div class="d-flex align-items-center">
+                                <div class="cell-line-height">
+                                    <a class="font-medium-1 d-block">
+                                        <span class="font-weight-bold"> {{ row.quantiteColisPotentielle ? row.quantiteColisPotentielle : 0 }} Colis</span>
+                                    </a>
+                                    <span class="text-muted font-small-4"> {{ row.quantiteProduitPotentielle ? row.quantiteProduitPotentielle : 0 }} produit</span>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <!-- DIFFERNCE qte commandé / potentielle -->
+                    <ngx-datatable-column 
+                        name="Diff" 
+                        prop="differenceCommandeLivre" 
+                        [width]="30"
+                    >
+                        <ng-template 
+                            let-differenceCommandeLivre="value" 
+                            ngx-datatable-cell-template
+                        >
+                            <div
+                                class="badge badge-pill"
+                                [ngClass]="{
+                                    'badge-light-success': differenceCommandeLivre == 0,
+                                    'badge-light-danger': differenceCommandeLivre < 0
+                                }"
+                            >
+                                {{ differenceCommandeLivre }}
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <!-- qte confirmée -->
+                    <ngx-datatable-column 
+                        name="Qté confirmée" 
+                        prop="qtePotentielle" 
+                        [width]="100"
+                    >
+                        <ng-template 
+                            let-row="row" 
+                            let-name="value" 
+                            ngx-datatable-cell-template
+                        >
+                            <div class="d-flex align-items-center">
+                                <div class="cell-line-height">
+                                    <a class="font-medium-1 d-block">
+                                        <span class="font-weight-bold"> {{ row.quantiteColisLivre ? row.quantiteColisLivre : 0 }} Colis</span>
+                                    </a>
+                                    <span class="text-muted font-small-4"> {{ row.quantiteProduitLivre ? row.quantiteProduitLivre : 0  }} Produit</span>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <!-- Actions -->
+                    <ngx-datatable-column 
+                        *ngIf="rowsUms.length > 0 && !hasRole.includes('Client')"
+                        name="actions"
+                        [sortable]="false"
+                        [width]="50"
+                    >
+                        <ng-template 
+                            let-row="row" 
+                            let-name="value" 
+                            ngx-datatable-cell-template
+                        >
+                            <div class="d-flex align-items-center col-actions pointer-events-none" *ngIf="row.termine == 0">
+                                <div
+                                    class="avatar avatar-status bg-light-secondary"
+                                >
+                                    <span 
+                                        class="avatar-content" 
+                                        placement="top" 
+                                        [ngbTooltip]="tipContent" 
+                                        container="body"
+                                    >
+                                        <i class="feather avatar-icon font-medium-1 icon-check-circle"></i>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center col-actions  pointer-events-none" *ngIf="row.termine == 1">
+                                <div class="avatar avatar-status bg-light-success">
+                                    <span class="avatar-content">
+                                        <i class="feather avatar-icon font-medium-1 icon-check"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                </ngx-datatable>
+            </div>
+        </section>
+        <!-- Section databale UMS -->
+        <div class="row match-height" *ngIf="!hasRole.includes('Client')">
+            <!-- Um sortie -->
+            <div class="col-lg-12 col-12">
+                <div class="card">
+                    <div class="divider divider-warning mx-1 mb-0">
+                        <div class="divider-text font-medium-2">UM Sortie</div>
+                    </div>
+                    <!-- <div class="card-header d-flex justify-content-between pb-0">
+                        <div ngbDropdown class="chart-dropdown">
+                            <button
+                                *ngIf="bcs.readyForExpedition"
+                                rippleEffect
+                                class="btn btn-outline-primary ml-1  p-50"
+                                type="button"
+                                (click)="updateUmsDateExpedition()"
+                            >
+                                Prêt à être expédié
+                            </button>
+                        </div>
+                    </div> -->
+                    <br>
+                    <ngx-datatable
+                        [rows]="rowsUms"
+                        [rowHeight]="'auto'"
+                        class="bootstrap core-bootstrap"
+                        [limit]="selectedOption"
+                        [columnMode]="ColumnMode.force"
+                        [headerHeight]="50"
+                        [footerHeight]="50"
+                        [scrollbarH]="false"
+                        [messages]="{emptyMessage: 'Aucun Ums n\'a été trouvé', totalMessage:'Ums'}"
+                    > 
+                        <ngx-datatable-column 
+                            name="id" 
+                            prop="numeroBonLivraison" 
+                            [width]="50"
+                            [sortable]="false"
+                        >
+                            <ng-template 
+                                let-row="row" 
+                                ngx-datatable-cell-template
+                            >
+                                <a 
+                                    routerLink="/ums/detail/{{row.id}}" 
+                                    class="font-weight-bold"
+                                >
+                                    #{{ row.id }}
+                                </a>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column 
+                            name="numéro UM" 
+                            prop="numero" 
+                            [width]="50"
+                            [sortable]="true"
+                        >
+                            <ng-template 
+                                let-row="row" 
+                                ngx-datatable-cell-template
+                            >
+                                <a 
+                                    class="font-weight-bold"
+                                >
+                                    {{ row.numero }}
+                                </a>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column 
+                            name="Date ouverture" 
+                            prop="dateOuverture" 
+                            [width]="10"
+                            [sortable]="false"
+                        >
+                            <ng-template 
+                                let-row="row" 
+                                ngx-datatable-cell-template
+                            >
+                                <div>
+                                    {{ row.dateOuverture | date: 'dd-MM-yyyy HH:mm:ss' }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column 
+                            name="Date fermeture" 
+                            prop="dateFermeture" 
+                            [width]="10"
+                            [sortable]="false"
+                        >
+                            <ng-template 
+                                let-row="row" 
+                                ngx-datatable-cell-template
+                            >
+                                <div>
+                                    {{ row.dateFermeture | date: 'dd-MM-yyyy HH:mm:ss' }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column 
+                            name="Date expédition" 
+                            prop="dateExpedition" 
+                            [width]="10"
+                            [sortable]="false"
+                        >
+                            <ng-template 
+                                let-row="row" 
+                                ngx-datatable-cell-template
+                            >
+                                <div>
+                                    {{ row.dateExpedition | date: 'dd-MM-yyyy HH:mm:ss' }}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+                    </ngx-datatable>
+                </div>
+            </div>
+            <!--/ Um sortie -->
+        </div>
+    </div>
+</div>
+
+<ng-template #modalLigne let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="myModalLabel1">Ajouter ligne BCS</h4>
+      <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body" tabindex="0" ngbAutofocus>
+      <form [formGroup]="ReactiveLigneForm" (ngSubmit)="ReactiveLigneFormOnSubmit()">
+        <label>Article: </label>
+        <div class="form-group">
+            <fieldset class="form-group">
+              <ng-select 
+                name="articles"
+                [items]="articles" 
+                bindLabel="designationClient"  
+                bindValue="codeClient"
+                formControlName="article"
+                [ngClass]="{ 'is-invalid': ReactiveLigneFormSubmitted && getReactiveLigneForm.article.errors }"
+              >
+                <ng-template ng-option-tmp let-item="item">
+                  {{item.designationClient}}
+                </ng-template>
+              </ng-select>
+              <div
+                *ngIf="ReactiveLigneFormSubmitted && getReactiveLigneForm.article.errors"
+                class="invalid-feedback"
+                >
+                <div *ngIf="getReactiveLigneForm.article.errors.required">Article est requis</div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="form-group">
+            <div class="form-group">
+                <label for="qte">Quantité colis</label>
+                <input
+                  type="number"
+                  id="qte"
+                  class="form-control"
+                  formControlName="qte"
+                  [ngClass]="{ 'is-invalid': ReactiveLigneFormSubmitted && getReactiveLigneForm.qte.errors }"
+                />
+                <div
+                  *ngIf="ReactiveLigneFormSubmitted && getReactiveLigneForm.qte.errors"
+                  class="invalid-feedback"
+                >
+                  <div *ngIf="getReactiveLigneForm.qte.errors.required">Quantité est requis</div>
+                </div>
+              </div>
+        </div>
+        <div class="col-12">
+            <div class="form-group">
+                <button class="btn btn-success" rippleEffect>Ajouter</button>
+            </div>
+        </div>
+      </form>
+    </div>
+</ng-template>

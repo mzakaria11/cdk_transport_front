@@ -1,0 +1,322 @@
+<div class="content-wrapper container-xxl p-0">
+  <div class="content-body">
+      <app-content-header [contentHeader]="contentHeader"></app-content-header>
+      <section class="users-list-wrapper">
+          <div class="card">
+              <h4 class="card-header text-primary">Filtre de recherche</h4>
+              <div class="card-body">
+                  <div class="row">
+                      <!-- designation Filter -->
+                      <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                          <p class="card-text col-title mb-md-50 mb-0">N° BL</p>
+                          <fieldset class="form-group">
+                              <input
+                              [(ngModel)]="request.numeroBl"
+                              name="searchValue"
+                              type="search"
+                              class="form-control ml-25"
+                          /></fieldset>
+                      </div>
+                      <!-- designation Filter Ends -->
+
+                      <!-- Qte Colis Filter -->
+                      <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                          <p class="card-text col-title mb-md-50 mb-0">Qte Palette</p>
+                          <fieldset class="form-group">
+                              <input
+                              [(ngModel)]="operation"
+                              name="searchValue"
+                              type="search"
+                              class="form-control ml-25"
+                          /></fieldset>
+                      </div>
+                      <!-- Qte Colis Filter Ends -->
+
+                      <!-- LVE Filter -->
+                      <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                          <p class="card-text col-title mb-md-50 mb-0">N° Récepisse ( LVE )</p>
+                          <fieldset class="form-group">
+                              <input
+                              [(ngModel)]="request.lve"
+                              name="searchValue"
+                              type="search"
+                              class="form-control ml-25"
+                          /></fieldset>
+                      </div>
+                      <!-- LVE Filter Ends -->
+  
+                      <!-- Fournisseur Filter -->
+                      <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                          <p class="card-text col-title mb-md-50 mb-0">Fournisseur</p>
+                          <ng-select 
+                              name="fournisseur"
+                              id="fournisseur"
+                              [items]="fournisseurs" 
+                              [(ngModel)]="request.fournisseur"
+                              bindLabel="nom"  
+                              bindValue="id"
+                          >
+                              <ng-template ng-option-tmp let-item="item">
+                              {{item.nom}}
+                              </ng-template>
+                          </ng-select>
+                      </div>
+                      <!-- Fournisseur Filter Ends -->
+                      
+                      <!-- Date Start Filter -->
+                      <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                          <p class="card-text col-title mb-md-50 mb-0">Date Debut</p>
+                          <fieldset class="form-group">
+                              <input
+                              [(ngModel)]="dateStart"
+                              name="searchValue"
+                              type="date"
+                              class="form-control ml-25"
+                          /></fieldset>
+                      </div>
+                      <!-- Date Start Filter Ends -->
+
+                      <!-- Date Start Filter -->
+                      <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                          <p class="card-text col-title mb-md-50 mb-0">Date Fin</p>
+                          <fieldset class="form-group">
+                              <input
+                              [(ngModel)]="dateEnd"
+                              name="searchValue"
+                              type="date"
+                              class="form-control ml-25"
+                          /></fieldset>
+                      </div>
+                      <!-- Date Start Filter Ends -->
+                  </div>
+
+                  <div class="btn btn-icon btn-outline-danger" style="float: right;" (click)="clear()" rippleEffect>
+                      <span [data-feather]="'trash'"></span>
+                  </div>
+                  <div class="btn btn-icon btn-primary" style="float: right; margin-right: 10px;" (click)="search()" rippleEffect>
+                      <span [data-feather]="'search'"></span>
+                  </div>
+              </div>
+          </div>
+          <div class="card">
+              <div class="row">
+                  <div class="col-md-6 col-12">
+                      <div class="d-flex justify-content-between align-items-center m-2">
+                          <label class="d-flex align-items-center"> 
+                              <select 
+                                    id="select"
+                                  class="form-control mx-25 pr-3" 
+                                  (change)="onSizeChange($event.target.value)"
+                              >
+                                  <option
+                                    *ngFor="let option of pageLimitOptions"
+                                    [value]="option.value"
+                                    [selected]="option.value == currentPageLimit"
+                                  >
+                                    {{ option.value }}
+                                  </option>
+                              </select>
+                              <!-- <span class="ml-z5">BL</span> -->
+                          </label>
+                      </div>
+                  </div>
+                  <div class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end">
+                      <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                          <label class="d-flex align-items-center ml-1 ml-md-0">
+                              Recherche:
+                              <input
+                                  [(ngModel)]="searchValue"
+                                  name="searchValue"
+                                  type="search"
+                                  class="form-control ml-25"
+                                  (keyup)="filterUpdate($event)"
+                                  (search)="filterUpdate($event)"
+                              />
+                          </label>
+                      </div>
+                  </div>
+              </div>
+
+              <ngx-datatable
+                  [rows]="bles"
+                  rowHeight="auto"
+                  [headerHeight]="50"
+                  [footerHeight]="50"
+                  [scrollbarH]="true"
+                  [columnMode]="ColumnMode.force"
+                  [externalPaging]="true"
+                  [limit]="request.page.limit"
+                  [count]="request.page.count"
+                  [offset]="request.page.offset"
+                  (page)="pageCallback($event)"
+                  [externalSorting]="true"
+                  (sort)="onSort($event)"
+                  [messages]="{emptyMessage: 'Aucun BL n\'a été trouvé', totalMessage:'BLS'}"
+                  class="bootstrap core-bootstrap"
+            >
+                <ngx-datatable-column name="#" prop="verified" [width]="10" *ngIf="!hasRole.includes('User')">
+                    <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                        <div class="d-flex align-items-center">
+                            <div class="custom-control custom-control-success custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" [id]="row.id" [(ngModel)]="row.verified" (click)="setAsVerified(row)"/>
+                                <label class="custom-control-label" [for]="row.id"></label>
+                            </div>
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+
+                  <ngx-datatable-column name="N° BL" prop="numeroBonLivraison" [width]="50">
+                      <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                          <div class="d-flex align-items-center">
+                              <div class="cell-line-height">
+                                  <a class="font-medium-1 d-block" routerLink="/ble/detail/{{row.id}}">
+                                      <span class="font-weight-bold">{{ row.numeroBonLivraison ?? '-' }}</span>
+                                  </a>
+                              </div>
+                          </div>
+                      </ng-template>
+                  </ngx-datatable-column>
+
+    
+                  <ngx-datatable-column name="lve" prop="lve.numeroRecepisse" [width]="200">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                      <div>
+                          <a class="font-medium-1 d-block" routerLink="/lve/detail/{{row?.lve?.id}}">
+                              <span class="font-weight-bold">{{ row?.lve?.numeroRecepisse ?? '-' }}</span>
+                          </a>
+                      </div>
+                      </ng-template>
+                  </ngx-datatable-column>
+    
+                  <ngx-datatable-column name="fournisseur" prop="fournisseur.nom" [width]="200">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                      <div>
+                          {{ row?.fournisseur?.nom }}
+                      </div>
+                      </ng-template>
+                  </ngx-datatable-column>
+      
+                  <ngx-datatable-column name="quantitePalette" prop="quantitePalette" [width]="200">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                      <div>
+                          {{ row.quantitePalette ?? '-' }}
+                      </div>
+                      </ng-template>
+                  </ngx-datatable-column>
+      
+                  <ngx-datatable-column name="Date réception" prop="dateReception" [width]="200">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                      <div>
+                          {{ row.dateReception | date: 'dd-MM-yyyy' }}
+                      </div>
+                      </ng-template>
+                  </ngx-datatable-column>
+      
+                  <ngx-datatable-column
+                      name="Actions"
+                      [width]="10"
+                      [sortable]="false" 
+                      *ngIf="!(hasRole.includes('Client') || hasRole.includes('User'))"
+                  >
+                      <ng-template 
+                          ngx-datatable-cell-template 
+                          let-row="row"
+                      >
+                          <div ngbDropdown container="body">
+                              <button 
+                                  ngbDropdownToggle 
+                                  type="button" 
+                                  class="btn icon-btn btn-sm hide-arrow" 
+                                  rippleEffect
+                              >
+                                  <span 
+                                      [data-feather]="'more-vertical'" 
+                                      [class]="'cursor-pointer'"
+                                  ></span>
+                              </button>
+                              <div ngbDropdownMenu>
+                                  <a 
+                                      routerLink="/ble/detail/{{ row.id }}" 
+                                      ngbDropdownItem
+                                  >
+                                      <span 
+                                          [data-feather]="'file-text'" 
+                                          [size]="16" 
+                                          [class]="'mr-50'"
+                                      ></span> 
+                                      Consulter
+                                  </a>
+                                  <a 
+                                      routerLink="/ble/edit/{{ row.id }}" 
+                                      ngbDropdownItem 
+                                      *ngIf="hasRole.includes('Super_admin') || hasRole.includes('Admin')"
+                                  >
+                                      <span 
+                                          [data-feather]="'edit'" 
+                                          [size]="16" 
+                                          [class]="'mr-50'"
+                                      ></span> 
+                                      Modifier
+                                  </a>
+                                  <a 
+                                      (click)="modalOpenForm(modalForm, row.id)" 
+                                      ngbDropdownItem 
+                                      *ngIf="hasRole.includes('Super_admin')"
+                                  >
+                                      <span 
+                                          [data-feather]="'trash'" 
+                                          [size]="16" 
+                                          [class]="'mr-50'"
+                                      ></span> 
+                                      Suprimer
+                                  </a>
+                              </div>
+                          </div>
+                      </ng-template>
+                  </ngx-datatable-column>
+              </ngx-datatable>
+          </div>
+      </section>
+  </div>
+</div>
+
+<div class="login-form"> 
+  <ng-template #modalForm let-modal>
+      <div class="modal-header">
+          <h4 class="modal-title" id="myModalLabel1">Confirmation de suppression</h4>
+          <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      <div class="modal-body" tabindex="0" ngbAutofocus>
+          <form class="form-validate" [formGroup]="ReactivePasswordConfirmationForm" (ngSubmit)="ReactiveCPFormOnSubmit()">
+              <div class="row">
+                  <div class="col-md-12">
+                      <div class="form-group">
+                          <div class="form-group">
+                              <label for="password">Mot de passe</label>
+                              <input
+                                  type="password"
+                                  id="password"
+                                  formControlName="password"
+                                  class="form-control"
+                                  [ngClass]="{ 'is-invalid': ReactiveCPFormSubmitted && ReactiveCPForm.password.errors }"
+                              />
+                              <div
+                                  *ngIf="ReactiveCPFormSubmitted && ReactiveCPForm.password.errors"
+                                  class="invalid-feedback"
+                              >
+                                  <div *ngIf="ReactiveCPForm.password.errors.required">Mot de passe est requis</div>
+                                  <div *ngIf="ReactiveCPForm.password.errors.minlength">Mot de passe doit comporter au moins 6 caractères</div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="modal-footer" style="width: 100%;">
+                      <button class="btn btn-primary" rippleEffect> Confirmer </button>
+                  </div>
+              </div>
+          </form>
+      </div>
+  </ng-template>
+</div>

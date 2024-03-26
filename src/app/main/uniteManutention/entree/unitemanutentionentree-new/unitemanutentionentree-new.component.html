@@ -1,0 +1,202 @@
+
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <app-content-header [contentHeader]="contentHeader"></app-content-header>
+        <section class="app-user-edit">
+          <div class="card">
+            <div class="card-body">
+              <ul ngbNav #nav="ngbNav" class="nav nav-pills">
+                <li ngbNavItem>
+                  <a ngbNavLink class="d-flex align-items-center"
+                    ><i data-feather="box" class="mr-sm-50"></i><span class="d-none d-sm-block">Ajouter Nouveau UME</span></a
+                  >
+                  <ng-template ngbNavContent>
+                    <div class="tab-pane active" id="account" aria-labelledby="account-tab" role="tabpanel">
+  
+                      <form class="form-validate" [formGroup]="ReactiveUmeForm" (ngSubmit)="ReactiveUmeFormOnSubmit()">
+  
+                        <div class="row">
+                          <div class="col-12">
+                              <h4 class="mb-1">
+                                  <i data-feather="feather" [size]="16" class="mr-75 font-medium-5"></i>
+                                  <span class="align-middle">Identification UM</span>
+                              </h4>
+                          </div>
+  
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <div class="form-group">
+                                  <label for="bl">Numéro BL</label>
+                                  <input
+                                    readonly="true"
+                                    type="text"
+                                    id="bl"
+                                    name="bl"
+                                    class="form-control"
+                                    [value]="ble.numeroBonLivraison"
+                                  />
+                                </div>
+                            </div>
+                          </div>
+                          
+                          <div class="col-lg-6 col-md-6">
+                            <fieldset class="form-group">
+                              <label for="dateReception">Date de réception</label>
+                              <div class="input-group">
+                                <input
+                                  id="dateReception"
+                                  name="dateReception"
+                                  [(ngModel)]="dateReception"
+                                  class="form-control"
+                                  placeholder="Date de réception"
+                                  formControlName="dateReception"
+                                  ngbDatepicker
+                                  #datePeremptionDP="ngbDatepicker"
+                                />
+                                <div class="input-group-append">
+                                  <button
+                                    class="btn btn-outline-secondary feather icon-calendar"
+                                    (click)="datePeremptionDP.toggle()"
+                                    type="button"
+                                    rippleEffect
+                                  ></button>
+                                </div>
+                              </div>
+                            </fieldset>
+                          </div>
+
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label for="zone">Zone Depot</label>
+                              <ng-select 
+                                formControlName="zoneDepot"
+                                [items]="zone" 
+                                [(ngModel)]="selected"
+                                bindLabel="nom"  
+                                bindValue="id"
+                                [searchFn]="customSearchFn"
+                                [ngClass]="{ 'is-invalid': ReactiveUmeFormSubmitted && GetReactiveUmeForm.zoneDepot.errors }"
+                              >
+                                <ng-template ng-option-tmp let-item="item">
+                                  {{item.nom}}
+                                </ng-template>
+                              </ng-select>
+                              <span *ngIf="ReactiveUmeFormSubmitted && GetReactiveUmeForm.zoneDepot.errors" class="invalid-form">
+                                <small class="form-text text-danger" *ngIf="GetReactiveUmeForm.zoneDepot.errors.required">Zone depot est requis!</small>
+                              </span>
+                            </div>
+                          </div>
+
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label for="zone">Article</label>
+                              <ng-select 
+                                formControlName="article"
+                                [items]="articles" 
+                                [(ngModel)]="articleSelected"
+                                bindLabel="designationClient"  
+                                bindValue="id"
+                                [searchFn]="customSearchFn"
+                                [ngClass]="{ 'is-invalid': ReactiveUmeFormSubmitted && GetReactiveUmeForm.article.errors }"
+                                (change)="onArticleChange($event)"
+                              >
+                                <ng-template ng-option-tmp let-item="item">
+                                  {{item.designationClient}}
+                                </ng-template>
+                              </ng-select>
+                              <span *ngIf="ReactiveUmeFormSubmitted && GetReactiveUmeForm.article.errors" class="invalid-form">
+                                <small class="form-text text-danger" *ngIf="GetReactiveUmeForm.article.errors.required">Article est requis!</small>
+                              </span>
+                            </div>
+                          </div>
+
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label for="qteColis">Qte Colis</label>
+                              <input 
+                                type="number"
+                                min="0"
+                                id="qteColis"
+                                formControlName="qteColis"
+                                class="form-control"
+                                [ngClass]="{ 'is-invalid': ReactiveUmeFormSubmitted && GetReactiveUmeForm.qteColis.errors }"
+                              />
+                              <span *ngIf="ReactiveUmeFormSubmitted && GetReactiveUmeForm.qteColis.errors" class="invalid-form">
+                                <small class="form-text text-danger" *ngIf="GetReactiveUmeForm.qteColis.errors.required">Qte colis est requis!</small>
+                              </span>
+                            </div>
+                          </div>
+
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label for="colisage">Colisage</label>
+                              <input 
+                                type="number"
+                                min="0"
+                                id="colisage"
+                                [(ngModel)]="colisage"
+                                formControlName="colisage"
+                                class="form-control"
+                                [ngClass]="{ 'is-invalid': ReactiveUmeFormSubmitted && GetReactiveUmeForm.colisage.errors }"
+                              />
+                              <span *ngIf="ReactiveUmeFormSubmitted && GetReactiveUmeForm.colisage.errors" class="invalid-form">
+                                <small class="form-text text-danger" *ngIf="GetReactiveUmeForm.colisage.errors.required">Qte colis est requis!</small>
+                              </span>
+                            </div>
+                          </div>
+
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label for="lot">N° Lot</label>
+                              <input 
+                                type="text"
+                                id="lot"
+                                formControlName="lot"
+                                class="form-control"
+                                [ngClass]="{ 'is-invalid': ReactiveUmeFormSubmitted && GetReactiveUmeForm.lot.errors }"
+                              />
+                              <span *ngIf="ReactiveUmeFormSubmitted && GetReactiveUmeForm.lot.errors" class="invalid-form">
+                                <small class="form-text text-danger" *ngIf="GetReactiveUmeForm.lot.errors.required">Numéro de lot est requis!</small>
+                              </span>
+                            </div>
+                          </div>
+
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label for="datePeremption">Date de Péremption</label>
+                              <input 
+                                type="date"
+                                id="datePeremption"
+                                formControlName="datePeremption"
+                                class="form-control"
+                                placeholder="dd-mm-yyyy"
+                                [min]="today" 
+                                [ngClass]="{ 'is-invalid': ReactiveUmeFormSubmitted && GetReactiveUmeForm.datePeremption.errors }"
+                              />
+                              <span *ngIf="ReactiveUmeFormSubmitted && GetReactiveUmeForm.datePeremption.errors" class="invalid-form">
+                                <small class="form-text text-danger" *ngIf="GetReactiveUmeForm.datePeremption.errors.required">Date de péremption est requis!</small>
+                              </span>
+                              <span *ngIf="dateValid(ReactiveUmeForm) && ReactiveUmeFormSubmitted" class="invalid-form">
+                                <small class="form-text text-danger">La date doit être supérieure à la date d'aujourd'hui'</small>
+                              </span>
+                            </div>
+                          </div>
+                            
+                          <div class="col-12 d-flex flex-sm-row flex-column mt-2">
+                              <button class="btn btn-outline-success" rippleEffect>
+                                Ajouter
+                              </button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </ng-template>
+                </li>
+              </ul>
+              <div [ngbNavOutlet]="nav" class="mt-2"></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  

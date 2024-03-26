@@ -1,0 +1,232 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <app-content-header [contentHeader]="contentHeader"></app-content-header>
+        <section class="users-list-wrapper">
+
+            <!-- <div class="text-center font-medium-5">
+                <h6 
+                    class="mr-1 font-medium-1" 
+                    *ngIf="cmds.length > 0"
+                >
+                    Lancer le script
+                </h6>
+                <div 
+                    class="custom-control custom-switch mb-1" 
+                    *ngIf="cmds.length > 0"
+                >
+                    <input
+                        id="priceSwitch"
+                        name="priceSwitch"
+                        type="checkbox"
+                        class="custom-control-input"
+                        [checked]="isExecut"
+                        [(ngModel)]="isExecut"
+                        (change)="repartir()"
+                    />
+                    <label 
+                        class="custom-control-label" 
+                        for="priceSwitch"
+                    ></label>
+                </div>
+            </div> -->
+
+            <div class="card">
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <div class="d-flex justify-content-between align-items-center m-2">
+                            <label class="d-flex align-items-center">
+                                <select 
+                                    id="select"
+                                    class="form-control mx-25 pr-3" 
+                                    (change)="onSizeChange($event.target.value)"
+                                >
+                                    <option
+                                        *ngFor="let option of pageLimitOptions"
+                                        [value]="option.value"
+                                        [selected]="option.value == currentPageLimit"
+                                    >
+                                        {{ option.value }}
+                                    </option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+  
+                <ngx-datatable
+                    [rows]="repartitionHistrories"
+                    rowHeight="auto"
+                    [headerHeight]="50"
+                    [footerHeight]="50"
+                    [scrollbarH]="true"
+                    [columnMode]="ColumnMode.force"
+                    [externalPaging]="true"
+                    [limit]="request.page.limit"
+                    [count]="request.page.count"
+                    [offset]="request.page.offset"
+                    (page)="pageCallback($event)"
+                    [messages]="{emptyMessage: 'Aucune Rép n\'a été trouvé', totalMessage:'Répartitions'}"
+                    class="bootstrap core-bootstrap"
+                >
+                    <!-- Date -->
+                    <ngx-datatable-column 
+                        name="Date" 
+                        prop="dateC" 
+                        [width]="100"
+                    >
+                        <ng-template 
+                            let-row="row" 
+                            let-name="value" 
+                            ngx-datatable-cell-template
+                        >
+                            <div class="d-flex align-items-center">
+                                <div class="cell-line-height">
+                                    <a 
+                                        class="font-medium-1 d-block"
+                                        routerLink="/repartition/detail/{{row.dateC}}"
+                                    >
+                                        <span class="font-weight-bold"> {{ row.dateC | date: 'dd-MM-yyyy' }} </span>
+                                    </a>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <!-- Date Ends -->
+                    
+                    <!-- Total article -->
+                    <!-- <ngx-datatable-column 
+                        name="Total articles" 
+                        prop="totalQteLigne" 
+                        [width]="50"
+                    >
+                        <ng-template 
+                            let-row="row" 
+                            let-name="value" 
+                            ngx-datatable-cell-template
+                        >
+                            <div class="d-flex align-items-center">
+                                <div class="cell-line-height">
+                                    <a 
+                                        class="font-medium-1 d-block" 
+                                    >
+                                        <span class="font-weight-bold"> {{ row.totalQteLigne }} </span>
+                                    </a>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column> -->
+                    <!-- Total article ends -->
+                
+                    <!-- Colis assigne -->
+                    <ngx-datatable-column 
+                        name="Colis assigné" 
+                        prop="totalQteColis" 
+                        [width]="50"
+                    >
+                        <ng-template 
+                            let-row="row" 
+                            ngx-datatable-cell-template
+                        >
+                            <div>
+                                <a 
+                                    class="font-medium-1 d-block" 
+                                >
+                                    <span class="font-weight-bold"> {{ row.totalQteColis }} </span>
+                                </a>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <!-- Colis assigne ends -->
+                
+                    <!-- Qté exist -->
+                    <ngx-datatable-column 
+                        name="Article en stock" 
+                        prop="qteLigneRep" 
+                        [width]="50"
+                    >
+                        <ng-template 
+                            let-row="row" 
+                            ngx-datatable-cell-template
+                        >
+                            <div>
+                                <a 
+                                    class="font-medium-1 d-block" 
+                                >
+                                    <span class="font-weight-bold text-success"> {{ row.qteLigneRep }} </span>
+                                </a>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <!-- Qté exist Ends -->
+                
+                    <!-- rupture stock -->
+                    <ngx-datatable-column 
+                        name="Article en ruprture" 
+                        prop="qteLigneNotRep" 
+                        [width]="50"
+                    >
+                        <ng-template 
+                            let-row="row" 
+                            ngx-datatable-cell-template
+                        >
+                        <div>
+                            <a class="font-medium-1 d-block">
+                                <span 
+                                    class="font-weight-bold text-success"
+                                    [ngClass]="{'text-danger': row.qteLigneNotRep > 0 }"
+                                > 
+                                    {{ row.qteLigneNotRep }} 
+                                </span>
+                            </a>
+                        </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <!-- rupture stock Ends -->
+                
+                    <!-- qte total en stock  -->
+                    <ngx-datatable-column 
+                            name="Qté total en stock" 
+                            prop="qteLigneDiffEZero" 
+                            [width]="50"
+                    >
+                        <ng-template 
+                            let-row="row" 
+                            ngx-datatable-cell-template
+                        >
+                            <div>
+                                <a 
+                                    class="font-medium-1 d-block" 
+                                >
+                                    <span class="font-weight-bold text-success"> {{ row.qteLigneDiffEZero }} </span>
+                                </a>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <!-- qte total en stock Ends -->
+                
+                    <!-- qte insuffisante  -->
+                    <ngx-datatable-column 
+                        name="Qté insuffisante" 
+                        prop="qteLigneDiffMZero" 
+                        [width]="50"
+                    >
+                        <ng-template 
+                            let-row="row" 
+                            ngx-datatable-cell-template
+                        >
+                            <div>
+                                <a 
+                                    class="font-medium-1 d-block" 
+                                >
+                                    <span class="font-weight-bold text-warning"> {{ row.qteLigneDiffMZero }} </span>
+                                </a>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <!-- qte insuffisante Ends -->
+                    
+                </ngx-datatable>
+            </div>
+        </section>
+    </div>
+</div>

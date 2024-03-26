@@ -1,0 +1,85 @@
+.overlay {
+    position: fixed;
+    display: block;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(74,74,74,.5);
+    z-index: 99999;
+}
+
+.loading {
+    position: absolute;
+    left: calc(50% - 35px);
+    top: 50%;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    border: 3px solid transparent;
+}
+
+.loading .effect-1,
+.loading .effect-2 {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 3px solid transparent;
+    border-left: 3px solid rgb(142, 193, 255);
+    border-radius: 50%;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.loading .effect-1 {
+    animation: rotate 1s ease infinite;
+}
+
+.loading .effect-2 {
+    animation: rotateOpacity 1s ease infinite 0.1s;
+}
+
+.loading .effect-3 {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 3px solid transparent;
+    border-left: 3px solid rgb(164, 183, 204);
+    -webkit-animation: rotateOpacity 1s ease infinite 0.2s;
+    animation: rotateOpacity 1s ease infinite 0.2s;
+    border-radius: 50%;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.loading .effects {
+    transition: all 0.3s ease;
+}
+
+@keyframes rotate {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(1turn);
+        transform: rotate(1turn);
+    }
+}
+
+@keyframes rotateOpacity {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+        opacity: 0.1;
+    }
+
+    100% {
+        -webkit-transform: rotate(1turn);
+        transform: rotate(1turn);
+        opacity: 1;
+    }
+}

@@ -1,0 +1,36 @@
+<li class="media" [ngClass]="{ 'selected-row-bg': selected === true }">
+    <div class="media-left pr-50">
+      <div class="avatar mr-1 ml-0 bg-light-secondary">
+        <div class="avatar-content" style="width: 40px; height: 42px;">{{email['destinataire'].codeUM}}</div>
+      </div>
+      <!-- <div class="user-action">
+        <div class="custom-control custom-checkbox">
+          <input
+            type="checkbox"
+            class="custom-control-input"
+            id="customCheck{{ email.id }}"
+            name="customCheck{{ email.id }}"
+            [(ngModel)]="selected"
+            (ngModelChange)="onSelectedChange()"
+            (click)="$event.stopPropagation()"
+          />
+          <label class="custom-control-label" for="customCheck{{ email.id }}"></label>
+        </div>
+      </div> -->
+    </div>
+    <div class="media-body">
+      <div class="mail-details">
+        <div class="mail-items">
+          <h5 class="mb-25">{{ email['destinataire'].adresselivraisonNom }}</h5>
+          <span class="text-truncate">{{ email.subject }}</span>
+        </div>
+        <div class="mail-meta-item">
+          <span class="mail-date">{{ email['chorodatage'] | date: 'short':'UTC' }}</span>
+        </div>
+      </div>
+      <div class="mail-message">
+        <p class="text-truncate mb-0">{{ email.message | striphtml }}</p>
+      </div>
+    </div>
+</li>
+  

@@ -1,0 +1,215 @@
+
+<app-content-header [contentHeader]="contentHeader"></app-content-header>
+
+<div class="content-wrapper container-xxl p-0">
+  <div class="content-body">
+    <section class="app-user-edit">
+      <div class="card">
+        <div class="card-body">
+          <ul ngbNav #nav="ngbNav" class="nav nav-pills">
+            <li ngbNavItem>
+              <a ngbNavLink class="d-flex align-items-center"
+                ><i data-feather="box" class="mr-sm-50"></i><span class="d-none d-sm-block">Nouveau Article</span></a
+              >
+              <ng-template ngbNavContent>
+                <div class="tab-pane active" id="account" aria-labelledby="account-tab" role="tabpanel">
+                  <form [formGroup]="ReactiveArticlesForm" (ngSubmit)="ReactiveArticlesFormOnSubmit()">
+                    <h6 class="mb-2">Information</h6>
+                    <div class="row">
+                      <!-- Code -->
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="UDcodeFournisseur">Code</label>
+                          <input
+                            type="text"
+                            id="UDcodeFournisseur"
+                            formControlName="codeFournisseur"
+                            class="form-control"
+                            [ngClass]="{ 'is-invalid': ReactiveArticlesFormSubmitted && ReactiveArticleForm.codeFournisseur.errors }"
+                          />
+                          <div
+                            *ngIf="ReactiveArticlesFormSubmitted && ReactiveArticleForm.codeFournisseur.errors"
+                            class="invalid-feedback"
+                          >
+                            <div *ngIf="ReactiveArticleForm.codeFournisseur.errors.required">Code est requis</div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Designation -->
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="UDdesignationFournisseur">Désignation</label>
+                          <input
+                            type="text"
+                            id="UDdesignationFournisseur"
+                            formControlName="designationFournisseur"
+                            class="form-control"
+                            [ngClass]="{ 'is-invalid': ReactiveArticlesFormSubmitted && ReactiveArticleForm.designationFournisseur.errors }"
+                          />
+                          <div
+                            *ngIf="ReactiveArticlesFormSubmitted && ReactiveArticleForm.designationFournisseur.errors"
+                            class="invalid-feedback"
+                          >
+                            <div *ngIf="ReactiveArticleForm.designationFournisseur.errors.required">Désignation est requis</div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- duree Stockage -->
+                      <!-- <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="UDdureeStockage">Durée stockage</label>
+                          <input
+                            type="number"
+                            min="0"
+                            id="UDdureeStockage"
+                            formControlName="dureeStockage"
+                            class="form-control"
+                            [ngClass]="{ 'is-invalid': ReactiveArticlesFormSubmitted && ReactiveArticleForm.dureeStockage.errors }"
+                          />
+                          <div
+                            *ngIf="ReactiveArticlesFormSubmitted && ReactiveArticleForm.dureeStockage.errors"
+                            class="invalid-feedback"
+                          >
+                            <div *ngIf="ReactiveArticleForm.dureeStockage.errors.required">Durée stockage est requis</div>
+                          </div>
+                        </div>
+                      </div> -->
+                      <!-- delaiPeremption -->
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="UDdelaiPeremption">Délai péremption</label>
+                          <input
+                            type="number"
+                            min="0"
+                            id="UDdelaiPeremption"
+                            formControlName="delaiPeremption"
+                            class="form-control"
+                            [ngClass]="{ 'is-invalid': ReactiveArticlesFormSubmitted && ReactiveArticleForm.delaiPeremption.errors }"
+                          />
+                          <div
+                            *ngIf="ReactiveArticlesFormSubmitted && ReactiveArticleForm.delaiPeremption.errors"
+                            class="invalid-feedback"
+                          >
+                            <div *ngIf="ReactiveArticleForm.delaiPeremption.errors.required">Délai Peremption est requis</div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- 	quantiteColisStandard -->
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="UDquantiteColisStandard">	Quantite colis standard</label>
+                          <input
+                            type="number"
+                            min="0"
+                            id="UDquantiteColisStandard"
+                            formControlName="quantiteColisStandard"
+                            class="form-control"
+                            [ngClass]="{ 'is-invalid': ReactiveArticlesFormSubmitted && ReactiveArticleForm.quantiteColisStandard.errors }"
+                          />
+                          <div
+                            *ngIf="ReactiveArticlesFormSubmitted && ReactiveArticleForm.quantiteColisStandard.errors"
+                            class="invalid-feedback"
+                          >
+                            <div *ngIf="ReactiveArticleForm.quantiteColisStandard.errors.required">	Quantite colis standard est requis</div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- 	quantiteColisStockComplet -->
+                      <!-- <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="UDquantiteColisStockComplet">	Quantite colis stock complet</label>
+                          <input
+                            type="number"
+                            min="0"
+                            id="UDquantiteColisStockComplet"
+                            formControlName="quantiteColisStockComplet"
+                            class="form-control"
+                            [ngClass]="{ 'is-invalid': ReactiveArticlesFormSubmitted && ReactiveArticleForm.quantiteColisStockComplet.errors }"
+                          />
+                          <div
+                            *ngIf="ReactiveArticlesFormSubmitted && ReactiveArticleForm.quantiteColisStockComplet.errors"
+                            class="invalid-feedback"
+                          >
+                            <div *ngIf="ReactiveArticleForm.quantiteColisStockComplet.errors.required">	Quantite colis stock complet est requis</div>
+                          </div>
+                        </div>
+                      </div> -->
+                      <!-- 	quantiteProduitStockComplet -->
+                      <!-- <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="UDquantiteProduitStockComplet">	Quantite produit stock complet</label>
+                          <input
+                            type="number"
+                            min="0"
+                            id="UDquantiteProduitStockComplet"
+                            formControlName="quantiteProduitStockComplet"
+                            class="form-control"
+                            [ngClass]="{ 'is-invalid': ReactiveArticlesFormSubmitted && ReactiveArticleForm.quantiteProduitStockComplet.errors }"
+                          />
+                          <div
+                            *ngIf="ReactiveArticlesFormSubmitted && ReactiveArticleForm.quantiteProduitStockComplet.errors"
+                            class="invalid-feedback"
+                          >
+                            <div *ngIf="ReactiveArticleForm.quantiteProduitStockComplet.errors.required">	Quantite produit stock complet est requis</div>
+                          </div>
+                        </div>
+                      </div> -->
+                      <!-- 	poidsColisStandard -->
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="UDpoidsColisStandard">Poids colis standard</label>
+                          <input
+                            type="number"
+                            min="0"
+                            id="UDpoidsColisStandard"
+                            formControlName="poidsColisStandard"
+                            class="form-control"
+                            [ngClass]="{ 'is-invalid': ReactiveArticlesFormSubmitted && ReactiveArticleForm.poidsColisStandard.errors }"
+                          />
+                          <div
+                            *ngIf="ReactiveArticlesFormSubmitted && ReactiveArticleForm.poidsColisStandard.errors"
+                            class="invalid-feedback"
+                          >
+                            <div *ngIf="ReactiveArticleForm.poidsColisStandard.errors.required">Poids colis standard est requis</div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- fournisseur -->
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="UDFournisseur">Fournisseur</label>
+                          <select
+                            id="UDFournisseur"
+                            formControlName="fournisseur"
+                            class="form-control"
+                            [ngClass]="{ 'is-invalid': ReactiveArticlesFormSubmitted && ReactiveArticleForm.fournisseur.errors }"
+                          >
+                            <option value="">Tous</option>
+                            <option *ngFor="let option of fournisseurs" [value]="option.id">{{option.nom}}</option>
+                          </select>
+                          <div
+                            *ngIf="ReactiveArticlesFormSubmitted && ReactiveArticleForm.fournisseur.errors"
+                            class="invalid-feedback"
+                          >
+                            <div *ngIf="ReactiveArticleForm.fournisseur.errors.required">Fournisseur est requis</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-12">
+                        <div class="form-group">
+                        <button class="btn btn-success" rippleEffect>Ajouter</button>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </ng-template>
+            </li>
+          </ul>
+          <div [ngbNavOutlet]="nav" class="mt-2"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

@@ -1,0 +1,592 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+      <section class="horizontal-wizard">
+        <div id="stepper1" class="bs-stepper horizontal-wizard-example">
+          <!-- stepper forms Header  -->
+          <div class="bs-stepper-header">
+            <div class="step" data-target="#lve-form">
+              <button class="step-trigger">
+                <span class="bs-stepper-box">1</span>
+                <span class="bs-stepper-label">
+                  <span class="bs-stepper-title">LVE</span>
+                  <span class="bs-stepper-subtitle">Ajouter lettre de voiture entrée</span>
+                </span>
+              </button>
+            </div>
+            <div class="line"><i data-feather="chevron-right" class="font-medium-2"></i></div>
+            <div class="step" data-target="#ble-form">
+              <button class="step-trigger">
+                <span class="bs-stepper-box">2</span>
+                <span class="bs-stepper-label">
+                  <span class="bs-stepper-title">BLE</span>
+                  <span class="bs-stepper-subtitle">Ajouter bon de livraison entrée</span>
+                </span>
+              </button>
+            </div>
+            <div class="line"><i data-feather="chevron-right" class="font-medium-2"></i></div>
+            <div class="step" data-target="#ume-form">
+              <button class="step-trigger">
+                <span class="bs-stepper-box">3</span>
+                <span class="bs-stepper-label">
+                  <span class="bs-stepper-title">UME</span>
+                  <span class="bs-stepper-subtitle">Ajouter une ou plusieurs UME</span>
+                </span>
+              </button>
+            </div>
+          </div>
+          <!-- stepper forms Header Ends -->
+
+          <div class="bs-stepper-content">
+            <form (ngSubmit)="(HWForm.form.valid)" #HWForm="ngForm">
+
+              <!-- LVE Form  -->
+              <div id="lve-form" class="content">
+                <form #lveForm="ngForm">
+                  <div class="content-header">
+                    <h5 class="mb-0">LVE Info</h5>
+                    <small class="text-muted">Saisie les informations de la lettre de voiture entrée.</small>
+                  </div>
+  
+                  <div class="row">
+                    <!-- NUmero Recipisse -->
+                    <div class="form-group col-md-6">
+                      <label class="form-label" for="numeroRecepisse">Numéro Recepisse</label>
+                      <input
+                        [ngModel]="lve?.numeroRecepisse"
+                        #numeroRecepisseRef="ngModel"
+                        required
+                        type="text"
+                        name="numeroRecepisse"
+                        id="numeroRecepisse"
+                        class="form-control"
+                        [class.error]="!numeroRecepisseRef.valid && lveForm.submitted"
+                      />
+                      <span *ngIf="lveForm.submitted && numeroRecepisseRef.invalid" class="invalid-form">
+                        <small class="form-text text-danger" *ngIf="numeroRecepisseRef.errors.required"
+                          >Numéro recepisse est requis!</small
+                        >
+                      </span>
+                    </div>
+                    <!-- NUmero Recipisse Ends -->
+
+                    <!-- Date reception -->
+                    <div class="form-group col-md-6">
+                      <label class="form-label" for="date">Date de reception</label>
+                      <fieldset class="form-group">
+                        <div class="input-group">
+                          <input
+                            id="date"
+                            name="date"
+                            class="form-control"
+                            required
+                            [ngModel]="lveDateReception"
+                            #lveDateReceptionRef="ngModel"
+                            [class.error]="!lveDateReceptionRef.valid && lveForm.submitted"
+                            #lveDateExpeditionDP="ngbDatepicker"  
+                            ngbDatepicker
+                          />
+                          <div class="input-group-append">
+                            <button
+                              class="btn btn-outline-secondary feather icon-calendar"
+                              (click)="lveDateExpeditionDP.toggle()"
+                              type="button"
+                              rippleEffect
+                            ></button>
+                          </div>
+                        </div>
+                      </fieldset>
+                      <span *ngIf="lveForm.submitted && lveDateReceptionRef.invalid" class="invalid-form">
+                        <small class="form-text text-danger" *ngIf="lveDateReceptionRef.errors.required"
+                          >Date de reception est requis!</small
+                        >
+                      </span>
+                      <!-- <span *ngIf="dateValid(lveForm)  && lveForm.submitted" class="invalid-form">
+                        <small class="form-text text-danger"
+                          >La date doit être supérieure à la date d'aujourd'hui'</small
+                        >
+                      </span> -->
+                    </div>
+                    <!-- Date reception Ends -->
+
+                    <!-- Qte Colis -->
+                    <div class="form-group col-md-6">
+                      <label class="form-label" for="quantiteColis">Quantité colis</label>
+                      <input
+                        [ngModel]="lve?.quantiteColis"
+                        type="number"
+                        min="0"
+                        name="quantiteColis"
+                        id="quantiteColis"
+                        class="form-control"
+                      />
+                    </div>
+                    <!-- Qte colis Ends -->
+
+                    <!-- Qte palette -->
+                    <div class="form-group col-md-6">
+                      <label class="form-label" for="quantitePalette">Quantité palette</label>
+                      <input
+                        [ngModel]="lve?.quantitePalette"
+                        type="number"
+                        min="0"
+                        name="quantitePalette"
+                        id="quantitePalette"
+                        class="form-control"
+                      />
+                    </div>
+                    <!-- Qte palette Ends -->
+
+                    <!-- Transporteur -->
+                    <div class="col-md-6">
+                      <label class="form-label" for="idTransporteur">Transporteur</label>
+                      <fieldset class="form-group">
+                        <ng-select 
+                          name="idTransporteur"
+                          id="idTransporteur"
+                          [items]="transporteurs" 
+                          [ngModel]="lve?.idTransporteur"
+                          #idTransporteurRef="ngModel"
+                          required
+                          bindLabel="nom"  
+                          bindValue="id"
+                          [class.error]="!idTransporteurRef.valid && lveForm.submitted"
+                        >
+                          <ng-template ng-option-tmp let-item="item">
+                            {{item.nom}}
+                          </ng-template>
+                        </ng-select>
+                        <span *ngIf="lveForm.submitted && idTransporteurRef.invalid" class="invalid-form">
+                          <small class="form-text text-danger" *ngIf="idTransporteurRef.errors.required">Transporteur est requis!</small>
+                        </span>
+                      </fieldset>
+                    </div>
+                    <!-- Transporteur Ends -->
+
+                    <!-- LVE Fichier -->
+                    <div class="form-group col-md-6">
+                      <label class="form-label" for="lveFichier">Fichier :</label>
+                      <div class="custom-file">
+                        <input
+                          type="file"
+                          class="custom-file-input"
+                          type="file"
+                          ng2FileSelect
+                          [uploader]="lveFichier"
+                          id="lveFichier"
+                          name="lveFichier"
+                          (change)="onLveFileSelected()"
+                        />
+                        <label class="custom-file-label">{{ lveFileName }}</label>
+                      </div>
+                      <span class="text-danger font-small-3 float-right mt-1"> <a (click)="vider('lv')">Vider</a></span>
+                    </div>
+                    <!-- LVE Fichier Ends -->
+
+                    <div class="col-12">
+                      <h4 class="mb-1 mt-2">
+                        <i data-feather="thumbs-down" [size]="16" class="mr-75 font-medium-5"></i>
+                        <span class="align-middle">Réclamations</span>
+                      </h4>
+                    </div>
+
+                    <!-- Reclamation qte colis -->
+                    <div class="form-group col-md-6">
+                      <label class="form-label" for="reclamationQuantitecolis">Réclamation Quantité colis</label>
+                      <input
+                        [ngModel]="lve?.reclamationQuantitecolis"
+                        type="number"
+                        min="0"
+                        name="reclamationQuantitecolis"
+                        id="reclamationQuantitecolis"
+                        class="form-control"
+                      />
+                    </div>
+                    <!-- Reclamation qte colis Ends -->
+
+                    <!-- Reclamation qte colis -->
+                    <div class="form-group col-md-6">
+                      <label class="form-label" for="reclamationQuantitepalette">Réclamation Quantité palette</label>
+                      <input
+                        [ngModel]="lve?.reclamationQuantitepalette"
+                        type="number"
+                        min="0"
+                        name="reclamationQuantitepalette"
+                        id="reclamationQuantitepalette"
+                        class="form-control"
+                      />
+                    </div>
+                    <!-- Reclamation qte colis Ends -->
+
+                    <!-- Reclamation qte colis -->
+                    <div class="form-group col-md-12">
+                      <label class="form-label" for="reclamationCommentaire">Réclamation Commentaire</label>
+                      <fieldset class="form-label-group mb-0">
+                        <textarea
+                          [ngModel]="lve?.reclamationCommentaire"
+                          #reclamationCommentaire
+                          [maxlength]="255"
+                          class="form-control char-textarea"
+                          name="reclamationCommentaire"
+                          id="reclamationCommentaire"
+                          rows="4"
+                          placeholder="Réclamation Commentaire"
+                        ></textarea>
+                      </fieldset>
+                      <small class="textarea-counter-value float-right"
+                        ><span *ngIf="reclamationCommentaire" class="char-count">{{ reclamationCommentaire.value.length }}</span>
+                        <span *ngIf="!reclamationCommentaire" class="char-count">0 </span> / 255
+                      </small>
+                    </div>
+                    <!-- Reclamation qte colis Ends -->
+
+                  </div>
+  
+                  <div class="d-flex justify-content-between">
+                    <button disabled style="background-color: transparent; border: none;"></button>
+                    <button
+                      (click)="lveFormOnSubmit(lveForm)"
+                      type="submit"
+                      class="btn btn-primary btn-next"
+                      rippleEffect
+                    >
+                      <span class="align-middle d-sm-inline-block d-none">Suivant</span>
+                      <i data-feather="arrow-right" class="align-middle ml-sm-25 ml-0"></i>
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <!-- LVE Form Ends -->
+
+              <!-- BLE Form -->
+              <div id="ble-form" class="content">
+                <form #bleForm="ngForm">
+                  <div class="content-header">
+                    <h5 class="mb-0">Ble Info</h5>
+                    <small>Saisie les informations du bon de livraison entrée.</small>
+                  </div>
+                  <div class="row">
+
+                    <!-- NUmero BL -->
+                    <div class="form-group col-md-6">
+                      <label class="form-label" for="numeroBonLivraison">Numéro BL</label>
+                      <input
+                        [ngModel]="ble?.numeroBonLivraison"
+                        #numeroBonLivraisonRef="ngModel"
+                        required
+                        type="text"
+                        name="numeroBonLivraison"
+                        id="numeroBonLivraison"
+                        class="form-control"
+                        [class.error]="!numeroBonLivraisonRef.valid && bleForm.submitted"
+                      />
+                      <span *ngIf="bleForm.submitted && numeroBonLivraisonRef.invalid" class="invalid-form">
+                        <small class="form-text text-danger" *ngIf="numeroBonLivraisonRef.errors.required">Numéro BL est requis!</small>
+                      </span>
+                    </div>
+                    <!-- NUmero BL Ends -->
+
+                    <!-- Date reception -->
+                    <div class="form-group col-md-6">
+                      <label class="form-label" for="date">Date de reception</label>
+                      <fieldset class="form-group">
+                        <div class="input-group">
+                          <input
+                            id="date"
+                            name="date"
+                            class="form-control"
+                            required
+                            [ngModel]="bleDateReception"
+                            #bleDateReceptionRef="ngModel"
+                            [class.error]="!bleDateReceptionRef.valid && bleForm.submitted"
+                            #bleDateExpeditionDP="ngbDatepicker"  
+                            ngbDatepicker
+                          />
+                          <div class="input-group-append">
+                            <button
+                              class="btn btn-outline-secondary feather icon-calendar"
+                              (click)="bleDateExpeditionDP.toggle()"
+                              type="button"
+                              rippleEffect
+                            ></button>
+                          </div>
+                        </div>
+                      </fieldset>
+                      <span *ngIf="bleForm.submitted && bleDateReceptionRef.invalid" class="invalid-form">
+                        <small class="form-text text-danger" *ngIf="bleDateReceptionRef.errors.required">Date de reception est requis!</small>
+                      </span>
+                    </div>
+                    <!-- Date reception Ends -->
+
+                    <!-- Fournisseurs -->
+                    <div class="col-md-6">
+                      <label class="form-label" for="idFournisseur">Fournisseur</label>
+                      <fieldset class="form-group">
+                        <ng-select 
+                          name="idFournisseur"
+                          id="idFournisseur"
+                          [items]="fournisseurs" 
+                          [ngModel]="ble?.idFournisseur"
+                          #idFournisseurRef="ngModel"
+                          required
+                          bindLabel="nom"  
+                          bindValue="id"
+                          [class.error]="!idFournisseurRef.valid && bleForm.submitted"
+                        >
+                          <ng-template ng-option-tmp let-item="item">
+                            {{item.nom}}
+                          </ng-template>
+                        </ng-select>
+                        <span *ngIf="bleForm.submitted && idFournisseurRef.invalid" class="invalid-form">
+                          <small class="form-text text-danger" *ngIf="idFournisseurRef.errors.required">Fournisseur est requis!</small>
+                        </span>
+                      </fieldset>
+                    </div>
+                    <!-- Fournisseurs Ends -->
+
+                    <!-- BLE Fichier -->
+                    <div class="form-group col-md-6">
+                      <label class="form-label" for="bleFichier">Fichier :</label>
+                      <div class="custom-file">
+                        <input
+                          type="file"
+                          class="custom-file-input"
+                          type="file"
+                          ng2FileSelect
+                          [uploader]="bleFichier"
+                          id="bleFichier"
+                          name="bleFichier"
+                          (change)="onBleFileSelected()"
+                        />
+                        <label class="custom-file-label">{{bleFileName}}</label>
+                      </div>
+                      <span class="text-danger font-small-3 float-right mt-1"> <a (click)="vider('bl')">Vider</a></span>
+                    </div>
+                    <!-- BLE Fichier Ends -->
+
+                    <!-- Commentaire -->
+                    <div class="form-group col-md-12">
+                      <label class="form-label" for="commentaire">Commentaire</label>
+                      <fieldset class="form-label-group mb-0">
+                        <textarea
+                          [ngModel]="ble?.commentaire"
+                          #commentaire
+                          [maxlength]="255"
+                          class="form-control char-textarea"
+                          name="commentaire"
+                          id="commentaire"
+                          rows="4"
+                          placeholder="Commentaire"
+                        ></textarea>
+                      </fieldset>
+                      <small class="textarea-counter-value float-right"
+                        ><span *ngIf="commentaire" class="char-count">{{ commentaire.value.length }}</span>
+                        <span *ngIf="!commentaire" class="char-count">0 </span> / 255
+                      </small>
+                    </div>
+                    <!-- Commentaire Ends -->
+
+                  </div>
+  
+                  <div class="d-flex justify-content-between">
+                    <button
+                      type="button"
+                      (click)="formStepperPrevious()"
+                      class="btn btn-primary btn-prev"
+                      rippleEffect
+                    >
+                      <i data-feather="arrow-left" class="align-middle mr-sm-25 mr-0"></i>
+                      <span class="align-middle d-sm-inline-block d-none">Précédent</span>
+                    </button>
+                    <button
+                      (click)="bleFormOnSubmit(bleForm)"
+                      class="btn btn-primary btn-next"
+                      rippleEffect
+                    >
+                      <span class="align-middle d-sm-inline-block d-none">Suivant</span>
+                      <i data-feather="arrow-right" class="align-middle ml-sm-25 ml-0"></i>
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <!-- BLE Form Ends --> 
+
+              <!-- UME Form  -->
+              <div id="ume-form" class="content">
+                <form #umeForm="ngForm">
+                  <div class="content-header">
+                    <h5 class="mb-0">UME</h5>
+                    <small>Ajouter un ou plusieurs articles.</small>
+                  </div>
+    
+                  <div class="card-body">
+                    <form  #colisForm="ngForm" class="source-item">
+                      <div class="row mb-1">
+                        <div class="col-12 px-0">
+                          <button type="button" class="btn btn-success btn-sm btn-add-new float-right" (click)="addItem(colisForm)" rippleEffect>
+                            <i data-feather="plus" class="mr-25"></i>
+                            <span class="align-middle">Ajouter article</span>
+                          </button>
+                        </div>
+                      </div>
+                      <div data-repeater-list="group-a">
+                        <div class="repeater-wrapper" data-repeater-item *ngFor="let item of items; let i = index" @heightIn>
+                          <div class="row d-flex align-items-end">
+                            <!-- ARTICLE -->
+                            <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                              <p class="card-text col-title mb-md-50 mb-0">Article</p>
+                              <ng-select 
+                                name="article{{i}}"
+                                id="article{{i}}"
+                                [items]="articles" 
+                                [(ngModel)]="item.article"
+                                #articleRef="ngModel"
+                                bindLabel="designationClient" 
+                                bindValue="id"
+                                [class.error]="!articleRef.valid && colisForm.submitted"
+                                required
+                                (change)="articleSelected($event)"
+                              >
+                                <ng-template ng-option-tmp let-item="item">
+                                  {{item.designationClient}}
+                                </ng-template>
+                              </ng-select>
+                              <span *ngIf="colisForm.submitted && articleRef.invalid" class="invalid-form">
+                                <small class="form-text text-danger" *ngIf="articleRef.errors.required">Article est requis!</small>
+                              </span>
+                            </div>
+                            <!-- ARTICLE Ends -->
+
+                            <!-- ZONE Depot -->
+                            <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                              <p class="card-text col-title mb-md-50 mb-0">Zone depot</p>
+                              <ng-select 
+                                name="zone{{i}}"
+                                id="zone{{i}}"
+                                [items]="zones" 
+                                [(ngModel)]="item.zone"
+                                #zoneRef="ngModel"
+                                bindLabel="nom"  
+                                bindValue="id"
+                                [class.error]="!zoneRef.valid && colisForm.submitted"
+                                required
+                              >
+                                <ng-template ng-option-tmp let-item="item">
+                                  {{item.nom}}
+                                </ng-template>
+                              </ng-select>
+                              <span *ngIf="colisForm.submitted && zoneRef.invalid" class="invalid-form">
+                                <small class="form-text text-danger" *ngIf="zoneRef.errors.required">Zone depot est requis!</small>
+                              </span>
+                            </div>
+                            <!-- ZONE Depot Ends -->
+
+                            <!-- Colisage -->
+                            <div class="col-md-1 col-12 my-lg-0 my-2">
+                              <p class="card-text col-title mb-md-50 mb-0">Colisage</p>
+                              <input
+                                type="number"
+                                class="form-control"
+                                id="colisage{{ i }}"
+                                name="colisage{{ i }}"
+                                [(ngModel)]="item.colisage"
+                                disabled="true"
+                              />
+                            </div>
+                            <!-- Colisage Ends -->
+
+                            <!-- Qte Colis -->
+                            <div class="col-md-1 col-12 my-lg-0 my-2">
+                              <p class="card-text col-title mb-md-50 mb-0">Qte Colis</p>
+                              <input
+                                type="number"
+                                class="form-control"
+                                id="qte{{ i }}"
+                                name="qte{{ i }}"
+                                [(ngModel)]="item.qte"
+                                #qteRef="ngModel"
+                                required
+                              />
+                              <span *ngIf="colisForm.submitted && qteRef.invalid" class="invalid-form">
+                                <small class="form-text text-danger" *ngIf="qteRef.errors.required">Qte colis est requis!</small>
+                              </span>
+                            </div>
+                            <!-- Qte Colis Ends -->
+
+                            <!-- Numero de lot -->
+                            <div class="col-md-1 col-12 my-lg-0 my-2">
+                              <p class="card-text col-title mb-md-50 mb-0">N° Lot</p>
+                              <input
+                                type="text"
+                                class="form-control"
+                                id="lot{{ i }}"
+                                name="lot{{ i }}"
+                                [(ngModel)]="item.lot"
+                                #lotRef="ngModel"
+                                required
+                              />
+                              <span *ngIf="colisForm.submitted && lotRef.invalid" class="invalid-form">
+                                <small class="form-text text-danger" *ngIf="lotRef.errors.required">Numero de lot est requis!</small>
+                              </span>
+                            </div>
+                            <!-- Numero de lot Ends -->
+
+                            <!-- Date Peremption -->
+                            <div class="col-lg-2 col-12 my-lg-0 my-2">
+                              <p class="card-text col-title mb-md-50 mb-0">Date péremption</p>
+                              <div class="input-group">
+                                <input
+                                  id="date{{i}}"
+                                  name="date{{i}}"
+                                  class="form-control"
+                                  type="date"
+                                  placeholder="dd-mm-yyyy"
+                                  [min]="today" 
+                                  required
+                                  [(ngModel)]="item.datePeremption"
+                                  (change)="selectedDate(item)"
+                                />
+                              </div>
+                            </div>
+                            <!-- Date Peremption Ends -->
+
+                            <div class="d-flex flex-column align-items-center justify-content-between border-left py-50 px-25" *ngIf="i > 0">
+                              <button (click)="deleteItem(i)" class="btn p-0">
+                                <i data-feather="x" [size]="18" class="cursor-pointer"></i>
+                              </button>
+                            </div>
+                          </div>
+                          <hr/>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                  
+                  <div class="d-flex justify-content-between">
+                    <button
+                      type="button"
+                      (click)="formStepperPrevious()"
+                      class="btn btn-primary btn-prev"
+                      rippleEffect
+                    >
+                      <i data-feather="arrow-left" class="align-middle mr-sm-25 mr-0"></i>
+                      <span class="align-middle d-sm-inline-block d-none">Précédent</span>
+                    </button>
+                    <button
+                      (click)="onFormsSubmit(colisForm)"
+                      class="btn btn-primary btn-next"
+                      rippleEffect
+                    >
+                      <span class="align-middle d-sm-inline-block d-none">Confirmer Tout</span>
+                      <i data-feather="arrow-right" class="align-middle ml-sm-25 ml-0"></i>
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <!-- UME Form Ends -->
+
+            </form>
+          </div>          
+        </div>
+      </section>
+    </div>
+  </div>

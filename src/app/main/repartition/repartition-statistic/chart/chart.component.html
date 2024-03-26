@@ -1,0 +1,118 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <app-content-header [contentHeader]="contentHeader"></app-content-header>
+        <section class="users-list-wrapper">
+            <div class="card">
+                <h4 class="card-header text-primary">Filtres</h4>
+                <!-- Filters -->
+                <div class="card-body">
+                    <div class="row">
+
+                        <!-- designation Filter -->
+                        <div class="col-lg-4 col-12 mb-lg-0 mb-2 mt-2">
+                            <p class="card-text col-title mb-md-50 mb-0">N° Command</p>
+                            <fieldset class="form-group">
+                                <input id="cmd" [(ngModel)]="cmd" name="searchValue" type="search"
+                                    class="form-control ml-25" />
+                            </fieldset>
+                        </div>
+                        <!-- designation Filter Ends -->
+
+                        <!-- Destinataire Filter -->
+                        <div class="col-lg-4 col-12 mb-lg-0 mb-2 mt-2">
+                            <p class="card-text col-title mb-md-50 mb-0">Destinataire</p>
+                            <ng-select [disabled]="cmd" name="destinataire" id="destinataire" [items]="destinataires"
+                                [(ngModel)]="selectedDestinataire" bindLabel="codeUM" bindValue="id">
+                                <ng-template ng-option-tmp let-item="item">
+
+                                    {{item.codeUM + ' - ' + item.nom}}
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                        <!-- Destinataire Filter Ends -->
+
+                        <!-- Destinataire Filter -->
+                        <div class="col-lg-4 col-12 mb-lg-0 mb-2 mt-2">
+                            <p class="card-text col-title mb-md-50 mb-0">Articles</p>
+                            <ng-select [disabled]="cmd" name="articles" id="articles" [items]="articles"
+                                [(ngModel)]="selectedArticle" bindLabel="name" bindValue="id"></ng-select>
+                        </div>
+                        <!-- Destinataire Filter Ends -->
+
+                        <!-- Date Start Filter -->
+                        <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-2">
+                            <p class="card-text col-title mb-md-50 mb-0">Date de debut</p>
+                            <fieldset class="form-group">
+                                <input [disabled]="cmd" [(ngModel)]="dateStart" name="searchValue" type="date"
+                                    class="form-control ml-25" />
+                            </fieldset>
+                        </div>
+                        <!-- Date Start Filter Ends -->
+
+                        <!-- Date End Filter -->
+                        <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-2">
+                            <p class="card-text col-title mb-md-50 mb-0">Date de fin</p>
+                            <fieldset class="form-group">
+                                <input [disabled]="cmd" [(ngModel)]="dateEnd" name="searchValue" type="date"
+                                    class="form-control ml-25" />
+                            </fieldset>
+                        </div>
+                        <!-- Date End Filter Ends -->
+
+                        <!-- Date Expedition Start Filter -->
+                        <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-2">
+                            <p class="card-text col-title mb-md-50 mb-0">Date de debut d'expédition</p>
+                            <fieldset class="form-group">
+                                <input [disabled]="cmd" [(ngModel)]="dateStartExp" name="searchValue" type="date"
+                                    class="form-control ml-25" />
+                            </fieldset>
+                        </div>
+                        <!-- Date Expedition Start Filter Ends -->
+
+                        <!-- Date Expedition End Filter -->
+                        <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-2">
+                            <p class="card-text col-title mb-md-50 mb-0">Date de fin d'expédition</p>
+                            <fieldset class="form-group">
+                                <input [disabled]="cmd" [(ngModel)]="dateEndExp" name="searchValue" type="date"
+                                    class="form-control ml-25" />
+                            </fieldset>
+                        </div>
+                        <!-- Date Expedition End Filter Ends -->
+
+                        <!-- Date Expedition End Filter -->
+                        <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-2">
+                            <div class="custom-control custom-control-primary custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="loadArticles"
+                                    [(ngModel)]="showArticles" />
+                                <label class="custom-control-label" for="loadArticles">Afficher Stock Article</label>
+                            </div>
+                        </div>
+                        <!-- Date Expedition End Filter Ends -->
+                    </div>
+
+                    <div class="btn btn-icon btn-outline-danger float-right" (click)="clear()" rippleEffect>
+                        <span [data-feather]="'trash'"></span>
+                    </div>
+                    <div class="btn btn-icon btn-primary float-right mr-1" (click)="search()" rippleEffect>
+                        <span [data-feather]="'search'"></span>
+                    </div>
+                </div>
+                <!-- Filter Ends -->
+            </div>
+
+        </section>
+
+        <app-stat-grid *ngIf="gridStatsResponse" [data]="gridStats"></app-stat-grid>
+
+        <div class="row match-height">
+            <div class="col-lg-4 col-md-6 col-12">
+                <app-stat-rupture *ngIf="ruptureStatsResponse" [data]="ruptureStat"></app-stat-rupture>
+            </div>
+            <div class="col-lg-8 col-md-12 col-12">
+                <app-colis-chart *ngIf="yearlyStatsResponse" [data]="yearlyStat"></app-colis-chart>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-stat-article *ngIf="showArticles" [dropDown]="articles"></app-stat-article>

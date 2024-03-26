@@ -1,0 +1,379 @@
+<!--<div class="content-wrapper container-xxl p-0">-->
+<!--    <div class="content-body">-->
+<!--      <section class="horizontal-wizard">-->
+<!--        <div id="stepper1" class="bs-stepper horizontal-wizard-example">-->
+<!--          &lt;!&ndash; stepper forms Header  &ndash;&gt;-->
+<!--          <div class="bs-stepper-header">-->
+<!--            <div class="step" data-target="#lve-form">-->
+<!--              <button class="step-trigger">-->
+<!--                <span class="bs-stepper-box">1</span>-->
+<!--                <span class="bs-stepper-label">-->
+<!--                  <span class="bs-stepper-title">Transporteur</span>-->
+<!--                  <span class="bs-stepper-subtitle">Ajouter un Transporteur</span>-->
+<!--                </span>-->
+<!--              </button>-->
+<!--            </div>-->
+
+<!--            <div class="line"><i data-feather="chevron-right" class="font-medium-2"></i></div>-->
+<!--            <div class="step" data-target="#ume-form">-->
+<!--              <button class="step-trigger">-->
+<!--                <span class="bs-stepper-box">3</span>-->
+<!--                <span class="bs-stepper-label">-->
+<!--                  <span class="bs-stepper-title">UME</span>-->
+<!--                  <span class="bs-stepper-subtitle">Ajouter une ou plusieurs UME</span>-->
+<!--                </span>-->
+<!--              </button>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          &lt;!&ndash; stepper forms Header Ends &ndash;&gt;-->
+
+<!--          <div class="bs-stepper-content">-->
+<!--            <form (ngSubmit)="(HWForm.form.valid)" #HWForm="ngForm">-->
+
+<!--              &lt;!&ndash; LVE Form  &ndash;&gt;-->
+<!--              <div id="lve-form" class="content">-->
+<!--                <form #lveForm="ngForm">-->
+
+
+<!--                    <div class="content-header">-->
+<!--                        <h5 class="mb-0">Transporteur Info</h5>-->
+<!--                        <small class="text-muted">Saisie les informations du Transporteur.</small>-->
+<!--                    </div>-->
+
+
+
+
+<!--                        <div class="row">-->
+
+<!--                        &lt;!&ndash;Nom Transporteur &ndash;&gt;-->
+<!--                            <div class="form-group col-md-6">-->
+<!--                                <label class="form-label" for="numeroRecepisse">Nom</label>-->
+<!--                                <input-->
+<!--                                        [ngModel]="lve?.numeroRecepisse"-->
+<!--                                        #numeroRecepisseRef="ngModel"-->
+<!--                                        required-->
+<!--                                        type="text"-->
+<!--                                        name="numeroRecepisse"-->
+<!--                                        id="numeroRecepisse"-->
+<!--                                        class="form-control"-->
+<!--                                        [class.error]="!numeroRecepisseRef.valid && lveForm.submitted"-->
+<!--                                />-->
+<!--                                <span *ngIf="lveForm.submitted && numeroRecepisseRef.invalid" class="invalid-form">-->
+<!--                                    <small class="form-text text-danger" *ngIf="numeroRecepisseRef.errors.required">Nom requis </small>-->
+<!--                                </span>-->
+<!--                            </div>-->
+<!--                        &lt;!&ndash;Nom Transporteur &ndash;&gt;-->
+
+<!--                        &lt;!&ndash;Email Transporteur &ndash;&gt;-->
+<!--                            <div class="form-group col-md-6">-->
+<!--                                <label class="form-label" for="numeroRecepisse">Email</label>-->
+<!--                                <input-->
+<!--                                        [ngModel]="lve?.numeroRecepisse"-->
+<!--                                        #numeroRecepisseRef="ngModel"-->
+<!--                                        required-->
+<!--                                        type="email"-->
+<!--                                        name="numeroRecepisse"-->
+<!--                                        id="idd"-->
+<!--                                        class="form-control"-->
+<!--                                        [class.error]="!numeroRecepisseRef.valid && lveForm.submitted"-->
+<!--                                />-->
+<!--                                <span *ngIf="lveForm.submitted && numeroRecepisseRef.invalid" class="invalid-form">-->
+<!--                                    <small class="form-text text-danger" *ngIf="numeroRecepisseRef.errors.required">Nom requis </small>-->
+<!--                                </span>-->
+<!--                            </div>-->
+<!--                        &lt;!&ndash;Email Transporteur &ndash;&gt;-->
+
+<!--                        &lt;!&ndash;Adresse Transporteur &ndash;&gt;-->
+<!--                            <div class="form-group col-md-6">-->
+<!--                                <label class="form-label" for="numeroRecepisse">Adresse</label>-->
+<!--                                <input-->
+<!--                                        [ngModel]="lve?.numeroRecepisse"-->
+<!--                                        #numeroRecepisseRef="ngModel"-->
+<!--                                        required-->
+<!--                                        type="text"-->
+<!--                                        name="numeroRecepisse"-->
+<!--                                        id="iddddd"-->
+<!--                                        class="form-control"-->
+<!--                                        [class.error]="!numeroRecepisseRef.valid && lveForm.submitted"-->
+<!--                                />-->
+<!--                                <span *ngIf="lveForm.submitted && numeroRecepisseRef.invalid" class="invalid-form">-->
+<!--                                    <small class="form-text text-danger" *ngIf="numeroRecepisseRef.errors.required">Nom requis </small>-->
+<!--                                </span>-->
+<!--                            </div>-->
+<!--                       &lt;!&ndash;Adresse Transporteur &ndash;&gt;-->
+
+<!--                        &lt;!&ndash;Telephone Transporteur &ndash;&gt;-->
+<!--                            <div class="form-group col-md-6">-->
+<!--                                <label class="form-label" for="numeroRecepisse">Telephone</label>-->
+<!--                                <input-->
+<!--                                        [ngModel]="lve?.numeroRecepisse"-->
+<!--                                        #numeroRecepisseRef="ngModel"-->
+<!--                                        required-->
+<!--                                        type="text"-->
+<!--                                        name="numeroRecepisse"-->
+<!--                                        id="idddddffff"-->
+<!--                                        class="form-control"-->
+<!--                                        [class.error]="!numeroRecepisseRef.valid && lveForm.submitted"-->
+<!--                                />-->
+<!--                                <span *ngIf="lveForm.submitted && numeroRecepisseRef.invalid" class="invalid-form">-->
+<!--                                    <small class="form-text text-danger" *ngIf="numeroRecepisseRef.errors.required">Nom requis </small>-->
+<!--                                </span>-->
+<!--                            </div>-->
+<!--                        &lt;!&ndash;Telephone Transporteur &ndash;&gt;-->
+
+
+<!--                            &lt;!&ndash; Type de Tarifs&ndash;&gt;-->
+<!--                            <div class="col-md-6">-->
+<!--                                <label class="form-label" for="numeroRecepisse">Telephone</label>-->
+<!--                                <fieldset class="form-group">-->
+<!--                                    <ng-select-->
+<!--                                            name="numeroRecepisse"-->
+<!--                                            id="numeroffge"-->
+<!--                                            [(ngModel)]="lve.numeroRecepisse"-->
+<!--                                            #numeroRecepisseRef="ngModel"-->
+<!--                                            required-->
+<!--                                            [items]="phoneOptions"-->
+<!--                                            bindLabel="type"-->
+
+<!--                                            [class.error]="!numeroRecepisseRef.valid && lveForm.submitted"-->
+<!--                                            placeholder="Choisissez un type de tarif">-->
+<!--                                    </ng-select>-->
+<!--                                    <span *ngIf="lveForm.submitted && numeroRecepisseRef.invalid" class="invalid-form">-->
+<!--                                        <small class="form-text text-danger" *ngIf="numeroRecepisseRef.errors.required">Telephone is required</small>-->
+<!--                                    </span>-->
+<!--                                </fieldset>-->
+<!--                            </div>-->
+<!--                            &lt;!&ndash; Type de tarifs &ndash;&gt;-->
+
+
+
+<!--                            &lt;!&ndash; Transporeteur Fichier &ndash;&gt;-->
+<!--                            <div class="form-group col-md-6">-->
+<!--                                <label class="form-label" for="lveFichier">Fichier :</label>-->
+<!--                                <div class="custom-file">-->
+<!--                                    <input-->
+<!--                                            type="file"-->
+<!--                                            class="custom-file-input"-->
+<!--                                            type="file"-->
+<!--                                            ng2FileSelect-->
+<!--                                            [uploader]="lveFichier"-->
+<!--                                            id="lveFichier"-->
+<!--                                            name="lveFichier"-->
+<!--                                            (change)="onLveFileSelected()"-->
+<!--                                    />-->
+<!--                                    <label class="custom-file-label">{{ lveFileName }}</label>-->
+<!--                                </div>-->
+<!--                                <span class="text-danger font-small-3 float-right mt-1"> <a (click)="vider('lv')">Vider</a></span>-->
+<!--                            </div>-->
+<!--                        &lt;!&ndash; Transporteur Fichier &ndash;&gt;-->
+
+
+
+
+<!--                            &lt;!&ndash; this is the next button&ndash;&gt;-->
+
+<!--                            <div class="d-flex justify-content-between">-->
+<!--                                <button disabled style="background-color: transparent; border: none;"></button>-->
+<!--                                <button-->
+<!--                                        (click)="lveFormOnSubmit(lveForm)"-->
+<!--                                        type="submit"-->
+<!--                                        class="btn btn-primary btn-next"-->
+<!--                                        rippleEffect-->
+<!--                                >-->
+<!--                                    <span class="align-middle d-sm-inline-block d-none">Suivant</span>-->
+<!--                                    <i data-feather="arrow-right" class="align-middle ml-sm-25 ml-0"></i>-->
+<!--                                </button>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+<!--                            &lt;!&ndash; this is the next button&ndash;&gt;-->
+
+
+
+<!--                </form>-->
+<!--              </div>-->
+<!--              &lt;!&ndash; LVE Form Ends &ndash;&gt;-->
+
+<!--              &lt;!&ndash; BLE Form &ndash;&gt;-->
+
+
+<!--              &lt;!&ndash; UME Form  &ndash;&gt;-->
+<!--              <div id="ume-form" class="content">-->
+<!--                <form #umeForm="ngForm">-->
+<!--                  <div class="content-header">-->
+<!--                    <h5 class="mb-0">UME</h5>-->
+<!--                    <small>Ajouter un ou plusieurs articles.</small>-->
+<!--                  </div>-->
+
+<!--                  <div class="card-body">-->
+<!--                    <form  #colisForm="ngForm" class="source-item">-->
+<!--                      <div class="row mb-1">-->
+<!--                        <div class="col-12 px-0">-->
+<!--                          <button type="button" class="btn btn-success btn-sm btn-add-new float-right" (click)="addItem(colisForm)" rippleEffect>-->
+<!--                            <i data-feather="plus" class="mr-25"></i>-->
+<!--                            <span class="align-middle">Ajouter article</span>-->
+<!--                          </button>-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                      <div data-repeater-list="group-a">-->
+<!--                        <div class="repeater-wrapper" data-repeater-item *ngFor="let item of items; let i = index" @heightIn>-->
+<!--                          <div class="row d-flex align-items-end">-->
+<!--                            &lt;!&ndash; ARTICLE &ndash;&gt;-->
+<!--&lt;!&ndash;                            <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">&ndash;&gt;-->
+<!--&lt;!&ndash;                              <p class="card-text col-title mb-md-50 mb-0">Article</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                              <ng-select&ndash;&gt;-->
+<!--&lt;!&ndash;                                name="article{{i}}"&ndash;&gt;-->
+<!--&lt;!&ndash;                                id="article{{i}}"&ndash;&gt;-->
+<!--&lt;!&ndash;                                [items]="articles"&ndash;&gt;-->
+<!--&lt;!&ndash;                                [(ngModel)]="item.article"&ndash;&gt;-->
+<!--&lt;!&ndash;                                #articleRef="ngModel"&ndash;&gt;-->
+<!--&lt;!&ndash;                                bindLabel="designationClient"&ndash;&gt;-->
+<!--&lt;!&ndash;                                bindValue="id"&ndash;&gt;-->
+<!--&lt;!&ndash;                                [class.error]="!articleRef.valid && colisForm.submitted"&ndash;&gt;-->
+<!--&lt;!&ndash;                                required&ndash;&gt;-->
+<!--&lt;!&ndash;                                (change)="articleSelected($event)"&ndash;&gt;-->
+<!--&lt;!&ndash;                              >&ndash;&gt;-->
+<!--&lt;!&ndash;                                <ng-template ng-option-tmp let-item="item">&ndash;&gt;-->
+<!--&lt;!&ndash;                                  {{item.designationClient}}&ndash;&gt;-->
+<!--&lt;!&ndash;                                </ng-template>&ndash;&gt;-->
+<!--&lt;!&ndash;                              </ng-select>&ndash;&gt;-->
+<!--&lt;!&ndash;                              <span *ngIf="colisForm.submitted && articleRef.invalid" class="invalid-form">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <small class="form-text text-danger" *ngIf="articleRef.errors.required">Article est requis!</small>&ndash;&gt;-->
+<!--&lt;!&ndash;                              </span>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </div>&ndash;&gt;-->
+<!--                            &lt;!&ndash; ARTICLE Ends &ndash;&gt;-->
+
+<!--                            &lt;!&ndash; ZONE Depot &ndash;&gt;-->
+<!--&lt;!&ndash;                            <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">&ndash;&gt;-->
+<!--&lt;!&ndash;                              <p class="card-text col-title mb-md-50 mb-0">Zone depot</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                              <ng-select&ndash;&gt;-->
+<!--&lt;!&ndash;                                name="zone{{i}}"&ndash;&gt;-->
+<!--&lt;!&ndash;                                id="zone{{i}}"&ndash;&gt;-->
+<!--&lt;!&ndash;                                [items]="zones"&ndash;&gt;-->
+<!--&lt;!&ndash;                                [(ngModel)]="item.zone"&ndash;&gt;-->
+<!--&lt;!&ndash;                                #zoneRef="ngModel"&ndash;&gt;-->
+<!--&lt;!&ndash;                                bindLabel="nom"&ndash;&gt;-->
+<!--&lt;!&ndash;                                bindValue="id"&ndash;&gt;-->
+<!--&lt;!&ndash;                                [class.error]="!zoneRef.valid && colisForm.submitted"&ndash;&gt;-->
+<!--&lt;!&ndash;                                required&ndash;&gt;-->
+<!--&lt;!&ndash;                              >&ndash;&gt;-->
+<!--&lt;!&ndash;                                <ng-template ng-option-tmp let-item="item">&ndash;&gt;-->
+<!--&lt;!&ndash;                                  {{item.nom}}&ndash;&gt;-->
+<!--&lt;!&ndash;                                </ng-template>&ndash;&gt;-->
+<!--&lt;!&ndash;                              </ng-select>&ndash;&gt;-->
+<!--&lt;!&ndash;                              <span *ngIf="colisForm.submitted && zoneRef.invalid" class="invalid-form">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <small class="form-text text-danger" *ngIf="zoneRef.errors.required">Zone depot est requis!</small>&ndash;&gt;-->
+<!--&lt;!&ndash;                              </span>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </div>&ndash;&gt;-->
+<!--                            &lt;!&ndash; ZONE Depot Ends &ndash;&gt;-->
+
+<!--                            &lt;!&ndash; Colisage &ndash;&gt;-->
+<!--                            <div class="col-md-1 col-12 my-lg-0 my-2">-->
+<!--                              <p class="card-text col-title mb-md-50 mb-0">Colisage</p>-->
+<!--                              <input-->
+<!--                                type="number"-->
+<!--                                class="form-control"-->
+<!--                                id="colisage{{ i }}"-->
+<!--                                name="colisage{{ i }}"-->
+<!--                                [(ngModel)]="item.colisage"-->
+<!--                                disabled="true"-->
+<!--                              />-->
+<!--                            </div>-->
+<!--                            &lt;!&ndash; Colisage Ends &ndash;&gt;-->
+
+<!--                            &lt;!&ndash; Qte Colis &ndash;&gt;-->
+<!--                            <div class="col-md-1 col-12 my-lg-0 my-2">-->
+<!--                              <p class="card-text col-title mb-md-50 mb-0">Qte Colis</p>-->
+<!--                              <input-->
+<!--                                type="number"-->
+<!--                                class="form-control"-->
+<!--                                id="qte{{ i }}"-->
+<!--                                name="qte{{ i }}"-->
+<!--                                [(ngModel)]="item.qte"-->
+<!--                                #qteRef="ngModel"-->
+<!--                                required-->
+<!--                              />-->
+<!--                              <span *ngIf="colisForm.submitted && qteRef.invalid" class="invalid-form">-->
+<!--                                <small class="form-text text-danger" *ngIf="qteRef.errors.required">Qte colis est requis!</small>-->
+<!--                              </span>-->
+<!--                            </div>-->
+<!--                            &lt;!&ndash; Qte Colis Ends &ndash;&gt;-->
+
+<!--                            &lt;!&ndash; Numero de lot &ndash;&gt;-->
+<!--                            <div class="col-md-1 col-12 my-lg-0 my-2">-->
+<!--                              <p class="card-text col-title mb-md-50 mb-0">N° Lot</p>-->
+<!--                              <input-->
+<!--                                type="text"-->
+<!--                                class="form-control"-->
+<!--                                id="lot{{ i }}"-->
+<!--                                name="lot{{ i }}"-->
+<!--                                [(ngModel)]="item.lot"-->
+<!--                                #lotRef="ngModel"-->
+<!--                                required-->
+<!--                              />-->
+<!--                              <span *ngIf="colisForm.submitted && lotRef.invalid" class="invalid-form">-->
+<!--                                <small class="form-text text-danger" *ngIf="lotRef.errors.required">Numero de lot est requis!</small>-->
+<!--                              </span>-->
+<!--                            </div>-->
+<!--                            &lt;!&ndash; Numero de lot Ends &ndash;&gt;-->
+
+<!--                            &lt;!&ndash; Date Peremption &ndash;&gt;-->
+<!--                            <div class="col-lg-2 col-12 my-lg-0 my-2">-->
+<!--                              <p class="card-text col-title mb-md-50 mb-0">Date péremption</p>-->
+<!--                              <div class="input-group">-->
+<!--                                <input-->
+<!--                                  id="date{{i}}"-->
+<!--                                  name="date{{i}}"-->
+<!--                                  class="form-control"-->
+<!--                                  type="date"-->
+<!--                                  placeholder="dd-mm-yyyy"-->
+<!--                                  [min]="today"-->
+<!--                                  required-->
+<!--                                  [(ngModel)]="item.datePeremption"-->
+<!--                                  (change)="selectedDate(item)"-->
+<!--                                />-->
+<!--                              </div>-->
+<!--                            </div>-->
+<!--                            &lt;!&ndash; Date Peremption Ends &ndash;&gt;-->
+
+<!--                            <div class="d-flex flex-column align-items-center justify-content-between border-left py-50 px-25" *ngIf="i > 0">-->
+<!--                              <button (click)="deleteItem(i)" class="btn p-0">-->
+<!--                                <i data-feather="x" [size]="18" class="cursor-pointer"></i>-->
+<!--                              </button>-->
+<!--                            </div>-->
+<!--                          </div>-->
+<!--                          <hr/>-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                    </form>-->
+<!--                  </div>-->
+
+<!--                  <div class="d-flex justify-content-between">-->
+<!--                    <button-->
+<!--                      type="button"-->
+<!--                      (click)="formStepperPrevious()"-->
+<!--                      class="btn btn-primary btn-prev"-->
+<!--                      rippleEffect-->
+<!--                    >-->
+<!--                      <i data-feather="arrow-left" class="align-middle mr-sm-25 mr-0"></i>-->
+<!--                      <span class="align-middle d-sm-inline-block d-none">Précédent</span>-->
+<!--                    </button>-->
+<!--                    <button-->
+<!--                      (click)="onFormsSubmit(colisForm)"-->
+<!--                      class="btn btn-primary btn-next"-->
+<!--                      rippleEffect-->
+<!--                    >-->
+<!--                      <span class="align-middle d-sm-inline-block d-none">Confirmer Tout</span>-->
+<!--                      <i data-feather="arrow-right" class="align-middle ml-sm-25 ml-0"></i>-->
+<!--                    </button>-->
+<!--                  </div>-->
+<!--                </form>-->
+<!--              </div>-->
+<!--              &lt;!&ndash; UME Form Ends &ndash;&gt;-->
+
+<!--            </form>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </section>-->
+<!--    </div>-->
+<!--  </div>-->

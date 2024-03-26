@@ -1,0 +1,130 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+      <app-content-header [contentHeader]="contentHeader"></app-content-header>
+      <ngb-alert [type]="'warning'" [dismissible]="false">
+        <div class="alert-body">
+          Note : pour ajouter un Bon de commande manuellement <a class="alert-link" routerLink="/bcs/mnew"> <strong>Ajouter</strong>  </a>.   
+        </div>
+      </ngb-alert>
+      <section id="file-upload">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-12 col-lg-12">
+                <div
+                  ng2FileDrop
+                  [ngClass]="{ 'file-drop-over': hasBaseDropZoneOver }"
+                  (fileOver)="fileOverBase($event)"
+                  [uploader]="uploader"
+                  class="py-5 mb-3 text-center font-medium-5 text-uppercase file-drop-zone"
+                >
+                    Déposez les fichiers ici pour les importés
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-3">
+                <h4>Sélectionnez un fichier</h4>
+                <fieldset class="form-group">
+                  <label for="file-upload-single">fichier:</label>
+                  <div class="custom-file">
+                    <input
+                      type="file"
+                      class="custom-file-input"
+                      type="file"
+                      ng2FileSelect
+                      [uploader]="uploader"
+                      id="file-upload-single"
+                    />
+                    <label class="custom-file-label">choisir un fichier</label>
+                  </div>
+                </fieldset>
+              </div>
+
+              <div class="col-lg-12 overflow-auto">
+                <div class="d-flex justify-content-between mb-1">
+                  <h4>Fichier importée</h4>
+                  <p>Longueur : {{ uploader?.queue?.length }}</p>
+                </div>
+  
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th width="50%">Nom</th>
+                      <th>Taille</th>
+                      <th></th>
+                      <th></th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of uploader.queue">
+                      <td>
+                        <strong>{{ item?.file?.name }}</strong>
+                      </td>
+                      <td *ngIf="uploader.options.isHTML5" nowrap>
+                        {{ item?.file?.size / 1024 / 1024 | number: '.2' }} MB
+                      </td>
+                      <!-- <td *ngIf="uploader.options.isHTML5">
+                        <ngb-progressbar type="primary" [value]="item.progress"></ngb-progressbar>
+                      </td>
+                      <td class="text-center">
+                        <span *ngIf="item.isSuccess || progress == 100"><i data-feather="check"></i></span>
+                        <span *ngIf="item.isCancel"><i data-feather="slash"></i></span>
+                        <span *ngIf="item.isError || progress == -1"><i data-feather="x-circle"></i></span>
+                      </td> -->
+                      <td></td>
+                      <td></td>
+                      <td nowrap>
+                        <!-- <button
+                          type="button"
+                          class="btn btn-raised btn-outline-success btn-sm mr-50"
+                          (click)="item.upload()"
+                          [disabled]="item.isReady || item.isUploading || item.isSuccess"
+                          rippleEffect
+                        >
+                          <span data-feather="upload"></span>
+                        </button> -->
+                        <button
+                          type="button"
+                          class="btn btn-raised btn-outline-danger btn-sm"
+                          (click)="item.remove(); removeFromQueue(item)"
+                          rippleEffect
+                        >
+                          <i data-feather="trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+  
+                <div id="">
+                  <p class="mt-1">Progrès de la file d'attente :</p>
+                  <ngb-progressbar class="mb-1" type="primary" [value]="uploader.progress || progress"></ngb-progressbar>
+                  <button
+                    type="button"
+                    class="btn mr-1 btn-primary mb-1 mb-sm-0"
+                    (click)="importTo()"
+                    [disabled]="!uploader.getNotUploadedItems().length"
+                    rippleEffect
+                  >
+                    <span data-feather="upload" class="mr-25"></span> Importer tout
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger mb-1 mb-sm-0"
+                    (click)="uploader.clearQueue(); clearQueue()"
+                    [disabled]="!uploader.queue.length"
+                    rippleEffect
+                  >
+                    <span data-feather="trash" class="mr-25"></span> Supprimer tout
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+  

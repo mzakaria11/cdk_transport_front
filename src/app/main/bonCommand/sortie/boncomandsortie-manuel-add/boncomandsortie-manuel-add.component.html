@@ -1,0 +1,157 @@
+<div class="content-wrapper container-xxl p-0">
+  <div class="content-body">
+    <app-content-header [contentHeader]="contentHeader"></app-content-header>
+    <section class="users-list-wrapper">
+      <div class="card">
+        <h4 class="card-header text-primary">Nouveau Bon de commande</h4>
+        <form #umeForm="ngForm">
+          <div class="card-body">
+            <form  #bcsForm="ngForm">
+              <div class="row">
+                <!-- Destinataire Input -->
+                <div class="form-group col-md-4">
+                  <label class="form-label" for="codeDestinataire">Destinataire</label>
+                  <ng-select 
+                    name="codeDestinataire"
+                    id="codeDestinataire"
+                    [items]="destinataires" 
+                    [(ngModel)]="bcs.codeDestinataire"
+                    #codeDestinataireRef="ngModel"
+                    bindLabel="codeUM" 
+                    bindValue="codeUM"
+                    [class.error]="!codeDestinataireRef.valid && bcsForm.submitted"
+                    required
+                    (change)="syncLigne()"
+                  >
+                    <ng-template ng-option-tmp let-item="item">
+                      {{item.codeUM + ' - ' + item.nom}}
+                    </ng-template>
+                  </ng-select>
+                  <span *ngIf="bcsForm.submitted && codeDestinataireRef.invalid" class="invalid-form">
+                    <small class="form-text text-danger" *ngIf="codeDestinataireRef.errors.required">Destinataire est requis!</small>
+                  </span>
+                </div>
+                <!-- Destinataire Input Ends -->
+                
+                <!-- N° CMD -->
+                <div class="form-group col-md-4">
+                  <label class="form-label" for="numeroCommande">N° Commande</label>
+                  <input
+                    [(ngModel)]="bcs.numeroCommande"
+                    #numeroCommandeRef="ngModel"
+                    required
+                    type="text"
+                    name="numeroCommande"
+                    id="numeroCommande"
+                    class="form-control"
+                    [class.error]="!numeroCommandeRef.valid && bcsForm.submitted"
+                    (change)="syncLigne()"
+                  />
+                  <span *ngIf="bcsForm.submitted && numeroCommandeRef.invalid" class="invalid-form">
+                    <small class="form-text text-danger" *ngIf="numeroCommandeRef.errors.required"
+                      >N° Commande est requis!</small
+                    >
+                  </span>
+                </div>
+                <!-- N° CMD Ends -->
+                
+                <!--Date CMD -->
+                <div class="form-group col-md-4">
+                  <label class="form-label" for="dateCommande">Date de Commande</label>
+                  <input
+                    type="date"
+                    placeholder="dd-mm-yyyy"
+                    [(ngModel)]="bcs.dateCommande"
+                    name="dateCommande"
+                    id="dateCommande"
+                    class="form-control"
+                    (change)="syncLigne()"
+                  />
+                </div>
+                <!--Date CMD Ends -->
+              </div>
+
+              <div class="row mb-1">
+                <div class="col-12 px-2">
+                  <button type="button" class="btn btn-success btn-sm btn-add-new float-right" (click)="addLigne(bcsForm)" rippleEffect>
+                    <i data-feather="plus" class="mr-25"></i>
+                    <span class="align-middle">Ajouter Ligne</span>
+                  </button>
+                </div>
+              </div>
+              
+              <div data-repeater-list="group-a">
+                <div class="repeater-wrapper" data-repeater-item *ngFor="let ligne of lignes; let i = index" @heightIn>
+                  <div class="row d-flex align-items-end">
+                    <!-- ARTICLE -->
+                    <div class="col-lg-6 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                      <p class="card-text col-title mb-md-50 mb-0">Lignes</p>
+                      <ng-select 
+                        name="codeArticle{{i}}"
+                        id="codeArticle{{i}}"
+                        [items]="articles" 
+                        [(ngModel)]="ligne.codeArticle"
+                        #codeArticleRef="ngModel"
+                        bindLabel="designationClient" 
+                        bindValue="codeClient"
+                        [class.error]="!codeArticleRef.valid && bcsForm.submitted"
+                        required
+                      >
+                        <ng-template ng-option-tmp let-item="item">
+                          {{item.codeClient + ' - ' + item.designationClient}}
+                        </ng-template>
+                      </ng-select>
+                      <span *ngIf="bcsForm.submitted && codeArticleRef.invalid" class="invalid-form">
+                        <small class="form-text text-danger" *ngIf="codeArticleRef.errors.required">Article est requis!</small>
+                      </span>
+                    </div>
+                    <!-- ARTICLE Ends -->
+
+                    <!-- Qte Colis -->
+                    <div class="col-md-5 col-12 my-lg-0 my-2">
+                      <p class="card-text col-title mb-md-50 mb-0">Qte Colis</p>
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="qteColis{{ i }}"
+                        name="qteColis{{ i }}"
+                        [(ngModel)]="ligne.qteColis"
+                        #qteColisRef="ngModel"
+                        required
+                        [class.error]="!qteColisRef.valid && bcsForm.submitted"
+                      />
+                      <span *ngIf="bcsForm.submitted && qteColisRef.invalid" class="invalid-form">
+                        <small class="form-text text-danger" *ngIf="qteColisRef.errors.required">qte colis est requis!</small>
+                      </span>
+                    </div>
+                    <!-- Qte Colis Ends -->
+
+                    <div class="d-flex flex-column align-items-center justify-content-between border-left py-50 px-25" *ngIf="i > 0">
+                      <button (click)="deleteLigne(i)" class="btn p-0">
+                        <i data-feather="x" [size]="18" class="cursor-pointer"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <hr/>
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between float-right m-2">
+                <button
+                  class="btn btn-primary btn-next"
+                  rippleEffect
+                  (click)="submit(bcsForm)"
+                >
+                  <i data-feather="plus" class="align-middle ml-sm-25 ml-0"></i>
+                  <span class="align-middle d-sm-inline-block d-none"> Ajouter</span>
+                </button>
+              </div>
+
+            </form>
+          </div>
+        </form>
+      </div>
+    </section>
+  </div>
+</div>
+  

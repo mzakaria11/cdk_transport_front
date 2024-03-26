@@ -1,0 +1,113 @@
+<app-content-header [contentHeader]="contentHeader"></app-content-header>
+
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <section class="app-user-edit">
+            <div class="card">
+                <div class="card-body">
+                    <ul ngbNav #nav="ngbNav" class="nav nav-pills">
+                        <li ngbNavItem>
+                            <a ngbNavLink class="d-flex align-items-center"
+                            ><i data-feather="truck" class="mr-sm-50"></i><span class="d-none d-sm-block">Ajouter departement</span></a
+                            >
+                            <ng-template ngbNavContent>
+                                <div class="tab-pane active" id="account" aria-labelledby="account-tab" role="tabpanel">
+
+                                    <form class="form-validate" [formGroup]="ReactiveDepartementForm" (ngSubmit)="ReactiveDrFormOnSubmit()">
+                                        <div class="row">
+
+                                            <!--   num Departement-->
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="form-group">
+                                                        <label for="UDNom">numDepartement</label>
+                                                        <input
+                                                                type="text"
+                                                                id="UDNumDepartement"
+                                                                formControlName="numDepartement"
+                                                                class="form-control"
+                                                                [ngClass]="{ 'is-invalid': ReactiveDrFormSubmitted && ReactiveDrForm.numDepartement.errors }"
+                                                        />
+                                                        <div
+                                                                *ngIf="ReactiveDrFormSubmitted && ReactiveDrForm.numDepartement.errors"
+                                                                class="invalid-feedback"
+                                                        >
+                                                            <div *ngIf="ReactiveDrForm.numDepartement.errors.required">Nom est requis</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--   num Departement-->
+
+                                <!--   nom Departement-->
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="form-group">
+                                                        <label for="UDNom">Nom</label>
+                                                        <input
+                                                                type="text"
+                                                                id="UDNom"
+                                                                formControlName="nom"
+                                                                class="form-control"
+                                                                [ngClass]="{ 'is-invalid': ReactiveDrFormSubmitted && ReactiveDrForm.nom.errors }"
+                                                        />
+                                                        <div
+                                                                *ngIf="ReactiveDrFormSubmitted && ReactiveDrForm.nom.errors"
+                                                                class="invalid-feedback"
+                                                        >
+                                                            <div *ngIf="ReactiveDrForm.nom.errors.required">Nom est requis</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                    <!--   nom Departement-->
+
+
+
+
+
+
+
+                                            <!--   num Departement-->
+<!--                                            <div class="col-md-4">-->
+<!--                                                <div class="form-group">-->
+<!--                                                    <div class="form-group">-->
+<!--                                                        <label for="UDnumDepartement">Num Departement</label>-->
+<!--                                                        <input-->
+<!--                                                                type="text"-->
+<!--                                                                id="UDnumDepartement"-->
+<!--                                                                formControlName="text"-->
+<!--                                                                class="form-control"-->
+<!--                                                                [ngClass]="{ 'is-invalid': ReactiveDrFormSubmitted && ReactiveDrForm.numDepartement.errors }"-->
+<!--                                                        />-->
+<!--                                                        <div-->
+<!--                                                                *ngIf="ReactiveDrFormSubmitted && ReactiveDrForm.numDepartement.errors"-->
+<!--                                                                class="invalid-feedback"-->
+<!--                                                        >-->
+<!--                                                            <div *ngIf="ReactiveDrForm.numDepartement.errors.required">Num Departement est requis</div>-->
+<!--                                                        </div>-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+                                            <!--   num Departement-->
+
+
+                                            <div class="col-12 d-flex flex-sm-row flex-column mt-2">
+                                                <button class="btn btn-outline-success" rippleEffect>
+                                                    Ajouter
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </ng-template>
+                        </li>
+                    </ul>
+                    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+

@@ -1,0 +1,73 @@
+<!-- Email list Area -->
+<div class="email-app-list">
+    <!-- Email search starts -->
+    <div class="app-fixed-search d-flex align-items-center">
+      <div class="sidebar-toggle d-block d-lg-none ml-1">
+        <button class="btn p-0" (click)="toggleSidebar('email-sidebar')"><i data-feather="menu" [size]="21"></i></button>
+      </div>
+      <div class="d-flex align-content-center justify-content-between w-100">
+        <div class="input-group input-group-merge">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i data-feather="search" class="text-muted"></i></span>
+          </div>
+          <input
+            type="text"
+            class="form-control"
+            id="email-search"
+            placeholder="rechercher sur un email"
+            aria-label="Search..."
+            aria-describedby="email-search"
+            (keyup)="queryUpdate($event)"
+          />
+        </div>
+      </div>
+    </div>
+    <!-- Email search ends -->
+  
+    <!-- Email actions starts -->
+    <!-- <div class="app-action">
+      <div class="action-left">
+        <div class="custom-control custom-checkbox selectAll">
+          <input
+            type="checkbox"
+            class="custom-control-input"
+            id="selectAllCheck"
+            [checked]="hasSelectedMails"
+            [indeterminate]="isIndeterminate"
+            (click)="toggleSelectAll()"
+          />
+          <label class="custom-control-label font-weight-bolder pl-25" for="selectAllCheck">Select All</label>
+        </div>
+      </div>
+      <div class="action-right" *ngIf="hasSelectedMails > 0">
+        <ul class="list-inline m-0">
+          <li class="list-inline-item mail-delete">
+            <button class="action-icon btn p-0" (click)="updateFolderOnSelectedMails('trash')">
+              <i data-feather="trash-2" [size]="18"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div> -->
+    <!-- Email actions ends -->
+  
+    <!-- Email list starts -->
+    <div class="email-user-list" [perfectScrollbar]>
+      <ul class="email-media-list">
+        <email-list-item
+          [email]="email"
+          *ngFor="let email of emails; let i = index"
+          ></email-list-item>
+          <!-- (click)="openEmail(email.id); $event.stopPropagation()" -->
+        <ng-container *ngIf="emails.length; else noResults"></ng-container>
+      </ul>
+      <ng-template #noResults>
+        <div class="no-results show">
+          <h5>No Items Found</h5>
+        </div>
+      </ng-template>
+    </div>
+    <!-- Email list ends -->
+  </div>
+  <!--/ Email list Area -->
+  

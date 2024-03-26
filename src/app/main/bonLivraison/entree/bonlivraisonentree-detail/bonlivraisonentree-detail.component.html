@@ -1,0 +1,373 @@
+<div class="content-wrapper container-xxl p-0">
+  <app-content-header [contentHeader]="contentHeader"></app-content-header>
+  <div class="content-body">
+    <section class="invoice-preview-wrapper">
+      <div class="row invoice-preview">
+        <div class="col-xl-10 col-md-8 col-12">
+          <div class="card">
+            <div class="card-body">
+              <ul ngbNav #nav="ngbNav" class="nav nav-pills">
+                <li ngbNavItem>
+                  <a ngbNavLink class="d-flex align-items-center">
+                    <i data-feather="box" class="mr-sm-50"></i>
+                    <span class="d-none d-sm-block">{{ edit ? 'Modifier' : 'Détail' }}</span>
+                  </a>
+                  <ng-template ngbNavContent>
+                    <div class="tab-pane active" id="account" aria-labelledby="account-tab" role="tabpanel">
+                      <form class="form-validate" (ngSubmit)="(bleForm.form.valid)" #bleForm="ngForm">
+                        <div class="row">
+    
+                          <div class="col-md-4">
+                            <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                              <label for="numeroBonLivraison">N° BL</label>
+                              <input
+                                  type="text"
+                                  id="numeroBonLivraison"
+                                  class="form-control"
+                                  placeholder="N° BL"
+                                  name="numeroBonLivraison"
+                                  [(ngModel)]="ble.numeroBonLivraison"
+                              />
+                            </div>
+                          </div>
+                            
+                          <div class="col-12 col-md-4">                              
+                            <label for="expedition">Date de réception</label>
+                            <fieldset class="form-group" [ngClass]="{'pointer-events-none': (!edit)}">
+                              <div class="input-group">
+                                <input
+                                  class="form-control"
+                                  ngbDatepicker
+                                  #dateReceptionDP="ngbDatepicker"    
+                                  [(ngModel)]="dateReception"                            
+                                  name="expedition"
+                                  id="expedition"
+                                />
+                                <div class="input-group-append">
+                                  <button
+                                    class="btn btn-outline-secondary feather icon-calendar"
+                                    (click)="dateReceptionDP.toggle()"
+                                    type="button"
+                                    rippleEffect
+                                  ></button>
+                                </div>
+                                <!-- <div
+                                  *ngIf="umsForm.submitted && ums.dateReception == null" 
+                                  class="invalid-feedback"
+                                >
+                                  <div>Date d'expédition est requis</div>
+                                </div>                               -->
+                              </div>
+                            </fieldset>
+                          </div>
+    
+                          <div class="col-md-4" [ngClass]="{'pointer-events-none': !edit}">
+                            <div class="form-group">
+                              <label for="quantitePalette">Quantité Palette</label>
+                              <input
+                                type="text"
+                                id="quantitePalette"
+                                class="form-control"
+                                placeholder="Quantité Palette"
+                                name="quantitePalette"
+                                [(ngModel)]="ble.quantitePalette"
+                              />
+                            </div>
+                          </div> 
+    
+                          <div class="col-md-6" style="margin-bottom: 2px;" *ngIf="!hasRole.includes('Client')">
+                            <label for="fournisseur">Fournisseur</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="btn btn-outline-primary" *ngIf="ble.fournisseur" routerLink="/fournisseurs/detail/{{ble.fournisseur.id}}">
+                                        <i data-feather="eye"></i>
+                                    </div>
+                                </div>
+                                <input 
+                                    id="fournisseur"
+                                    name="fournisseur"  
+                                    type="text" 
+                                    class="form-control pointer-events-none" 
+                                    placeholder="fournisseur" 
+                                    [ngModel]="ble.fournisseur?.nom" 
+                                />
+                                <div class="input-group-append">
+                                    <div class="btn btn-outline-primary" *ngIf="ble.fournisseur" routerLink="/fournisseurs/detail/{{ble.fournisseur.id}}">Consulter !</div>
+                                </div>
+                            </div>
+                          </div> 
+    
+                          <div class="col-md-6" style="margin-bottom: 2px;" *ngIf="hasRole.includes('Client')">
+                            <label for="fourni">Fournisseur</label>
+                            <div class="input-group">
+                                <input 
+                                    id="fourni"
+                                    name="fourni"  
+                                    type="text" 
+                                    class="form-control pointer-events-none" 
+                                    placeholder="fournisseur" 
+                                    [ngModel]="ble.fournisseur?.nom" 
+                                />
+                            </div>
+                          </div> 
+
+                          <div class="col-md-6" style="margin-bottom: 2px;">
+                            <label for="lve">Lettre de voiture</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="btn btn-outline-primary" *ngIf="ble.lve" routerLink="/lve/detail/{{ble.lve.id}}">
+                                        <i data-feather="eye"></i>
+                                    </div>
+                                </div>
+                                <input 
+                                    id="lve"
+                                    name="lve"  
+                                    type="text" 
+                                    class="form-control pointer-events-none" 
+                                    placeholder="lve" 
+                                    [ngModel]="ble.lve.numeroRecepisse" 
+                                />
+                                <div class="input-group-append">
+                                    <div class="btn btn-outline-primary" *ngIf="ble.lve" routerLink="/lve/detail/{{ble.lve.id}}">Consulter !</div>
+                                </div>
+                            </div>
+                          </div> 
+
+                          <div class="col-md-12 mt-1" *ngIf="ble.fichier">
+                            <div class="media-body">
+                              <small class="text-muted">fichier importé.</small>
+                              <p class="my-50">
+                                <a class="text-primary" (click)="openFile()" id="blog-image-text">{{ble.fichier}}</a>
+                              </p>
+                            </div>
+                          </div>  
+                        </div>
+                      </form>
+                    </div>
+                  </ng-template>
+                </li>
+              </ul>
+              <div [ngbNavOutlet]="nav" class="mt-2"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-12 mt-md-0 mt-2" *ngIf="!hasRole.includes('Client')">
+          <div class="card">
+            <div class="card-body">
+              <button
+                class="btn btn-success btn-block mb-75"
+                routerLink="/ume/new/{{ble.id}}"
+                rippleEffect
+              >
+                Ajouter UME
+              </button>
+              <a 
+                class="btn btn-outline-danger btn-block mb-75" 
+                rippleEffect
+                (click)="modalOpenForm(modalForm)" 
+                *ngIf="edit && hasRole.includes('Super_admin')"
+              >
+                Supprimer
+              </a>
+              <a
+                class="btn btn-outline-secondary btn-block mb-75"
+                rippleEffect
+                (click)="submit(bleForm)"
+                *ngIf="edit && hasRole.includes('Super_admin')  || hasRole.includes('Admin')"
+              >
+                Modifier
+              </a>
+            </div>
+          </div>
+
+          <div class="card" *ngIf="!ble.fichier">
+            <div class="card-body">
+              <label class="form-label" for="bleFichier">Importer Fichier</label>
+              <div class="custom-file">
+                <input
+                  type="file"
+                  class="custom-file-input"
+                  type="file"
+                  ng2FileSelect
+                  [uploader]="bleFichier"
+                  id="bleFichier"
+                  name="bleFichier"
+                  (change)="onLveFileSelected()"
+                />
+                <label class="custom-file-label font-small-2">{{ bleFileName }}</label>
+              </div>
+              <div *ngIf="!bleFileName.includes('choisir')">
+                <span class="text-success font-small-3 float-right mt-1"> <a (click)="upload()">Importer</a></span>
+                <span class="text-danger font-small-3 float-right mt-1 mr-1"> <a (click)="vider()">Vider</a></span>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="content-wrapper container-xxl p-0">
+  <div class="content-body">
+    <div class="card">
+      <div class="divider divider-warning mx-1 mb-0">
+        <div class="divider-text font-medium-2">Lignes du bon livraison entrée</div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 col-12">
+            <div class="d-flex justify-content-between align-items-center mx-1">
+            <label class="d-flex align-items-center">
+              Afficher
+              <select id="select" class="form-control mx-25" [(ngModel)]="selectedOption">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      </div>
+      <ngx-datatable
+        [rows]="lignes"
+        [rowHeight]="'auto'"
+        class="bootstrap core-bootstrap"
+        [limit]="selectedOption"
+        [columnMode]="ColumnMode.force"
+        [headerHeight]="50"
+        [footerHeight]="50"
+        [scrollbarH]="true"
+        [messages]="{emptyMessage: 'Aucun Ligne n\'a été trouvé', totalMessage:'Lignes'}"
+      > 
+        <ngx-datatable-column name="Désigantion" prop="article.designationClient" [width]="200">
+            <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+            <div class="d-flex align-items-center">
+                <div class="cell-line-height"> 
+                <a class="font-medium-2 d-block" routerLink="/articles/detail/{{row.article.id}}"
+                    ><span class="font-weight-bold">{{ row.article ? row.article.designationClient : ''}}</span></a
+                >
+                <span class="text-muted font-medium-1">{{ row.article ? 'code : ' + row.article.codeFournisseur : '' }}</span>
+                </div>
+            </div>
+            </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Quantité" prop="quantiteProduit" [width]="100">
+            <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+            <div class="d-flex align-items-center">
+                <div class="cell-line-height">
+                <a class="font-medium-2 d-block"
+                    ><span class="font-weight-bold">{{ row.quantiteColis}} colis</span></a
+                >
+                <span class="text-muted font-medium-1">{{ row.quantiteProduit }} U</span>
+                </div>
+            </div>
+            </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="QTe reçue" prop="quantiteProduitRecu" [width]="100">
+            <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+            <div class="d-flex align-items-center">
+                <div class="cell-line-height">
+                <a class="font-medium-2 d-block">
+                  <span class="font-weight-bold"> {{ row?.quantiteColisRecu + ' colis' }} </span>
+                </a>
+                <span class="text-muted font-medium-1">{{  row?.quantiteProduitRecu + ' U' }} </span>
+                </div>
+            </div>
+            </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="ume" prop="idUme" [width]="40">
+          <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+            <div class="d-flex align-items-center">
+              <div class="cell-line-height">
+                <a class="font-medium-1 d-block" routerLink="/ume/detail/{{row.idUme}}">
+                  <i size="18" data-feather="eye"></i>
+                  <span class="font-weight-bold ml-1">{{ row.idUme ?? '' }}</span>
+                </a>
+              </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="n° lot" prop="numeroLot" [width]="100">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <div
+              class="font-medium-1"
+            >
+              {{  row.numeroLot }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="n° UME" prop="numeroUme" [width]="10">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <div
+              class="font-medium-1"
+            >
+              {{  row.numeroUme  }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Zone depot" prop="zone" [width]="40">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <div
+              class="font-medium-1"
+            >
+              {{  row.zone  }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+    </div>
+  </div>
+</div>
+
+<div class="login-form"> 
+  <ng-template #modalForm let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="myModalLabel1">Confirmation de suppression</h4>
+      <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body" tabindex="0" ngbAutofocus>
+      <form class="form-validate" [formGroup]="ReactivePasswordConfirmationForm" (ngSubmit)="ReactiveCPFormOnSubmit()">
+        <div class="row">
+
+          <div class="col-md-12">
+            <div class="form-group">
+              <div class="form-group">
+                  <label for="password">Mot de passe</label>
+                  <input
+                    type="password"
+                    id="password"
+                    formControlName="password"
+                    class="form-control"
+                    [ngClass]="{ 'is-invalid': ReactiveCPFormSubmitted && ReactiveCPForm.password.errors }"
+                  />
+                  <div
+                    *ngIf="ReactiveCPFormSubmitted && ReactiveCPForm.password.errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="ReactiveCPForm.password.errors.required">Mot de passe est requis</div>
+                    <div *ngIf="ReactiveCPForm.password.errors.minlength">Mot de passe doit comporter au moins 6 caractères</div>
+                  </div>
+                </div>
+            </div>
+          </div>
+          <div class="modal-footer" style="width: 100%;">
+            <button class="btn btn-primary" rippleEffect>
+              Confirmer
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+</div>

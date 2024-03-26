@@ -1,0 +1,525 @@
+<div class="content-wrapper container-xxl p-0">
+  <div class="content-body">
+      <app-content-header [contentHeader]="contentHeader"></app-content-header>
+      <section class="users-list-wrapper">
+          <div class="card">
+              <h4 class="card-header text-primary">Filtre de recherche</h4>
+              <div class="card-body">
+                  <div class="row">
+  
+                      <!-- Destinataire Filter -->
+                      <div class="col-lg-6 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                          <p class="card-text col-title mb-md-50 mb-0">Destinataire</p>
+                          <ng-select 
+                              name="destinataire"
+                              id="destinataire"
+                              [items]="destinataires" 
+                              [(ngModel)]="request.destinataire"
+                              bindLabel="codeUM"  
+                              bindValue="id"
+                          >
+                              <ng-template ng-option-tmp let-item="item">
+                              {{item.codeUM + '  -  ' + item.nom}}
+                              </ng-template>
+                          </ng-select>
+                      </div>
+                      <!-- Destinataire Filter Ends -->
+  
+                      <!-- Poids Filter -->
+                      <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                          <p class="card-text col-title mb-md-50 mb-0">Poids</p>
+                          <fieldset class="form-group">
+                              <input
+                              [(ngModel)]="operation"
+                              name="searchValue"
+                              type="search"
+                              class="form-control ml-25"
+                          /></fieldset>
+                      </div>
+                      <!-- Poids Filter Ends -->
+
+                      <!-- Statut Filter -->
+                      <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                          <p class="card-text col-title mb-md-50 mb-0">Statut</p>
+                          <fieldset class="form-group">
+                              <ng-select
+                                [items]="stats"
+                                [(ngModel)]="selectedStat"
+                                name="stat"
+                                bindLabel="name"
+                                placeholder="État"
+                              ></ng-select>
+                          </fieldset>   
+                      </div>
+                      <!-- Statut Filter Ends -->
+
+                      <!-- Date Start Filter -->
+                      <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                          <p class="card-text col-title mb-md-50 mb-0">Date d'ouverture debut</p>
+                          <fieldset class="form-group">
+                              <input
+                              [(ngModel)]="dateOuverture.start"
+                              name="searchValue"
+                              type="date"
+                              class="form-control ml-25"
+                          /></fieldset>
+                      </div>
+                      <!-- Date Start Filter Ends -->
+
+                      <!-- Date End Filter -->
+                      <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                          <p class="card-text col-title mb-md-50 mb-0">Date d'ouverture fin</p>
+                          <fieldset class="form-group">
+                              <input
+                              [(ngModel)]="dateOuverture.end"
+                              name="searchValue"
+                              type="date"
+                              class="form-control ml-25"
+                          /></fieldset>
+                      </div>
+                      <!-- Date End Filter Ends -->
+
+                      <!-- Date Start Filter -->
+                      <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                          <p class="card-text col-title mb-md-50 mb-0">Date de fermeture debut</p>
+                          <fieldset class="form-group">
+                              <input
+                              [(ngModel)]="dateFermeture.start"
+                              name="searchValue"
+                              type="date"
+                              class="form-control ml-25"
+                          /></fieldset>
+                      </div>
+                      <!-- Date Start Filter Ends -->
+
+                      <!-- Date End Filter -->
+                      <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                          <p class="card-text col-title mb-md-50 mb-0">Date de fermeture fin</p>
+                          <fieldset class="form-group">
+                              <input
+                              [(ngModel)]="dateFermeture.end"
+                              name="searchValue"
+                              type="date"
+                              class="form-control ml-25"
+                          /></fieldset>
+                      </div>
+                      <!-- Date End Filter Ends -->
+
+                      <!-- Date Start Filter -->
+                      <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                          <p class="card-text col-title mb-md-50 mb-0">Date d'expedition debut</p>
+                          <fieldset class="form-group">
+                              <input
+                              [(ngModel)]="dateExpedition.start"
+                              name="searchValue"
+                              type="date"
+                              class="form-control ml-25"
+                          /></fieldset>
+                      </div>
+                      <!-- Date Start Filter Ends -->
+
+                      <!-- Date End Filter -->
+                      <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                          <p class="card-text col-title mb-md-50 mb-0">Date d'expedition fin</p>
+                          <fieldset class="form-group">
+                              <input
+                              [(ngModel)]="dateExpedition.end"
+                              name="searchValue"
+                              type="date"
+                              class="form-control ml-25"
+                          /></fieldset>
+                      </div>
+                      <!-- Date End Filter Ends -->
+                  </div>
+
+                  <div class="btn btn-icon btn-outline-danger float-right" (click)="clear()" rippleEffect>
+                      <span [data-feather]="'trash'"></span>
+                  </div>
+                  <div class="btn btn-icon btn-primary float-right mr-1" (click)="search()" rippleEffect>
+                      <span [data-feather]="'search'"></span>
+                  </div>
+              </div>
+          </div>
+          <div class="card">
+              <div class="row">
+                  <div class="col-md-6 col-12">
+                      <div class="d-flex align-items-center m-2">
+                          <label class="d-flex align-items-center">
+                              <select 
+                                id="select"
+                                  class="form-control mx-25 pr-3" 
+                                  (change)="onSizeChange($event.target.value)"
+                              >
+                                  <option
+                                    *ngFor="let option of pageLimitOptions"
+                                    [value]="option.value"
+                                    [selected]="option.value == currentPageLimit"
+                                  >
+                                    {{ option.value }}
+                                  </option>
+                              </select>
+                          </label>
+                          <label 
+                              class="d-flex align-items-center ml-1"
+                          >
+                              Massive actions
+                              <select id="action" class="form-control mx-25" (change)="onSelectChange()" [(ngModel)]="massActionSelection">
+                                  <option value="0">Select</option>
+                                  <option value="1">Clôturé</option>
+                                  <option value="2">Imprimer Étiquette</option>
+                                  <option value="3">Imprimer Colisage</option>
+                              </select>
+                          </label>
+                      </div>
+                  </div>
+                  <div class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end">
+                      <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                          <label class="d-flex align-items-center ml-1 ml-md-0">
+                              Recherche:
+                              <input
+                                  [(ngModel)]="searchValue"
+                                  name="searchValue"
+                                  type="search"
+                                  class="form-control ml-25"
+                                  (keyup)="filterUpdate($event)"
+                                  (search)="filterUpdate($event)"
+                              />
+                          </label>
+                      </div>
+                  </div>
+              </div>
+
+              <ngx-datatable
+                  [rows]="umss"
+                  rowHeight="auto"
+                  [headerHeight]="50"
+                  [footerHeight]="50"
+                  [scrollbarH]="true"
+                  [columnMode]="ColumnMode.force"
+                  [externalPaging]="true"
+                  [limit]="request.page.limit"
+                  [count]="request.page.count"
+                  [offset]="request.page.offset"
+                  (page)="pageCallback($event)"
+                  [externalSorting]="true"
+                  (sort)="onSort($event)"
+                  [messages]="{emptyMessage: 'Aucun article n\'a été trouvé', totalMessage:'Articles'}"
+                  class="bootstrap core-bootstrap"
+              
+                  [selected]="selectedUms"
+                  [selectionType]="SelectionType.checkbox"
+                  (select)="umsOnSelect($event)"
+              >
+                  <ngx-datatable-column
+                      [width]="50"
+                      [sortable]="false"
+                      [canAutoResize]="false"
+                      [draggable]="false"
+                      [resizeable]="false"
+                  >
+                      <ng-template
+                          ngx-datatable-header-template
+                          let-value="value"
+                          let-allRowsSelected="allRowsSelected"
+                          let-selectFn="selectFn"
+                      >
+                          <div class="custom-control custom-control-primary custom-checkbox">
+                              <input
+                                  type="checkbox"
+                                  class="custom-control-input"
+                                  [checked]="allRowsSelected"
+                                  (change)="selectFn(!allRowsSelected)"
+                                  id="headerCustomChkbxRef"
+                              />
+                              <label 
+                                  class="custom-control-label" 
+                                  for="headerCustomChkbxRef"
+                              ></label>
+                          </div>
+                      </ng-template>
+
+                      <ng-template
+                          ngx-datatable-cell-template
+                          let-rowIndex="rowIndex"
+                          let-value="value"
+                          let-isSelected="isSelected"
+                          let-onCheckboxChangeFn="onCheckboxChangeFn"
+                      >
+                          <div class="custom-control custom-control-primary custom-checkbox">
+                              <input
+                                  type="checkbox"
+                                  class="custom-control-input"
+                                  [checked]="isSelected"
+                                  (change)="onCheckboxChangeFn($event)"
+                                  id="rowCustomChkbxRef{{ rowIndex }}"
+                              />
+                              <label 
+                                  class="custom-control-label" 
+                                  for="rowCustomChkbxRef{{ rowIndex }}"
+                              ></label>
+                          </div>
+                      </ng-template>
+                  </ngx-datatable-column>
+      
+                  <ngx-datatable-column 
+                      name="Id" 
+                      prop="idUniteManutentionSortie" 
+                      [width]="100"
+                  >
+                      <ng-template 
+                          let-row="row" 
+                          let-name="value" 
+                          ngx-datatable-cell-template
+                      >
+                          <div class="d-flex align-items-center">
+                              <div class="cell-line-height">
+                                  <a 
+                                      class="font-medium-1 d-block" 
+                                      routerLink="/ums/detail/{{row.id}}"
+                                  >
+                                      <span class="font-weight-bold"># {{ row.id }}</span>
+                                  </a>
+                              </div>
+                          </div>
+                      </ng-template>
+                  </ngx-datatable-column>
+      
+                  <ngx-datatable-column 
+                      name="Code UM" 
+                      prop="bcs.destinataire.codeUM" 
+                      [width]="100"
+                  >
+                      <ng-template 
+                          let-row="row" 
+                          let-name="value" 
+                          ngx-datatable-cell-template
+                      >
+                          <div class="d-flex align-items-center">
+                              <div class="cell-line-height">
+                                  <a 
+                                      class="font-medium-1 d-block" 
+                                      [routerLink]="'/destinataire/detail/{{row?.bcs?.destinataire?.id}}'"
+                                  >
+                                      <span class="font-weight-bold"> {{ row?.bcs?.destinataire?.codeUM }} </span>
+                                  </a>
+                              </div>
+                          </div>
+                      </ng-template>
+                  </ngx-datatable-column>
+      
+                  <ngx-datatable-column 
+                      name="Numéro um" 
+                      prop="numero" 
+                      [width]="100"
+                  >
+                      <ng-template 
+                          let-row="row" 
+                          ngx-datatable-cell-template
+                      >
+                          <div> {{ row.numero }} </div>
+                      </ng-template>
+                  </ngx-datatable-column>
+      
+                  <ngx-datatable-column 
+                      [width]="50" 
+                      name="Poids" 
+                      prop="poidsBrut" 
+                      [sortable]="false"
+                  >
+                      <ng-template 
+                          ngx-datatable-cell-template 
+                          let-value="value" 
+                          let-rowIndex="rowIndex" 
+                          let-row="row"
+                      >
+                          <!-- <div
+                          title="Double click to edit"
+                          (dblclick)="editingPoids[rowIndex + '-poids'] = true"
+                          *ngIf="!editingPoids[rowIndex + '-poids']"
+                          >
+                          {{ value }}
+                          </div> -->
+                          <input
+                              autofocus
+                              class="form-control form-control-sm"
+                              (blur)="inlineEditingUpdatePoids($event, 'poidsBrut', rowIndex)"
+                              type="number"
+                              [value]="value"
+                              [id]="row.id"
+                          />
+                      </ng-template>
+                  </ngx-datatable-column>
+      
+                  <ngx-datatable-column 
+                      name="Date ouverture" 
+                      prop="dateOuverture" 
+                      [width]="100"    
+                  >
+                      <ng-template 
+                          let-row="row" 
+                          ngx-datatable-cell-template
+                      >
+                          <div> {{ row.dateOuverture | date: 'dd-MM-yyyy HH:mm:ss' }} </div>
+                      </ng-template>
+                  </ngx-datatable-column>
+      
+                  <ngx-datatable-column 
+                      name="Date fermeture" 
+                      prop="dateFermeture" 
+                      [width]="100"
+                  >
+                      <ng-template 
+                          let-row="row" 
+                          ngx-datatable-cell-template
+                      >
+                          <div> {{ row.dateFermeture | date: 'dd-MM-yyyy HH:mm:ss' }} </div>
+                      </ng-template>
+                  </ngx-datatable-column>
+      
+                  <ngx-datatable-column 
+                      name="Date Expedition" 
+                      prop="dateExpedition" 
+                      [width]="100"
+                  >
+                      <ng-template 
+                          let-row="row" 
+                          ngx-datatable-cell-template
+                      >
+                          <div> {{ row.dateExpedition | date: 'dd-MM-yyyy HH:mm:ss' }} </div>
+                      </ng-template>
+                  </ngx-datatable-column>
+      
+                  <ngx-datatable-column 
+                      name="Actions" 
+                      [width]="10" 
+                      [sortable]="false"
+                  >
+                      <ng-template 
+                          ngx-datatable-cell-template 
+                          let-row="row"
+                      >
+                          <div 
+                              ngbDropdown 
+                              container="body"
+                          >
+                              <button 
+                                  ngbDropdownToggle 
+                                  type="button" 
+                                  class="btn icon-btn btn-sm hide-arrow" 
+                                  rippleEffect
+                              >
+                                  <span 
+                                      [data-feather]="'more-vertical'" 
+                                      [class]="'cursor-pointer'"
+                                  ></span>
+                              </button>
+
+                              <div ngbDropdownMenu>
+                                  <a 
+                                      routerLink="/ums/detail/{{ row.id }}" 
+                                      ngbDropdownItem
+                                  >
+                                      <span 
+                                          [data-feather]="'file-text'" 
+                                          [size]="16" 
+                                          [class]="'mr-50'"
+                                      ></span> 
+                                      Consulter
+                                  </a>
+                                  <a 
+                                      routerLink="/ums/edit/{{ row.id }}" 
+                                      ngbDropdownItem
+                                  >
+                                      <span 
+                                          [data-feather]="'edit'" 
+                                          [size]="16" 
+                                          [class]="'mr-50'"
+                                      ></span> 
+                                      Modifier
+                                  </a>
+                                  <a 
+                                      (click)="modalOpenForm(modalForm, row.id)" 
+                                      ngbDropdownItem
+                                      *ngIf="hasRole.includes('Super_admin')"
+                                  >
+                                      <span 
+                                          [data-feather]="'trash'" 
+                                          [size]="16" 
+                                          [class]="'mr-50'"
+                                      ></span> 
+                                      Suprimer
+                                  </a>
+
+                                    <a 
+                                        (click)="generatePdf('umsTicket', row)" 
+                                        ngbDropdownItem
+                                    >
+                                      <span 
+                                          [data-feather]="'printer'" 
+                                          [size]="16" 
+                                          [class]="'mr-50'"
+                                      ></span> 
+                                      Étiquette
+                                  </a>
+
+                                    <a 
+                                        (click)="generatePdf('colisageUms', row)" 
+                                        ngbDropdownItem
+                                    >
+                                      <span 
+                                          [data-feather]="'printer'" 
+                                          [size]="16" 
+                                          [class]="'mr-50'"
+                                      ></span> 
+                                      Colisage
+                                  </a>
+                              </div>
+                          </div>
+                      </ng-template>
+                  </ngx-datatable-column>
+              </ngx-datatable>
+          </div>
+      </section>
+  </div>
+</div>
+
+<div class="login-form"> 
+  <ng-template #modalForm let-modal>
+      <div class="modal-header">
+          <h4 class="modal-title" id="myModalLabel1">Confirmation de suppression</h4>
+          <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      <div class="modal-body" tabindex="0" ngbAutofocus>
+          <form class="form-validate" [formGroup]="ReactivePasswordConfirmationForm" (ngSubmit)="ReactiveCPFormOnSubmit()">
+              <div class="row">
+                  <div class="col-md-12">
+                      <div class="form-group">
+                          <div class="form-group">
+                              <label for="password">Mot de passe</label>
+                              <input
+                                  type="password"
+                                  id="password"
+                                  formControlName="password"
+                                  class="form-control"
+                                  [ngClass]="{ 'is-invalid': ReactiveCPFormSubmitted && ReactiveCPForm.password.errors }"
+                              />
+                              <div
+                                  *ngIf="ReactiveCPFormSubmitted && ReactiveCPForm.password.errors"
+                                  class="invalid-feedback"
+                              >
+                                  <div *ngIf="ReactiveCPForm.password.errors.required">Mot de passe est requis</div>
+                                  <div *ngIf="ReactiveCPForm.password.errors.minlength">Mot de passe doit comporter au moins 6 caractères</div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="modal-footer" style="width: 100%;">
+                      <button class="btn btn-primary" rippleEffect> Confirmer </button>
+                  </div>
+              </div>
+          </form>
+      </div>
+  </ng-template>
+</div>

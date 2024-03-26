@@ -1,0 +1,159 @@
+<div class="content-wrapper container-xxl p-0">
+    <!-- Breadcrumbs -->
+    <app-content-header [contentHeader]="contentHeader"></app-content-header>
+    <div class="content-body">
+      <section class="app-user-edit">
+        <div class="card">
+          <div class="card-body">
+            <ul ngbNav #nav="ngbNav" class="nav nav-pills">
+              <li ngbNavItem>
+                <a ngbNavLink class="d-flex align-items-center"
+                  ><i bls-feather="box" class="mr-sm-50"></i><span class="d-none d-sm-block">Nouveau BL</span></a
+                >
+                <ng-template ngbNavContent>
+                  <div class="tab-pane active" id="account" aria-labelledby="account-tab" role="tabpanel">
+
+                    <form class="form-validate" [formGroup]="ReactiveBlsForm" (ngSubmit)="ReactiveBlsFormOnSubmit()">
+
+                        <div class="row">
+                            <div class="col-12">
+                                <h4 class="mb-1">
+                                    <i data-feather="file-text" [size]="16" class="mr-75 font-medium-4"></i>
+                                    <span class="align-middle">Information</span>
+                                </h4>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                                <label for="numeroBonLivraison">Numéro BL</label>
+                                <input
+                                    type="text"
+                                    id="numeroBonLivraison"
+                                    class="form-control"
+                                    placeholder="Numéro BL"
+                                    name="numeroBonLivraison"
+                                    formControlName="numeroBonLivraison"
+                                />
+                                </div>
+                            </div>
+
+                            <!-- codeUM -->
+                            <div class="col-md-4" style="margin-bottom: 10px;">
+                                <label for="codeUM">Code UM</label>
+                                <div class="input-group">
+                                    <input 
+                                        id="codeUM"
+                                        name="codeUM"  
+                                        type="text" 
+                                        class="form-control" 
+                                        placeholder="Code UM" 
+                                        [ngClass]="{'pointer-events-none': !edit}" 
+                                        formControlName="codeUM"
+                                    />
+                                </div>
+                            </div> 
+
+                            <!-- bcs -->
+                            <div class="col-md-4" style="margin-bottom: 10px;">
+                                <label for="bcs">Bon de commande sortie</label>
+                                <div class="input-group">
+                                    <input 
+                                        id="bcs"
+                                        name="bcs"  
+                                        type="text" 
+                                        class="form-control" 
+                                        placeholder="bcs" 
+                                        [ngClass]="{'pointer-events-none': !edit}" 
+                                        formControlName="idBcs"
+                                    />
+                                </div>
+                            </div> 
+
+                            <div class="col-lg-4 col-md-6">
+                                <div class="form-group">
+                                  <label for="dateImpression">Date Impression</label>
+                                  <div class="input-group">
+                                    <input
+                                        ng-model="currentDate"
+                                        class="form-control"
+                                        placeholder="aaaa-mm-jj"
+                                        name="dateImpression"
+                                        formControlName="dateImpression"
+                                        ngbDatepicker
+                                        #dateImpressionDP="ngbDatepicker"
+                                        (click)="dateImpressionDP.toggle()"
+                                    />
+                                  </div>
+                                </div>
+                            </div>     
+
+                            <!-- fournisseur -->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                  <label for="LVTransporteur">Transporteur</label>
+                                  <select
+                                    id="LVTransporteur"
+                                    formControlName="transporteur"
+                                    class="form-control"
+                                    [ngClass]="{ 'is-invalid': ReactiveBlsFormSubmitted && GetReactiveBlsForm.transporteur.errors }"
+                                  >
+                                    <option value="">Tous</option>
+                                    <option *ngFor="let option of transporteurs" [value]="option.id">{{option.nom}}</option>
+                                  </select>
+                                  <div
+                                    *ngIf="ReactiveBlsFormSubmitted && GetReactiveBlsForm.transporteur.errors"
+                                    class="invalid-feedback"
+                                  >
+                                    <div *ngIf="GetReactiveBlsForm.transporteur.errors.required">Transporteur est requis</div>
+                                  </div>
+                                </div>
+                            </div>
+                        
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                <label for="prixExpedition">Prix expédition</label>
+                                <input
+                                    type="text"
+                                    id="prixExpedition"
+                                    class="form-control"
+                                    placeholder="prixExpedition"
+                                    name="prixExpedition"
+                                    formControlName="prixExpedition"
+                                />
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                <label for="codeTracking">Code tracking</label>
+                                <input
+                                    type="text"
+                                    id="codeTracking"
+                                    class="form-control"
+                                    placeholder="codeTracking"
+                                    name="codeTracking"
+                                    formControlName="codeTracking"
+                                    [ngClass]="{'pointer-events-none': !edit}"
+                                />
+                                </div>
+                            </div>
+  
+                          <div class="col-12 d-flex flex-sm-row flex-column mt-2">
+                              <button class="btn btn-outline-success" rippleEffect>
+                                Ajouter
+                              </button>
+                          </div>
+
+                        </div>
+                      </form>
+                  </div>
+                </ng-template>
+              </li>
+            </ul>
+            <div [ngbNavOutlet]="nav" class="mt-2"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+</div>
+  

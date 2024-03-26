@@ -1,0 +1,154 @@
+<div class="content-wrapper container-xxl p-0">
+    <!-- <app-content-header [contentHeader]="contentHeader"></app-content-header> -->
+      <div class="content-body">
+        <section class="invoice-preview-wrapper">
+          <div class="row invoice-preview">
+            <!-- Invoice -->
+            <div class="col-xl-9 col-md-8 col-12 printRef">
+                <div class="card invoice-preview-card">
+                    <div class="card-body invoice-padding pb-0">
+                        <!-- Header Starts -->
+                        <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
+                            <div>
+                            <div class="logo-wrapper">
+                                <span class="brand-logo">
+                                <img src="{{ coreConfig.app.appLogoImage }}" alt="brand-logo" />
+                                </span>
+                                <h3 class="text-primary invoice-logo">CrossDock</h3>
+                            </div>
+                            <p class="card-text mb-25">Remettant pour le compte de tiers</p>
+                            <p class="card-text mb-25">122 Allée de la lavande</p>
+                            <p class="card-text mb-0">84300 Cavaillon</p>
+                            </div>
+                            <div class="mt-md-0 mt-2">
+                            <h4 class="invoice-title">
+                                <span class="invoice-number" *ngIf="type == 'colisage'">Liste colisage - BC {{ bcs.numeroCommande }}</span>
+                                <span class="invoice-number" *ngIf="type == 'stock'">Stock</span>
+                            </h4>
+                            <div class="invoice-date-wrapper">
+                                <p class="invoice-date-title">N° UM:</p>
+                                <p class="invoice-date">{{ ums.numero }}</p>
+                            </div>
+                            <div class="invoice-date-wrapper">
+                                <p class="invoice-date-title">Date de commande:</p>
+                                <p class="invoice-date">{{ bcs.dateCommande | date : "dd-MM-yyyy" }}</p>
+                            </div>
+                            <div class="invoice-date-wrapper">
+                                <p class="invoice-date-title">Code UM:</p>
+                                <p class="invoice-date"> {{ bcs.destinataire.codeUM }} </p>
+                            </div>
+                            </div>
+                        </div>
+                        <!-- Header Ends -->
+                    </div>
+        
+                    <div class="card-body invoice-padding pb-0" *ngIf="type == 'colisage'">
+                        <!-- Header Starts -->
+                        <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
+                            <div>
+                            <h6 class="mb-2">Expéditeur :</h6>
+                            <h6 class="mb-25">{{ bcs.destinataire.nom }}</h6>
+                            <p class="card-text mb-25">{{ bcs.destinataire.adresselivraisonComplement1 }}</p>
+                            <p class="card-text mb-25">{{ bcs.destinataire.adresselivraisonNumero + ' ' +  bcs.destinataire.adresselivraisonRue}}</p>
+                            <p class="card-text mb-25">{{ bcs.destinataire.adresselivraisonCodepostal + ' ' +  bcs.destinataire.adresselivraisonLocalite}}</p>
+                            </div>
+                            <div>
+                            <h6 class="mb-2">Addresse de commande :</h6>
+                            <h6 class="mb-25">{{ bcs.destinataire.nom }}</h6>
+                            <p class="card-text mb-25">{{ bcs.destinataire.adresselivraisonNumero }} {{ bcs.destinataire.adresselivraisonRue }}</p>
+                            <p class="card-text mb-25">{{ bcs.destinataire.adresselivraisonCodepostal }} {{ bcs.destinataire.adresselivraisonLocalite }}</p>
+                            </div>
+                            <div class="mt-md-0 mt-2">
+                            <h6 class="mb-2">Addresse de livraison :</h6>
+                            <table>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                    <span class="font-weight-bold">{{ bcs.destinataire.nom }}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>{{ bcs.destinataire.adresselivraisonNumero }} {{ bcs.destinataire.adresselivraisonRue }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ bcs.destinataire.adresselivraisonCodepostal }} {{ bcs.destinataire.adresselivraisonLocalite }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Téléphone : {{ bcs.destinataire.telephone }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                        <!-- Header Ends -->
+                    </div>
+                    <!-- Invoice Description Starts -->
+                    <div class="table-responsive" *ngIf="type == 'colisage'">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th class="py-1">Code Article</th>
+                                <th class="py-1">Désignation</th>
+                                <th class="py-1">N° Lot</th>
+                                <th class="py-1">Date de péremption</th>
+                                <th class="py-1">Quantité</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let colis of ums.colisList">
+                                <td> {{ colis.article.codeClient }} </td>
+                                <td> {{ colis.article.designationClient }} </td>
+                                <td> {{ colis.numeroLot }} </td>
+                                <td> {{ colis.datePeremption | date: 'dd-MM-yyyy HH:mm:ss' }} </td>
+                                <td> {{ colis.quantiteProduit }} </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-responsive" *ngIf="type == 'stock'">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th class="py-1">Zone dépot</th>
+                                <th class="py-1">N° lot</th>
+                                <th class="py-1">Ume</th>
+                                <th class="py-1">Code Article</th>
+                                <th class="py-1">Désignation</th>
+                                <th class="py-1">Date de péremption</th>
+                                <th class="py-1">Quantité colis</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let stock of ums.stock">
+                                <td> {{ stock.zoneDepot }} </td>
+                                <td> {{ stock.nlot }} </td>
+                                <td> {{ stock.ume }} </td>
+                                <td> {{ stock.codeArticle }} </td>
+                                <td> {{ stock.designationArticle }} </td>
+                                <td> {{ stock.datePeremption | date: 'dd-MM-yyyy HH:mm:ss' }} </td>
+                                <td> {{ stock.qteColis }} </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="col-xl-3 col-md-4 col-12 invoice-actions mt-md-0 mt-2">
+              <div class="card">
+                <div class="card-body">
+                  <a class="btn btn-outline-primary btn-block mb-75" routerLink="/ums/detail/{{ums.id}}" rippleEffect>
+                    Retour
+                  </a>
+                  <a class="btn btn-outline-secondary btn-block mb-75" href="javascript:window.print();" rippleEffect>
+                    Imprimer
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+  </div>
+  
+    

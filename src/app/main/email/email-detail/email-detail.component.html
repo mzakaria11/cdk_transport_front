@@ -1,0 +1,99 @@
+<!-- Detailed Email View -->
+<ng-container *ngIf="isOpen === true">
+    <div class="email-app-details" style="width: 100%;" [class.show]="isOpen === true">
+      <!-- Detailed Email Header starts -->
+      <div class="email-detail-header">
+        <div class="email-header-left d-flex align-items-center">
+          <button class="btn go-back p-0 mr-1" (click)="toggleDetails()">
+            <i data-feather="chevron-left" [size]="21"></i>
+          </button>
+          <h4 class="email-subject mb-0">{{ openedEmail.subject }}</h4>
+        </div>
+        <div class="email-header-right ml-2 pl-1">
+          <ul class="list-inline m-0">
+            <li class="list-inline-item mr-75">
+              <button (click)="updateFolderOnSelectedMails('trash')" class="btn action-icon p-0">
+                <i data-feather="trash" [size]="18"></i>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- Detailed Email Header ends -->
+  
+      <!-- Detailed Email Content starts -->
+      <div class="email-scroll-area" [perfectScrollbar]>
+        <!-- replies -->
+        <div class="row mt-2">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header email-detail-head">
+                <div class="user-details d-flex justify-content-between align-items-center flex-wrap">
+                  <div class="avatar mr-1 ml-0 bg-light-secondary">
+                    <div class="avatar-content" style="width: 40px; height: 42px;">{{openedEmail.from.avatar}}</div>
+                  </div>
+                  <div class="mail-items">
+                    <h5 class="mb-0">{{ openedEmail.from.name }}</h5>
+                    <div ngbDropdown class="email-info-dropup">
+                      <span
+                        role="button"
+                        class="font-small-3 text-muted"
+                        id="card_top01"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        ngbDropdownToggle
+                      >
+                        {{ openedEmail.from.email }}
+                      </span>
+                      <div ngbDropdownMenu aria-labelledby="card_top01">
+                        <table class="table table-sm table-borderless">
+                          <tbody>
+                            <tr>
+                              <td class="text-right">From:</td>
+                              <td>{{ openedEmail.from.email }}</td>
+                            </tr>
+                            <tr>
+                              <td class="text-right">To:</td>
+                              <ng-container *ngFor="let emailToRef of openedEmail.to">
+                                <td>{{ emailToRef.email }}</td>
+                              </ng-container>
+                            </tr>
+                            <tr>
+                              <td class="text-right">Date:</td>
+                              <td>{{ openedEmail.time | date: 'short':'UTC' }}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body mail-message-wrapper pt-2">
+                <div class="mail-message" [innerHTML]="openedEmail.message"></div>
+              </div>
+              <div class="card-footer" *ngIf="openedEmail.attachments.length > 0 && false">
+                <div class="mail-attachments">
+                  <div class="d-flex align-items-center mb-1">
+                    <i data-feather="paperclip" [size]="16" class="mr-50"></i>
+                    <h5 class="font-weight-bolder text-body mb-0">{{ openedEmail.attachments.length }} Attachments</h5>
+                  </div>
+                  <div class="d-flex flex-column">
+                    <a href="javascript:void(0);" class="mb-50" *ngFor="let attachment of openedEmail.attachments">
+                      <img [src]="attachment.thumbnail" class="mr-25" alt="png" height="18" />
+                      <small class="text-muted font-weight-bolder">{{ attachment.fileName }}</small>
+                      <span class="text-muted font-small-2 ml-25">({{ attachment.size }})</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Detailed Email Content ends -->
+    </div>
+  </ng-container>
+  <!--/ Detailed Email View -->
+  

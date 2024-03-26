@@ -1,0 +1,42 @@
+# FROM node:16.14.0-alpine as build
+# RUN mkdir /cdk-front
+# WORKDIR /cdk-front
+# COPY / ./
+# COPY package*.json ./
+# RUN npm install -g @angular/cli --force && \
+#     npm install --legacy-peer-deps --only=production && \
+#     ng build 
+# COPY . .
+# ENV HOST 0.0.0.0
+# ENV NODE_ENV production
+
+# CMD npm start
+
+#EXPOSE 4200
+
+# FROM nginx:alpine
+# WORKDIR /cdk-front
+# COPY --from=build /cdk-front/dist /usr/share/nginx/html
+#EXPOSE 80 443
+#CMD [ "nginx", "-g", "daemon off;" ]
+
+FROM node:16.13.0
+
+ARG WORK_DIR=/front
+ENV PATH ${WORK_DIR}/node_modules/.bin:$PATH
+
+RUN mkdir ${WORK_DIR}
+WORKDIR ${WORK_DIR}
+
+COPY package.json ${WORK_DIR}
+COPY package-lock.json ${WORK_DIR}
+
+RUN npm i @angular/cli@13.2.0
+RUN npm i --legacy-peer-deps
+
+COPY . ${WORK_DIR}
+
+ENV PORT 50002
+EXPOSE ${PORT}
+
+CMD ng serve --host 0.0.0.0 --port ${PORT}

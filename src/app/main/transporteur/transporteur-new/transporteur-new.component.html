@@ -1,0 +1,119 @@
+<app-content-header [contentHeader]="contentHeader"></app-content-header>
+
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+      <section class="app-user-edit">
+        <div class="card">
+          <div class="card-body">
+            <ul ngbNav #nav="ngbNav" class="nav nav-pills">
+              <li ngbNavItem>
+                <a ngbNavLink class="d-flex align-items-center"
+                  ><i data-feather="truck" class="mr-sm-50"></i><span class="d-none d-sm-block">Ajouter transporteur</span></a
+                >
+                <ng-template ngbNavContent>
+                  <div class="tab-pane active" id="account" aria-labelledby="account-tab" role="tabpanel">
+
+                    <form class="form-validate" [formGroup]="ReactiveTransporteurForm" (ngSubmit)="ReactiveTrFormOnSubmit()">
+                      <div class="row">
+
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <div class="form-group">
+                                <label for="UDNom">Nom</label>
+                                <input
+                                  type="text"
+                                  id="UDNom"
+                                  formControlName="nom"
+                                  class="form-control"
+                                  [ngClass]="{ 'is-invalid': ReactiveTrFormSubmitted && ReactiveTrForm.nom.errors }"
+                                />
+                                <div
+                                  *ngIf="ReactiveTrFormSubmitted && ReactiveTrForm.nom.errors"
+                                  class="invalid-feedback"
+                                >
+                                  <div *ngIf="ReactiveTrForm.nom.errors.required">Nom est requis</div>
+                                </div>
+                              </div>
+                          </div>
+                        </div>
+
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <div class="form-group">
+                                <label for="UDEmail">Email</label>
+                                <input
+                                  type="email"
+                                  id="UDEmail"
+                                  formControlName="email"
+                                  class="form-control"
+                                  [ngClass]="{ 'is-invalid': ReactiveTrFormSubmitted && ReactiveTrForm.email.errors }"
+                                />
+                                <div
+                                  *ngIf="ReactiveTrFormSubmitted && ReactiveTrForm.email.errors"
+                                  class="invalid-feedback"
+                                >
+                                  <div *ngIf="ReactiveTrForm.email.errors.required">Email est requis</div>
+                                </div>
+                              </div>
+                          </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                              <div class="form-group">
+                                  <label for="UDAddress">Adresse</label>
+                                  <input
+                                    type="text"
+                                    id="UDAddress"
+                                    formControlName="address"
+                                    class="form-control"
+                                    [ngClass]="{ 'is-invalid': ReactiveTrFormSubmitted && ReactiveTrForm.address.errors }"
+                                  />
+                                  <div
+                                    *ngIf="ReactiveTrFormSubmitted && ReactiveTrForm.address.errors"
+                                    class="invalid-feedback"
+                                  >
+                                    <div *ngIf="ReactiveTrForm.address.errors.required">Adresse est requis</div>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                              <div class="form-group">
+                                  <label for="UDTelephone">Telephone</label>
+                                  <input
+                                    type="text"
+                                    id="UDTelephone"
+                                    formControlName="telephone"
+                                    class="form-control"
+                                    [ngClass]="{ 'is-invalid': ReactiveTrFormSubmitted && ReactiveTrForm.telephone.errors }"
+                                  />
+                                  <div
+                                    *ngIf="ReactiveTrFormSubmitted && ReactiveTrForm.telephone.errors"
+                                    class="invalid-feedback"
+                                  >
+                                    <div *ngIf="ReactiveTrForm.telephone.errors.required">Numero de telephone est requis</div>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 d-flex flex-sm-row flex-column mt-2">
+                            <button class="btn btn-outline-success" rippleEffect>
+                              Ajouter
+                            </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </ng-template>
+              </li>
+            </ul>
+            <div [ngbNavOutlet]="nav" class="mt-2"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>

@@ -1,0 +1,24 @@
+<div class="form-group-compose text-center compose-btn w-15 mb-1 float-right">
+  <button
+    type="button"
+    class="compose-email btn btn-primary btn-block"
+    data-target="#compose-mail"
+    (click)="openCompose()"
+    rippleEffect
+  >
+    Envoyer Mail
+  </button>
+</div>
+
+<div class="content-area-wrapper container-xxl p-0"> 
+  <div class="content-wrapper container-xxl p-0">
+    <app-email-compose></app-email-compose>
+    <div class="content-wrapper container-xxl p-0">
+      <div class="content-body">
+        <app-email-list></app-email-list>
+        <app-email-details></app-email-details>
+      </div>
+    </div>
+  </div>
+</div>
+  

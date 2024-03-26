@@ -1,0 +1,126 @@
+<section>
+    <div class="card">
+        <div class="row">
+            <div class="col-xl-12 col-md-10 col-12">
+                <div class="card card-statistics">
+                    <div class="card-header">
+                        <h4 class="card-title">Statistiques</h4>
+                    </div>
+                    <div class="card-body statistics-body">
+                        <div class="row d-flex justify-content-center align-items-center" *ngIf="!data">
+                            <span class="spinner-grow spinner-grow-sm mr-75" role="status"></span>
+                            <span class="spinner-grow spinner-grow-sm mr-75" role="status"></span>
+                            <span class="spinner-grow spinner-grow-sm mr-75" role="status"></span>
+                        </div>
+                        <div class="row" *ngIf="data">
+                            <div class="col-sm-4 col-xl-2 mb-2 mb-xl-0">
+                                <div class="media">
+                                    <div class="avatar bg-light-primary mr-2">
+                                        <div class="avatar-content">
+                                            <i data-feather="user" class="avatar-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="media-body my-auto">
+                                        <span>
+                                            <h4 class="font-weight-bolder mb-0">
+                                                {{ data.totalCmd ?? 0 }}
+                                            </h4>
+                                            <p class="card-text font-small-3 mb-0">Commandes</p>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 col-xl-2 mb-2 mb-xl-0">
+                                <div class="media">
+                                    <div class="avatar bg-light-info mr-2">
+                                        <div class="avatar-content">
+                                            <i data-feather="box" class="avatar-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="media-body my-auto">
+                                        <span>
+                                            <h4 class="font-weight-bolder mb-0">
+                                                {{ data.totalArt ?? 0 }}
+                                            </h4>
+                                            <p class="card-text font-small-3 mb-0">Articles</p>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 col-xl-2 mb-2 mb-sm-0">
+                                <div class="media">
+                                    <div class="avatar bg-light-secondary mr-2">
+                                        <div class="avatar-content">
+                                            <i data-feather="trending-down" class="avatar-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="media-body my-auto">
+                                        <span>
+                                            <h4 class="font-weight-bolder mb-0">
+                                                {{ data.colisCmd ?? 0 }}
+                                            </h4>
+                                            <p class="card-text font-small-3 mb-0">Colis Commandée</p>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 col-xl-2">
+                                <div class="media">
+                                    <div class="avatar bg-light-success mr-2">
+                                        <div class="avatar-content">
+                                            <i data-feather="shopping-cart" class="avatar-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="media-body my-auto">
+                                        <span>
+                                            <h4 class="font-weight-bolder mb-0">
+                                                {{ data.colisLivre ?? 0 }}
+                                            </h4>
+                                            <p class="card-text font-small-3 mb-0">Colis livré</p>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 col-xl-2">
+                                <div class="media">
+                                    <div class="avatar bg-light-danger mr-2">
+                                        <div class="avatar-content">
+                                            <i data-feather="x-square" class="avatar-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="media-body my-auto">
+                                        <span>
+                                            <h4 class="font-weight-bolder mb-0">
+                                                {{ data.rupture ?? 0 }}
+                                            </h4>
+                                            <p class="card-text font-small-3 mb-0">Article en rupture</p>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 col-xl-2">
+                                <div class="media">
+                                    <div class="avatar bg-light-warning mr-2">
+                                        <div class="avatar-content">
+                                            <i data-feather="square" class="avatar-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="media-body my-auto">
+                                        <span>
+                                            <h4 class="font-weight-bolder mb-0">
+                                                {{ data.insuffisant ?? 0 }}
+                                            </h4>
+                                            <p class="card-text font-small-3 mb-0">
+                                                Article avec qte insuffisante
+                                            </p>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,310 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <app-content-header [contentHeader]="contentHeader"></app-content-header>
+        <section class="users-list-wrapper">
+            <div class="card">
+                <h4 class="card-header text-primary">Filtre de recherche</h4>
+                <div class="card-body">
+                        <div class="row">
+                            <!-- designation Filter -->
+                            <div class="col-lg-4 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                <p class="card-text col-title mb-md-50 mb-0">N° BL</p>
+                                <fieldset class="form-group">
+                                    <input
+                                    [(ngModel)]="request.numeroBl"
+                                    name="searchValue"
+                                    type="search"
+                                    class="form-control ml-25"
+                                /></fieldset>
+                            </div>
+                            <!-- designation Filter Ends -->
+        
+                            <!-- Destinataire Filter -->
+                            <div class="col-lg-8 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                <p class="card-text col-title mb-md-50 mb-0">Destinataire</p>
+                                <ng-select 
+                                    name="destinataire"
+                                    id="destinataire"
+                                    [items]="destinataires" 
+                                    [(ngModel)]="request.destinataire"
+                                    bindLabel="codeUM"  
+                                    bindValue="id"
+                                >
+                                    <ng-template ng-option-tmp let-item="item">
+                                    {{item.codeUM + '  -  ' + item.nom}}
+                                    </ng-template>
+                                </ng-select>
+                            </div>
+                            <!-- Destinataire Filter Ends -->
+        
+                            <!-- transporteur Filter -->
+                            <!-- <div class="col-lg-4 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                <p class="card-text col-title mb-md-50 mb-0">Transporteur</p>
+                                <ng-select 
+                                    name="transporteur"
+                                    id="transporteur"
+                                    [items]="transporteurs" 
+                                    [(ngModel)]="request.transporteur"
+                                    bindLabel="nom"  
+                                    bindValue="id"
+                                >
+                                    <ng-template ng-option-tmp let-item="item">
+                                    {{item.nom + ' ' + item.prenom}}
+                                    </ng-template>
+                                </ng-select>
+                            </div> -->
+                            <!-- transporteur Filter Ends -->
+                                
+                            <!-- Date Start Filter -->
+                            <div class="col-lg-4 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                <p class="card-text col-title mb-md-50 mb-0">Date Debut</p>
+                                <fieldset class="form-group">
+                                    <input
+                                        [(ngModel)]="dateStart"
+                                        name="searchValue"
+                                        type="date"
+                                        class="form-control ml-25"
+                                /></fieldset>
+                            </div>
+                            <!-- Date Start Filter Ends -->
+
+                            <!-- Date Start Filter -->
+                            <div class="col-lg-4 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                <p class="card-text col-title mb-md-50 mb-0">Date Fin</p>
+                                <fieldset class="form-group">
+                                    <input
+                                    [(ngModel)]="dateEnd"
+                                    name="searchValue"
+                                    type="date"
+                                    class="form-control ml-25"
+                                /></fieldset>
+                            </div>
+                            <!-- Date Start Filter Ends -->
+                        </div>
+
+                        <div class="btn btn-icon btn-outline-danger float-right ml-1" (click)="clear()" rippleEffect>
+                            <span [data-feather]="'trash'"></span>
+                        </div>
+                        <div class="btn btn-icon btn-primary float-right" (click)="search()" rippleEffect>
+                            <span [data-feather]="'search'"></span>
+                        </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <div class="d-flex align-items-center m-2">
+                            <label class="d-flex align-items-center">
+                                <select 
+                                    class="form-control mx-25 pr-3" 
+                                    (change)="onSizeChange($event.target.value)"
+                                >
+                                    <option
+                                      *ngFor="let option of pageLimitOptions"
+                                      [value]="option.value"
+                                      [selected]="option.value == currentPageLimit"
+                                    >
+                                      {{ option.value }}
+                                    </option>
+                                </select>
+                            </label>
+                            <label 
+                                class="d-flex align-items-center ml-1"
+                                *ngIf="!hasRole.includes('Client')"
+                            >
+                                Massive actions
+                                <select id="select" class="form-control mx-25" (change)="onSelectChange()" [(ngModel)]="massActionSelection">
+                                    <option value="">Select</option>
+                                    <option value="blsBcs">Imprimer BL</option>
+                                    <!-- <option value="2">Imprimer BL</option>
+                                    <option value="3">Télécharger BL</option> -->
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end">
+                        <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                            <label class="d-flex align-items-center ml-1 ml-md-0">
+                                Recherche:
+                                <input
+                                    [(ngModel)]="searchValue"
+                                    name="searchValue"
+                                    type="search"
+                                    class="form-control ml-25"
+                                    (keyup)="filterUpdate($event)"
+                                    (search)="filterUpdate($event)"
+                                />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <ngx-datatable
+                    [rows]="bls"
+                    rowHeight="auto"
+                    [headerHeight]="50"
+                    [footerHeight]="50"
+                    [scrollbarH]="true"
+                    [columnMode]="ColumnMode.force"
+                    [externalPaging]="true"
+                    [limit]="request.page.limit"
+                    [count]="request.page.count"
+                    [offset]="request.page.offset"
+                    (page)="pageCallback($event)"
+                    [externalSorting]="true"
+                    (sort)="onSort($event)"
+                    [messages]="{emptyMessage: 'Aucun BL n\'a été trouvé', totalMessage:'BLS'}"
+                    class="bootstrap core-bootstrap"
+                    [selected]="selectedBls"
+                    [selectionType]="SelectionType.checkbox"
+                    (select)="blsOnSelect($event)"
+                >
+                    <ngx-datatable-column
+                        [width]="50"
+                        [sortable]="false"
+                        [canAutoResize]="false"
+                        [draggable]="false"
+                        [resizeable]="false"
+                        *ngIf="!hasRole.includes('Client')"
+                    >
+                        <ng-template
+                        ngx-datatable-header-template
+                        let-value="value"
+                        let-allRowsSelected="allRowsSelected"
+                        let-selectFn="selectFn"
+                        >
+                        <div class="custom-control custom-control-primary custom-checkbox">
+                            <input
+                            type="checkbox"
+                            class="custom-control-input"
+                            [checked]="allRowsSelected"
+                            (change)="selectFn(!allRowsSelected)"
+                            id="headerCustomChkbxRef"
+                            />
+                            <label class="custom-control-label" for="headerCustomChkbxRef"></label>
+                        </div>
+                        </ng-template>
+                        <ng-template
+                        ngx-datatable-cell-template
+                        let-rowIndex="rowIndex"
+                        let-value="value"
+                        let-isSelected="isSelected"
+                        let-onCheckboxChangeFn="onCheckboxChangeFn"
+                        >
+                        <div class="custom-control custom-control-primary custom-checkbox">
+                            <input
+                            type="checkbox"
+                            class="custom-control-input"
+                            [checked]="isSelected"
+                            (change)="onCheckboxChangeFn($event)"
+                            id="rowCustomChkbxRef{{ rowIndex }}"
+                            />
+                            <label class="custom-control-label" for="rowCustomChkbxRef{{ rowIndex }}"></label>
+                        </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+      
+                    <ngx-datatable-column name="N° BL" prop="numeroBonLivraison" [width]="200">
+                        <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                        <div class="d-flex align-items-center">
+                            <div class="cell-line-height">
+                            <a class="font-medium-1 d-block" routerLink="/bls/detail/{{row.id}}"
+                                ><span class="font-weight-bold">{{ row.numeroBonLivraison }}</span></a
+                            >
+                            </div>
+                        </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+        
+                    <ngx-datatable-column name="bcs" prop="bcs.destinataire.codeUM" [width]="200">
+                        <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                        <div class="d-flex align-items-center">
+                            <div class="cell-line-height">
+                            <a class="font-medium-1 d-block" routerLink="/bcs/detail/{{row?.bcs?.id}}"
+                                ><span class="font-weight-bold">{{ 'BC-' + row?.bcs?.numeroCommande + ' | ' + (row?.bcs?.destinataire?.codeUM ?? '') }}</span></a
+                            >
+                            </div>
+                        </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                
+                    <ngx-datatable-column name="Date" prop="dateImpression" [width]="200">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div>
+                            {{ row.dateImpression | date: 'dd-MM-yyyy HH:mm:ss' }}
+                        </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+        
+                    <ngx-datatable-column name="Actions" [width]="40" [sortable]="false">
+                        <ng-template ngx-datatable-cell-template let-row="row">
+                        <div ngbDropdown container="body">
+                            <button ngbDropdownToggle type="button" class="btn icon-btn btn-sm hide-arrow" rippleEffect>
+                            <span [data-feather]="'more-vertical'" [class]="'cursor-pointer'"></span>
+                            </button>
+                            <div ngbDropdownMenu>
+                            <a (click)="generateBl(row.bcs)" ngbDropdownItem>
+                                <span [data-feather]="'printer'" [size]="16" [class]="'mr-50'"></span> 
+                                Imprimer BL
+                            </a>
+                            <a routerLink="/bls/detail/{{ row.id }}" ngbDropdownItem>
+                                <span [data-feather]="'file-text'" [size]="16" [class]="'mr-50'"></span> 
+                                Consulter
+                            </a>
+                            <a routerLink="/bls/detail/{{ row.id }}" ngbDropdownItem>
+                                <span [data-feather]="'edit'" [size]="16" [class]="'mr-50'"></span> 
+                                Modifier
+                            </a>
+                            <a (click)="modalOpenForm(modalForm, row.id)" ngbDropdownItem *ngIf="hasRole.includes('Super_admin')">
+                                <span [data-feather]="'trash'" [size]="16" [class]="'mr-50'"></span> 
+                                Suprimer
+                            </a>
+                            </div>
+                        </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                </ngx-datatable>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div class="login-form"> 
+    <ng-template #modalForm let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="myModalLabel1">Confirmation de suppression</h4>
+            <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body" tabindex="0" ngbAutofocus>
+            <form class="form-validate" [formGroup]="ReactivePasswordConfirmationForm" (ngSubmit)="ReactiveCPFormOnSubmit()">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label for="password">Mot de passe</label>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    formControlName="password"
+                                    class="form-control"
+                                    [ngClass]="{ 'is-invalid': ReactiveCPFormSubmitted && ReactiveCPForm.password.errors }"
+                                />
+                                <div
+                                    *ngIf="ReactiveCPFormSubmitted && ReactiveCPForm.password.errors"
+                                    class="invalid-feedback"
+                                >
+                                    <div *ngIf="ReactiveCPForm.password.errors.required">Mot de passe est requis</div>
+                                    <div *ngIf="ReactiveCPForm.password.errors.minlength">Mot de passe doit comporter au moins 6 caractères</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="width: 100%;">
+                        <button class="btn btn-primary" rippleEffect> Confirmer </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+</div>

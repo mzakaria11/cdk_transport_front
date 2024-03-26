@@ -1,0 +1,54 @@
+<div class="auth-wrapper auth-v1 px-2">
+    <div class="auth-inner py-2">
+      <!-- Forgot Password v1 -->
+      <div class="card mb-0">
+        <div class="card-body">
+          <a href="javascript:void(0);" class="brand-logo">
+            <img src="{{ coreConfig.app.appLogoImage }}" alt="brand-logo" height="28" />
+            <h2 class="brand-text text-primary ml-1">{{ coreConfig.app.appName }}</h2>
+          </a>
+  
+          <h4 class="card-title mb-1">Vérifier Mot de passe? 🔒</h4>
+          <p class="card-text mb-2">Vous recevrez un email avec un code. Vous serez entrer le code pour authentifier</p>
+          
+          <ngb-alert [type]="'danger'" [dismissible]="false" *ngIf="error">
+            <div class="alert-body">
+              <p>{{ error }}</p>
+            </div>
+          </ngb-alert>
+  
+          <form class="auth-forgot-password-form mt-2" [formGroup]="generetedCodeForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+              <label for="check-password" class="form-label">Code</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="code"
+                aria-describedby="check-password"
+                tabindex="1"
+                autofocus
+                [ngClass]="{ 'is-invalid': submitted && f.code.errors }"
+              />
+              <div *ngIf="submitted && f.code.errors" class="invalid-feedback">
+                <div *ngIf="f.code.errors.required">Code est requis</div>
+                <div *ngIf="f.code.errors.minlength">Le code doit comporter 10 caractères</div>
+              </div>
+            </div>
+
+            <button class="btn btn-primary btn-block" tabindex="2" rippleEffect>
+              <span class="spinner-border text-secondary" *ngIf="spinner" style="width: 1.5rem; height: 1.5rem; color: white;" ></span>
+              <span *ngIf="!spinner">Vérifier</span>
+            </button>
+          </form>
+  
+          <p class="text-center mt-2">
+            <a routerLink="/login">
+              <i data-feather="chevron-left" class="mb-25"></i> Retour au login
+            </a>
+          </p>
+        </div>
+      </div>
+      <!-- /Forgot Password v1 -->
+    </div>
+  </div>
+  

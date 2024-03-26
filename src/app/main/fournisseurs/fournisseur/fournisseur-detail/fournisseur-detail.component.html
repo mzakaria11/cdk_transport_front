@@ -1,0 +1,275 @@
+<app-content-header [contentHeader]="contentHeader"></app-content-header>
+
+<div class="content-wrapper container-xxl p-0">
+  <div class="content-body">
+    <section class="app-user-edit">
+      <div class="card">
+        <div class="card-body">
+          <ul ngbNav #nav="ngbNav" class="nav nav-pills">
+            <li ngbNavItem>
+              <a ngbNavLink class="d-flex align-items-center"
+                ><i data-feather="box" class="mr-sm-50"></i><span class="d-none d-sm-block">{{ edit ? 'Modifier' : 'Détail' }}</span></a
+              >
+              <ng-template ngbNavContent>
+                <div class="tab-pane active" id="account" aria-labelledby="account-tab" role="tabpanel">
+
+                  <form class="form-validate" (ngSubmit)="(fournisseurForm.form.valid)" #fournisseurForm="ngForm">
+                    <div class="row">
+
+                      <div class="col-md-4">
+                        <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                          <label for="nom">Nom</label>
+                          <input
+                              autocomplete="nom"
+                              type="text"
+                              id="nom"
+                              class="form-control"
+                              placeholder="nom"
+                              name="nom"
+                              [(ngModel)]="fournisseur.nom"
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col-md-4" [ngClass]="{'pointer-events-none': !edit}">
+                        <div class="form-group">
+                          <label for="email">Email</label>
+                          <input
+                              autocomplete="email"
+                              type="text"
+                              id="email"
+                              class="form-control"
+                              placeholder="email"
+                              name="email"
+                              [(ngModel)]="fournisseur.email"
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col-md-4">
+                        <div class="form-group"  [ngClass]="{'pointer-events-none': !edit}">
+                          <label for="telephone">Telephone</label>
+                          <input
+                              autocomplete="phone"
+                            type="text"
+                            id="telephone"
+                            class="form-control"
+                            placeholder="telephone"
+                            name="telephone"
+                            [(ngModel)]="fournisseur.telephone"
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col-md-12">
+                        <div class="form-group"  [ngClass]="{'pointer-events-none': !edit}">
+                          <label for="address">Adresse</label>
+                          <textarea
+                              autocomplete="address"
+                              type="text"
+                              id="address"
+                              class="form-control"
+                              placeholder="adresse"
+                              name="address"
+                              [(ngModel)]="fournisseur.adresse"
+                          ></textarea>
+                        </div>
+                      </div>
+                      <div class="col-12 d-flex flex-sm-row flex-column mt-2" *ngIf="edit">
+                          <button
+                            type="submit"
+                            (click)="submit(fournisseurForm)"
+                            class="btn btn-success mb-1 mb-sm-0 mr-0 mr-sm-1"
+                            rippleEffect
+                          >
+                            Modifier
+                          </button>
+                          <button (click)="modalOpenForm(modalForm)" class="btn btn-outline-danger" *ngIf="hasRole.includes('Super_admin')" rippleEffect>
+                            Supprimer
+                          </button>
+                        </div>
+                    </div>
+                  </form>
+                                                              
+                  <div class="divider divider-left" *ngIf="!edit && (hasRole.includes('Super_admin') || hasRole.includes('Admin'))">
+                    <div class="divider-text">  
+                      <div class="custom-control custom-switch custom-control-inline">
+                        <input type="checkbox" class="custom-control-input" id="customSwitch1" [checked]="edit" (change)="updateNav()"/>
+                        <label class="custom-control-label" for="customSwitch1">Basculez pour modifier</label>
+                      </div>
+                    </div>
+                  </div>
+                  
+                </div>
+              </ng-template>
+            </li>
+          </ul>
+          <div [ngbNavOutlet]="nav" class="mt-2"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="divider divider-primary m-1">
+          <div class="divider-text">
+            <h4> Liste des articles </h4>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 col-12">
+            <div class="d-flex justify-content-between align-items-center m-1">
+              <label class="d-flex align-items-center">
+                Afficher
+                <select id="select" class="form-control mx-25" [(ngModel)]="selectedOption">
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                  <option value="200">200</option>
+                  <option value="500">500</option>
+                </select>
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end">
+            <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+              <label class="d-flex align-items-center ml-1 ml-md-0">
+                Recherche:
+                <input
+                  name="searchValue"
+                  type="search"
+                  placeholder="Code"
+                  class="form-control ml-25"
+                  (keyup)="filterUpdate($event)"
+                  (search)="filterUpdate($event)"
+                />
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <ngx-datatable
+          [rows]="fournisseur.articles"
+          [rowHeight]="'auto'"
+          class="bootstrap core-bootstrap"
+          [limit]="selectedOption"
+          [columnMode]="ColumnMode.force"
+          [headerHeight]="50"
+          [footerHeight]="50"
+          [scrollbarH]="true"
+          [messages]="{emptyMessage: 'Aucun article n\'a été trouvé', totalMessage:'Articles'}"
+        >
+          <ngx-datatable-column name="Code" prop="codeClient" [width]="50">
+            <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+              <div class="d-flex align-items-center">
+                <div class="cell-line-height">
+                  <a class="font-medium-1 d-block" routerLink="/articles/detail/{{row.id}}"
+                    ><span class="font-weight-bold">{{ row.codeClient }}</span></a
+                  >
+                  <span class="text-muted font-small-2"> {{ row.codeFournisseur }}</span>
+                </div>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Désignation" prop="desgnationClient" [width]="250">
+            <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+              <div class="d-flex align-items-center">
+                <div class="cell-line-height">
+                  <a class="font-medium-1 d-block"
+                    ><span class="font-weight-bold">{{ row.designationClient }}</span></a
+                  >
+                  <span class="text-muted font-small-2"> {{ row.designationFournisseur }}</span>
+                </div>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Qte produit" prop="quantiteProduitStockComplet" [width]="50">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <div>
+                {{ row.quantiteProduitStockComplet }}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Qte colis" prop="quantiteColisStockComplet" [width]="50">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <div>
+                {{ row.quantiteColisStockComplet }}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Colis standard" prop="quantiteColisStandard" [width]="50">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <div>
+                {{ row.quantiteColisStandard }}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Stock" prop="quantiteProduitStockComplet" [width]="10">
+            <ng-template let-stock="value" ngx-datatable-cell-template>
+              <div
+                class="badge badge-pill"
+                [ngClass]="{
+                  'badge-light-success': stock > 0,
+                  'badge-light-secondary': stock == 0,
+                  'badge-light-danger': stock < 0
+                }"
+              >
+                stock
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+        </ngx-datatable>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="login-form"> 
+  <ng-template #modalForm let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="myModalLabel1">Confirmation de suppression</h4>
+      <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body" tabindex="0" ngbAutofocus>
+      <form class="form-validate" [formGroup]="ReactivePasswordConfirmationForm" (ngSubmit)="ReactiveCPFormOnSubmit()">
+        <div class="row">
+
+          <div class="col-md-12">
+            <div class="form-group">
+              <div class="form-group">
+                  <label for="password">Mot de passe</label>
+                  <input
+                    type="password"
+                    id="password"
+                    formControlName="password"
+                    class="form-control"
+                    [ngClass]="{ 'is-invalid': ReactiveCPFormSubmitted && ReactiveCPForm.password.errors }"
+                  />
+                  <div
+                    *ngIf="ReactiveCPFormSubmitted && ReactiveCPForm.password.errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="ReactiveCPForm.password.errors.required">Mot de passe est requis</div>
+                    <div *ngIf="ReactiveCPForm.password.errors.minlength">Mot de passe doit comporter au moins 6 caractères</div>
+                  </div>
+                </div>
+            </div>
+          </div>
+          <div class="modal-footer" style="width: 100%;">
+            <button class="btn btn-primary" rippleEffect>
+              Confirmer
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+</div>
+
+  

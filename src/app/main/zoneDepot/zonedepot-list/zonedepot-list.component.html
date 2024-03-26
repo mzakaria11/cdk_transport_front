@@ -1,0 +1,111 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+      <!-- content-header component -->
+      <app-content-header [contentHeader]="contentHeader"></app-content-header>
+  
+      <!-- Feather icons section start -->
+      <section id="feather-icons">
+        <div class="row">
+          <div class="col-12">
+            <div class="icon-search-wrapper my-3 mx-auto">
+              <div class="form-group input-group input-group-merge">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i data-feather="search"></i></span>
+                </div>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="icons-search"
+                  [(ngModel)]="searchText"
+                  placeholder="Rechereche..."
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex flex-wrap" id="icons-container">
+          <div
+            container="body"
+            placement="top"
+            class="card icon-card cursor-pointer text-center mb-2 mx-50"
+            (click)="modalOpenZone(modalZone)"
+          >
+            <div class="card-body">
+              <div class="icon-wrapper">
+                <i [data-feather]="'plus'" [size]="24"></i>
+              </div>
+              <p class="icon-name text-truncate mb-0 mt-1">Ajouter</p>
+            </div>
+          </div>
+          
+          <div
+            container="body"
+            placement="top"
+            class="card icon-card cursor-pointer text-center mb-2 mx-50"
+            *ngFor="let zone of zones | keyvalue | filter: searchText:'key'; let i = index"
+            placement="bottom" 
+            [ngbTooltip]="tipContent"
+          >
+            <ng-template #tipContent>
+              <ul class="nav nav-pills flex-column nav-left">
+                <li class="nav-item" *ngFor="let z of zone.value">
+                  {{z.nom}}
+                </li>
+              </ul>
+            </ng-template>
+            <div class="card-body">
+              <div class="icon-wrapper">
+                <i [data-feather]="'codepen'" [size]="24"></i>
+              </div>
+              <p class="icon-name text-truncate mb-0 mt-1">{{ zone.key }}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Feather icon-s section end -->
+    </div>
+  </div>
+  
+  <ng-template #modalZone let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title" id="myModalLabel160">Nouveau emplacement</h5>
+      <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form class="form-validate" [formGroup]="ReactiveZonesForm" (ngSubmit)="ReactiveZonesFormOnSubmit()">
+      <div class="form-group" style="width: 90%; margin: auto;">
+        <label for="prefix">prefix</label>
+        <input
+          type="text"
+          id="text"
+          formControlName="prefix"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': ReactiveZonesFormSubmitted && ReactiveZoneForm.prefix.errors }"
+        />
+        <div
+          *ngIf="ReactiveZonesFormSubmitted && ReactiveZoneForm.prefix.errors"
+          class="invalid-feedback"
+        >
+          <div *ngIf="ReactiveZoneForm.prefix.errors.required">Prefix est requis</div>
+        </div>
+      </div>
+      
+      <div class="form-group" style="width: 90%; margin: auto;">
+        <label for="etage">Nombre d'emplacement</label>
+        <input
+          type="number"
+          id="text"
+          min="0"
+          formControlName="etage"
+          class="form-control"
+        />
+      </div>
+
+      <div class="modal-footer" style="width: 100%;">
+        <button class="btn btn-primary" rippleEffect>
+          Ajouter
+        </button>
+      </div>
+    </form>
+  </ng-template>

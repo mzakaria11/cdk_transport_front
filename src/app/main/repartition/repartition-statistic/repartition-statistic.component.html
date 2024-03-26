@@ -1,0 +1,488 @@
+<div class="content-wrapper container-xxl p-0">
+  <div class="content-body">
+    <app-content-header [contentHeader]="contentHeader"></app-content-header>
+    <section class="users-list-wrapper">
+      <div class="card">
+        <h4 class="card-header text-primary">Filtres</h4>
+        <!-- Filters -->
+        <div class="card-body">
+          <div class="row">
+
+            <!-- designation Filter -->
+            <div class="col-lg-4 col-12 mb-lg-0 mb-2 mt-2">
+              <p class="card-text col-title mb-md-50 mb-0">N° Command</p>
+              <fieldset class="form-group">
+                <input id="cmd" [(ngModel)]="cmd" name="searchValue" type="search" class="form-control ml-25" />
+              </fieldset>
+            </div>
+            <!-- designation Filter Ends -->
+
+            <!-- Destinataire Filter -->
+            <div class="col-lg-4 col-12 mb-lg-0 mb-2 mt-2">
+              <p class="card-text col-title mb-md-50 mb-0">Destinataire</p>
+              <ng-select [disabled]="cmd" name="destinataire" id="destinataire" [items]="destinataires"
+                [(ngModel)]="selectedDestinataire" bindLabel="codeUM" bindValue="id">
+                <ng-template ng-option-tmp let-item="item">
+                  {{item.codeUM + ' - ' + item.nom}}
+                </ng-template>
+              </ng-select>
+            </div>
+            <!-- Destinataire Filter Ends -->
+
+            <!-- Destinataire Filter -->
+            <div class="col-lg-4 col-12 mb-lg-0 mb-2 mt-2">
+              <p class="card-text col-title mb-md-50 mb-0">Articles</p>
+              <ng-select [disabled]="cmd" name="articles" id="articles" [items]="articles" [(ngModel)]="selectedArticle"
+                bindLabel="name" bindValue="id"></ng-select>
+            </div>
+            <!-- Destinataire Filter Ends -->
+
+            <!-- Date Start Filter -->
+            <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-2">
+              <p class="card-text col-title mb-md-50 mb-0">Date de debut</p>
+              <fieldset class="form-group">
+                <input [disabled]="cmd" [(ngModel)]="dateStart" name="searchValue" type="date"
+                  class="form-control ml-25" />
+              </fieldset>
+            </div>
+            <!-- Date Start Filter Ends -->
+
+            <!-- Date End Filter -->
+            <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-2">
+              <p class="card-text col-title mb-md-50 mb-0">Date de fin</p>
+              <fieldset class="form-group">
+                <input [disabled]="cmd" [(ngModel)]="dateEnd" name="searchValue" type="date"
+                  class="form-control ml-25" />
+              </fieldset>
+            </div>
+            <!-- Date End Filter Ends -->
+
+            <!-- Date Expedition Start Filter -->
+            <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-2">
+              <p class="card-text col-title mb-md-50 mb-0">Date de debut d'expédition</p>
+              <fieldset class="form-group">
+                <input [disabled]="cmd" [(ngModel)]="dateStartExp" name="searchValue" type="date"
+                  class="form-control ml-25" />
+              </fieldset>
+            </div>
+            <!-- Date Expedition Start Filter Ends -->
+
+            <!-- Date Expedition End Filter -->
+            <div class="col-lg-3 col-12 mb-lg-0 mb-2 mt-2">
+              <p class="card-text col-title mb-md-50 mb-0">Date de fin d'expédition</p>
+              <fieldset class="form-group">
+                <input [disabled]="cmd" [(ngModel)]="dateEndExp" name="searchValue" type="date"
+                  class="form-control ml-25" />
+              </fieldset>
+            </div>
+            <!-- Date Expedition End Filter Ends -->
+          </div>
+
+          <div class="btn btn-icon btn-outline-danger float-right" (click)="clear()" rippleEffect>
+            <span [data-feather]="'trash'"></span>
+          </div>
+          <div class="btn btn-icon btn-primary float-right mr-1" (click)="search()" rippleEffect>
+            <span [data-feather]="'search'"></span>
+          </div>
+        </div>
+        <!-- Filter Ends -->
+      </div>
+
+      <div class="card">
+        <div class="row">
+          <div class="col-xl-12 col-md-10 col-12">
+            <div class="card card-statistics">
+              <div class="card-header">
+                <h4 class="card-title">Statistiques</h4>
+              </div>
+              <div class="card-body statistics-body">
+                <div class="row">
+                  <div class="col-sm-4 col-xl-2 mb-2 mb-xl-0">
+                    <div class="media">
+                      <div class="avatar bg-light-primary mr-2">
+                        <div class="avatar-content">
+                          <i data-feather="user" class="avatar-icon"></i>
+                        </div>
+                      </div>
+                      <div class="media-body my-auto">
+                        <span class="spinner-grow spinner-grow-sm" role="status" *ngIf="!statResponse"></span>
+                        <span *ngIf="statResponse">
+                          <h4 class="font-weight-bolder mb-0"> {{ repStat?.totalCmd ?? 0 }} </h4>
+                          <p class="card-text font-small-3 mb-0">Commandes</p>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4 col-xl-2 mb-2 mb-xl-0">
+                    <div class="media">
+                      <div class="avatar bg-light-info mr-2">
+                        <div class="avatar-content">
+                          <i data-feather="box" class="avatar-icon"></i>
+                        </div>
+                      </div>
+                      <div class="media-body my-auto">
+                        <span class="spinner-grow spinner-grow-sm" role="status" *ngIf="!statResponse"></span>
+                        <span *ngIf="statResponse">
+                          <h4 class="font-weight-bolder mb-0"> {{ repStat?.totalArt ?? 0 }} </h4>
+                          <p class="card-text font-small-3 mb-0">Articles</p>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4 col-xl-2 mb-2 mb-sm-0">
+                    <div class="media">
+                      <div class="avatar bg-light-secondary mr-2">
+                        <div class="avatar-content">
+                          <i data-feather="trending-down" class="avatar-icon"></i>
+                        </div>
+                      </div>
+                      <div class="media-body my-auto">
+                        <span class="spinner-grow spinner-grow-sm" role="status" *ngIf="!statResponse"></span>
+                        <span *ngIf="statResponse">
+                          <h4 class="font-weight-bolder mb-0"> {{ repStat?.colisCmd ?? 0 }} </h4>
+                          <p class="card-text font-small-3 mb-0">Colis Commandée</p>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4 col-xl-2">
+                    <div class="media">
+                      <div class="avatar bg-light-success mr-2">
+                        <div class="avatar-content">
+                          <i data-feather="shopping-cart" class="avatar-icon"></i>
+                        </div>
+                      </div>
+                      <div class="media-body my-auto">
+                        <span class="spinner-grow spinner-grow-sm" role="status" *ngIf="!statResponse"></span>
+                        <span *ngIf="statResponse">
+                          <h4 class="font-weight-bolder mb-0"> {{ repStat?.colisLivre ?? 0 }} </h4>
+                          <p class="card-text font-small-3 mb-0">Colis livré</p>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4 col-xl-2">
+                    <div class="media">
+                      <div class="avatar bg-light-danger mr-2">
+                        <div class="avatar-content">
+                          <i data-feather="x-square" class="avatar-icon"></i>
+                        </div>
+                      </div>
+                      <div class="media-body my-auto">
+                        <span class="spinner-grow spinner-grow-sm" role="status" *ngIf="!statResponse"></span>
+                        <span *ngIf="statResponse">
+                          <h4 class="font-weight-bolder mb-0"> {{ repStat?.rupture ?? 0 }} </h4>
+                          <p class="card-text font-small-3 mb-0">Article en rupture</p>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4 col-xl-2">
+                    <div class="media">
+                      <div class="avatar bg-light-warning mr-2">
+                        <div class="avatar-content">
+                          <i data-feather="square" class="avatar-icon"></i>
+                        </div>
+                      </div>
+                      <div class="media-body my-auto">
+                        <span class="spinner-grow spinner-grow-sm" role="status" *ngIf="!statResponse"></span>
+                        <span *ngIf="statResponse">
+                          <h4 class="font-weight-bolder mb-0"> {{ repStat?.insuffisant ?? 0 }} </h4>
+                          <p class="card-text font-small-3 mb-0">Article avec qte insuffisante</p>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="content-wrapper container-xxl p-0" *ngIf="cmdList.length == 0">
+  <div class="content-body">
+    <div class="row match-height">
+      <!-- Article rupture Card -->
+      <div class="col-lg-4 col-md-6 col-12">
+        <div class="card card-transaction">
+          <div class="card-header">
+            <h4 class="card-title">Article en rupture</h4>
+          </div>
+
+          <div class="spinner-grow" style="width: 3rem; height: 3rem; align-self: center; margin: auto;" role="status"
+            *ngIf="!rupturStatResponse"></div>
+
+          <div class="card-body scrollable-container" *ngIf="rupturStatResponse">
+            <div class="transaction-item" *ngFor="let art of articlRuptureStat">
+              <div class="media">
+                <div class="avatar bg-light-danger rounded">
+                  <div class="avatar-content">
+                    <i data-feather="box" class="avatar-icon font-medium-3"></i>
+                  </div>
+                </div>
+                <div class="media-body">
+                  <h6 class="transaction-title font-small-3">{{ art.article }}</h6>
+                  <small>{{ art.totalCmd}} commandes</small>
+                </div>
+              </div>
+              <div class="font-weight-bolder text-danger font-small-3">{{ art.colisNonLivre }} Colis</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Article rupture Card -->
+
+      <!-- Colis Card -->
+      <div class="col-lg-8 col-12">
+        <div class="card card-revenue-budget">
+          <div class="spinner-grow" style="width: 3rem; height: 3rem; align-self: center; margin: auto;" role="status"
+            *ngIf="!yearlyStatResponse"></div>
+          <div class="row mx-0" *ngIf="yearlyStatResponse">
+            <div class="col-md-12 col-12 revenue-report-wrapper">
+              <div class="d-sm-flex justify-content-between align-items-center mb-3">
+                <h4 class="card-title mb-50 mb-sm-0">Colis</h4>
+              </div>
+              <div id="revenue-report-chart" #colisChartRef>
+                <apx-chart [series]="[
+                            {
+                                name: 'Colis livré',
+                                data: yearlyColisLivre
+                            },
+                            {
+                                name: 'Colis non livré',
+                                data: yearlyColisNonLivre
+                            }
+                        ]
+                    " [chart]="{
+                      height: 300,
+                      width:
+                        isMenuToggled === false
+                          ? colisChartRef.offsetWidth
+                          : colisChartoptions.chart.width,
+                      stacked: true,
+                      type: 'bar',
+                      toolbar: { show: false }
+                    }" [plotOptions]="colisChartoptions.plotOptions" [colors]="colisChartoptions.colors"
+                  [dataLabels]="colisChartoptions.dataLabels" [legend]="colisChartoptions.legend"
+                  [grid]="colisChartoptions.grid" [xaxis]="colisChartoptions.xaxis"
+                  [yaxis]="colisChartoptions.yaxis"></apx-chart>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--/ Colis Card -->
+    </div>
+
+    <div class="row match-height">
+      <!-- Articles Table -->
+      <div class="col-lg-12 col-12">
+        <div class="card card-company-table">
+          <div class="card-body p-0">
+            <div class="table-responsive scrollable-container">
+              <table class="table">
+                <thead class="sticky-thead">
+                  <tr>
+                    <th>Article</th>
+                    <th>Total Commande</th>
+                    <!-- <th>Stock avant répartition</th> -->
+                    <th>Colis commandé</th>
+                    <th>Colis livré</th>
+                    <th>Colis non livré</th>
+                    <!-- <th>Stock aprés répartition</th> -->
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let art of articleTableStat">
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <div class="avatar bg-light-warning mr-1">
+                          <div class="avatar-content">
+                            <i data-feather="box" class="font-medium-3"></i>
+                          </div>
+                        </div>
+                        <a class="font-medium-1 d-block" routerLink="/articles/detail/{{art.idArticle}}">
+                          <span class="font-weight-bold">{{ art.article }} </span>
+                        </a>
+                      </div>
+                    </td>
+
+                    <td class="text-nowrap">
+                      <div class="d-flex flex-column">
+                        <span class="font-weight-bolder mb-25"> {{ art.totalCmd }} </span>
+                      </div>
+                    </td>
+
+                    <td> {{ art.colisCmd }} </td>
+
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <span class="font-weight-bolder mr-1 badge badge-pill" [ngClass]="{
+                                                          'badge-light-success': art.colisLivre == art.colisCmd,
+                                                          'badge-light-warning': art.colisLivre < art.colisCmd && art.colisLivre > 0,
+                                                          'badge-light-danger': art.colisLivre == 0
+                                                      }">
+                          {{ art.colisLivre }}
+                        </span>
+                      </div>
+                    </td>
+
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <span class="font-weight-bolder mr-1"
+                          [ngClass]="0 < art.colisNonLivre ? 'text-danger' : 'text-success' "> {{ art.colisNonLivre }}
+                        </span>
+                        <i data-feather="trending-down" *ngIf=" 0 < art.colisNonLivre"
+                          class="text-danger font-medium-1"></i>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--/ Articles Table -->
+
+    </div>
+
+    <div class="card" *ngIf="cmdList.length > 0">
+      <div class="row">
+        <div class="col-md-6 col-12">
+          <div class="d-flex justify-content-between align-items-center m-2">
+            <label class="d-flex align-items-center">Afficher
+              <select id="select" class="form-control mx-25" [(ngModel)]="selectedOption">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <ngx-datatable [rows]="cmdList" rowHeight="auto" [headerHeight]="50" [footerHeight]="50" [scrollbarH]="true"
+        [columnMode]="ColumnMode.force" [externalPaging]="true" [limit]="selectedOption"
+        [messages]="{emptyMessage: 'Aucune Commande n\'a été trouvée', totalMessage:'Commande'}"
+        class="bootstrap core-bootstrap">
+        <ngx-datatable-column name="Code" prop="codeClient" [width]="50">
+          <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+            <div class="d-flex align-items-center">
+              <div class="cell-line-height">
+                <a class="font-medium-1 d-block" routerLink="/articles/detail/{{row.id}}">
+                  <span class="font-weight-bold">{{ row.codeClient }}</span>
+                </a>
+                <span class="text-muted font-small-2"> {{ row.codeFournisseur }}</span>
+              </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Désignation" prop="designationClient" [width]="250">
+          <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+            <div class="d-flex align-items-center">
+              <div class="cell-line-height">
+                <a class="font-medium-1 d-block"><span class="font-weight-bold">{{
+                    row.designationClient }}</span></a>
+                <span class="text-muted font-small-2"> {{ row.designationFournisseur }}</span>
+              </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Fournisseur" prop="fournisseur.nom" [width]="50">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <div>
+              {{ row?.fournisseur?.nom }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="emplacments" prop="source" [width]="100">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <div class="d-flex align-items-center">
+              <div class="cell-line-height">
+                <span class="font-small-5"> {{ row.source }}</span>
+              </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+    </div>
+  </div>
+</div>
+
+<div class="content-wrapper container-xxl p-0" *ngIf="cmdList.length > 0">
+  <div class="content-body">
+    <div class="card">
+      <div class="row">
+        <div class="col-md-6 col-12">
+          <div class="d-flex justify-content-between align-items-center m-2">
+            <label class="d-flex align-items-center">Afficher
+              <select id="select" class="form-control mx-25" [(ngModel)]="selectedOption">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <ngx-datatable [rows]="cmdList" rowHeight="auto" [headerHeight]="50" [footerHeight]="50" [scrollbarH]="true"
+        [columnMode]="ColumnMode.force" [externalPaging]="true" [limit]="selectedOption"
+        [messages]="{emptyMessage: 'Aucune Commande n\'a été trouvée', totalMessage:'Commande'}"
+        class="bootstrap core-bootstrap">
+        <ngx-datatable-column name="Code" prop="codeClient" [width]="50">
+          <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+            <div class="d-flex align-items-center">
+              <div class="cell-line-height">
+                <a class="font-medium-1 d-block" routerLink="/articles/detail/{{row.id}}">
+                  <span class="font-weight-bold">{{ row.codeClient }}</span>
+                </a>
+                <span class="text-muted font-small-2"> {{ row.codeFournisseur }}</span>
+              </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Désignation" prop="designationClient" [width]="250">
+          <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+            <div class="d-flex align-items-center">
+              <div class="cell-line-height">
+                <a class="font-medium-1 d-block"><span class="font-weight-bold">{{
+                    row.designationClient }}</span></a>
+                <span class="text-muted font-small-2"> {{ row.designationFournisseur }}</span>
+              </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Fournisseur" prop="fournisseur.nom" [width]="50">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <div>
+              {{ row?.fournisseur?.nom }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="emplacments" prop="source" [width]="100">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <div class="d-flex align-items-center">
+              <div class="cell-line-height">
+                <span class="font-small-5"> {{ row.source }}</span>
+              </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,393 @@
+<div class="content-wrapper container-xxl p-0">
+  <app-content-header [contentHeader]="contentHeader"></app-content-header>
+
+  <!-- Statistic -->
+  <div class="col-xl-12 col-12">
+    <div class="card">
+      <div
+        class="card-header d-flex flex-sm-row flex-column justify-content-md-between align-items-start justify-content-start"
+      >
+        <h4 class="card-title font-medium-5 text-primary mb-sm-0 mb-1">Statistiques</h4>
+      </div>
+      <div class="card-body">
+        <div id="radialbar-chart" #apexRadialChartRef>
+          <apx-chart
+            [series]="apexRadialChart.series"
+            [chart]="{
+              height: 400,
+              width: isMenuToggled === false ? apexRadialChartRef.offsetWidth : apexRadialChart.chart.width,
+              type: 'radialBar'
+            }"
+            [plotOptions]="apexRadialChart.plotOptions"
+            [labels]="apexRadialChart.labels"
+            [colors]="apexRadialChart.colors"
+            [stroke]="apexRadialChart.stroke"
+            [legend]="apexRadialChart.legend"
+          ></apx-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Statistic Ends -->
+
+  <section class="app-user-edit">
+
+    <!-- search filter -->
+    <!-- <div class="card">
+      <h4 class="card-header text-primary">Filtre de recherche</h4>
+      <div class="card-body">
+        <div class="users-list-filter">
+          <form>
+            <div class="row">
+
+              <div class="col-12 col-md-4">
+                <fieldset class="form-group">
+                  <input
+                    [(ngModel)]="numeroBcsFilter"
+                    type="text"
+                    id="numeroBcs"
+                    class="form-control"
+                    placeholder="N° commande"
+                    name="numeroBcs"
+                  />
+                </fieldset>
+              </div>
+
+              <div class="col-12 col-md-4">
+                <fieldset class="form-group">
+                  <div class="input-group">
+                    <input
+                      [(ngModel)]="dateCommandeFilter"
+                      class="form-control"
+                      placeholder="Date commande"
+                      name="searchValue"
+                      ngbDatepicker
+                      #dateCommandeDP="ngbDatepicker"
+                    />
+                    <div class="input-group-append">
+                      <button
+                        class="btn btn-outline-secondary feather icon-calendar"
+                        (click)="dateCommandeDP.toggle()"
+                        type="button"
+                        rippleEffect
+                      ></button>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+
+              <div class="col-12 col-md-4">
+                <fieldset class="form-group">
+                  <input
+                    [(ngModel)]="codeUmFilter"
+                    type="text"
+                    id="codeUM"
+                    class="form-control"
+                    placeholder="Destinataire"
+                    name="codeUM"
+                  />
+                </fieldset>
+              </div>
+
+            </div>
+            <div class="btn btn-icon btn-outline-danger" style="float: right;" (click)="clear()"  rippleEffect>
+              <span [data-feather]="'trash'"></span>
+            </div>
+            <div class="btn btn-icon btn-primary" style="float: right; margin-right: 10px;" (click)="search()" rippleEffect>
+              <span [data-feather]="'search'"></span>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div> -->
+    <!-- search filter Ends -->
+
+    <!-- repartitioned bcs table  -->
+    <div class="row">
+      <div class="col-lg-12 d-flex flex-column justify-content-between border-container-lg">
+        <div class="card">
+          <div class="row">
+            <!-- Select options -->
+            <div class="col-md-2 col-12">
+              <div class="d-flex justify-content-between align-items-center m-1">
+                <label class="d-flex align-items-center">
+                  Afficher
+                  <select 
+                    class="form-control mx-25" 
+                    [(ngModel)]="selectedOption"
+                  >
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+            <!-- Select options Ends -->
+
+            <!-- Buttons documents -->
+            <div class="col-md-10 col-12 d-flex justify-content-start justify-content-md-end">
+              <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                <label class="d-flex align-items-center ml-1 ml-md-0">
+                  <input
+                      name="searchValue"
+                      type="search"
+                      class="form-control ml-25"
+                      placeholder="Code UM"
+                      (keyup)="filterUpdate($event)"
+                      (search)="filterUpdate($event)"
+                  />
+              </label>
+              </div>
+              <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                <button 
+                  type="button" 
+                  class="btn btn-outline-success" 
+                  rippleEffect
+                  (click)="etiquetteClientMass()"
+                >
+                  <span 
+                    [data-feather]="'printer'" 
+                    [class]="'mr-25'"
+                  ></span>
+                  Etiquette
+                </button>
+              </div>
+
+              <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                <button 
+                  type="button" 
+                  class="btn btn-outline-primary" 
+                  rippleEffect
+                  (click)="blsMass()"
+                >
+                  <span 
+                    [data-feather]="'printer'" 
+                    [class]="'mr-25'"
+                  ></span>
+                  Bon de livraisons
+                </button>
+              </div>
+
+              <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                <button 
+                  type="button" 
+                  class="btn btn-outline-secondary" 
+                  rippleEffect
+                  (click)="volumesMass()"
+                >
+                  <span 
+                    [data-feather]="'printer'" 
+                    [class]="'mr-25'"
+                  ></span>
+                  Volume et poids
+                </button>
+              </div>
+              <div class="d-flex align-items-center justify-content-end pb-1 pb-md-0">
+                <a 
+                  (click)="exportXlsx($event)"
+                  class="btn btn-outline-secondary float-right mr-1" 
+                  rippleEffect
+                >
+                  <span 
+                    [data-feather]="'download'" 
+                    [class]="'mr-25'"
+                  ></span>
+                  Volume (excel)
+                </a>
+              </div>
+
+              <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                <button 
+                  type="button" 
+                  class="btn btn-outline-warning" 
+                  rippleEffect
+                  (click)="colisagesMass()"
+                >
+                  <span 
+                    [data-feather]="'printer'" 
+                    [class]="'mr-25'"
+                  ></span>
+                  Liste de Colisage
+                </button>
+              </div>
+
+              <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                <button 
+                  type="button" 
+                  class="btn btn-outline-info" 
+                  rippleEffect
+                  (click)="stocksMass()"
+                >
+                  <span 
+                    [data-feather]="'printer'" 
+                    [class]="'mr-25'"
+                  ></span>
+                  Stock
+                </button>
+              </div>
+            </div>
+            <!-- Buttons documents Ends -->
+          </div>
+
+          <!-- Table -->
+          <ngx-datatable
+            [rows]="bcsList"
+            [rowHeight]="'auto'"
+            class="bootstrap core-bootstrap"
+            [limit]="selectedOption"
+            [columnMode]="ColumnMode.force"
+            [headerHeight]="50"
+            [footerHeight]="50"
+            [scrollbarH]="true"
+            [messages]="{emptyMessage: 'Aucun commande n\'a été trouvé', totalMessage:'Commandes'}"
+          >
+            <ngx-datatable-column 
+              name="Numéro commande" 
+              prop="numeroCommande" 
+              [width]="200"
+            >
+              <ng-template 
+                let-row="row" 
+                let-name="value" 
+                ngx-datatable-cell-template
+              >
+                <div class="d-flex align-items-center">
+                  <div class="cell-line-height">
+                    <a 
+                      class="font-medium-1 d-block" 
+                      routerLink="/bcs/detail/{{row.id}}"
+                    >
+                      <span class="font-weight-bold"> {{ row.numeroCommande }} </span>
+                    </a>
+                  </div>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column 
+              name="Date commande" 
+              prop="dateCommande" 
+              [width]="200"
+            >
+              <ng-template 
+                let-row="row" 
+                let-name="value" 
+                ngx-datatable-cell-template
+              >
+                <div class="d-flex align-items-center">
+                  <div class="cell-line-height">
+                    <a class="font-medium-1 d-block">
+                      <span class="font-weight-bold"> {{ row.dateCommande | date: 'dd-MM-yyyy' }} </span>
+                    </a>
+                  </div>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column 
+              name="Destinataire" 
+              prop="destinataire.codeUM" 
+              [width]="200"
+            >
+              <ng-template 
+                let-row="row" 
+                ngx-datatable-cell-template
+              >
+                <div>
+                  <a 
+                    class="font-medium-1 d-block" 
+                    routerLink="/destinataires/detail/{{row.destinataire.id}}"
+                  >
+                      <span class="font-weight-bold"> {{ row.destinataire ? row.destinataire.codeUM : '-' }} </span>
+                  </a>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Statut" prop="termine" [width]="150">
+              <ng-template let-termine="value" ngx-datatable-cell-template>
+                <div
+                  class="badge badge-pill"
+                  [ngClass]="{
+                    'badge-light-success': termine == 1,
+                    'badge-light-secondary': termine == 0
+                  }"
+                >
+                  {{termine == 0 ? 'Ouvert' : 'Terminé'}}
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Actions" [width]="50" [sortable]="false">
+              <ng-template ngx-datatable-cell-template let-row="row">
+                <div class="d-flex align-items-center col-actions">
+                  <a
+                    class="mr-1 text-success"
+                    container="body"
+                    placement="top"
+                    ngbTooltip="Imprimer Etiquette"
+                    (click)="etiquetteClient(row)"
+                  >
+                    <i size="18" data-feather="printer"></i>
+                  </a>
+
+                  <a
+                    class="mr-1 text-primary"
+                    container="body"
+                    placement="top"
+                    ngbTooltip="Imprimer BL"
+                    (click)="blByBcs(row.id)"
+                  >
+                    <i size="18" data-feather="truck"></i>
+                  </a>
+
+                  <a
+                    class="mr-1 text-warning"
+                    container="body"
+                    placement="top"
+                    ngbTooltip="Imprimer Liste de colisage"
+                    (click)="colisageByBcs(row.id)"
+                  >
+                    <i size="18" data-feather="file-text"></i>
+                  </a>
+
+                  <a 
+                    class="mr-1 text-info" 
+                    container="body" 
+                    placement="top" 
+                    ngbTooltip="Imprimer Stock"
+                    (click)="stockByBcs(row.id)"
+                  >
+                    <i size="18" data-feather="layers"></i>
+                  </a>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+          </ngx-datatable>
+        </div>
+      </div>
+    </div>
+    <!-- repartitioned bcs table ends -->
+
+  </section>
+
+  <!-- repartition result ends-->
+</div>
+
+<table id="excel-table" hidden> 
+  <tr>       
+     <th>codeUM</th> 
+     <th>destinataire</th>  
+     <th>qte palette</th> 
+     <th>poids</th>   
+  </tr>    
+  <tr *ngFor="let v of volumes">
+     <td>{{ v.codeUM }}</td>  
+     <td>{{ v.destinataire }}</td> 
+     <td>{{ v.qtePalette }}</td> 
+     <td>{{ v.poids }}</td> 
+  </tr> 
+</table>
