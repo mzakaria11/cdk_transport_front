@@ -33,6 +33,7 @@ import { LoaderService } from './layout/components/loader/loader.service';
 import { LoaderComponent } from './layout/components/loader/loader.component';
 import { MaintenanceGuard } from './auth/helpers/maintenance.guard';
 import {TarifMssNewComponent} from "./main/tarif-mss/tarif-mss-new/tarif-mss-new.component";
+import {DateTimePickerModule} from "./main/forms/form-elements/date-time-picker/date-time-picker.module";
 
 
 const role = JSON.parse(localStorage.getItem("currentUser"))?.role;
@@ -49,6 +50,7 @@ const appRoutes: Routes = [
     loadChildren: () => import('./main/components/buttons/buttons.module').then(m => m.ButtonsModule),
 
   },
+
   {
     path: 'dashboard',
     loadChildren: () => import('./main/dashboard/dashboard.module').then(m => m.DashboardModule),
@@ -191,6 +193,23 @@ const appRoutes: Routes = [
   {
     path: 'tarifmss',
     loadChildren: () => import('./main/tarif-mss/tarif-mss.module').then(m => m.TarifMssModule),
+
+  },
+
+  {
+    path: 'taxe',
+    loadChildren: () => import('./main/taxe/taxe.module').then(m => m.TaxeModule),
+
+  },
+  {
+    path: '',
+    loadChildren: () => import('./main/forms/form-elements/date-time-picker/date-time-picker.module').then(m => m.DateTimePickerModule),
+
+  },
+
+  {
+    path: '',
+    loadChildren: () => import('./main/forms/form-elements/checkbox/checkbox.module').then(m => m.CheckboxModule),
 
   },
 

@@ -116,7 +116,7 @@ export class TarifMssDetailComponent implements OnInit {
                             }
                         ).then(
                             () => {
-                              this._router.navigate(['/tarifmss/list']);
+                              this._router.navigate(['/taxe/list']);
                             }
                         );
                       }

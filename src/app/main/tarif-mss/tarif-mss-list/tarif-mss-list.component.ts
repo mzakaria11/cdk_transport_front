@@ -1,34 +1,14 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import {FormBuilder, FormGroup, UntypedFormGroup, Validators} from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ColumnMode, DatatableComponent } from '@swimlane/ngx-datatable';
-import { AuthenticationService } from 'app/auth/service';
-import {Subject, Subscription} from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import Swal from 'sweetalert2';
-import {TarifMss} from "../tarif-mss.model";
-import {TarifMssListService} from "../tarif-mss-list/tarif-mss-list.service";
-import {TarifMssDetailService} from "../tarif-mss-detail/tarif-mss-detail.service";
-import {Transporteur} from "../../transporteur/transporteur.model";
 import {TarifMssNewService} from "../tarif-mss-new/tarif-mss-new.service";
-import {ActivatedRoute, Router} from "@angular/router";
+import {Router} from "@angular/router";
 import {HttpClient} from "@angular/common/http";
 
-interface TarifAffResponse {
-    departements: Array<{
-        departementName: string;
-        departementId: number;
-        tarifs: Array<{ minKg: number; maxKg: number; prix: number; id: number}>;
-    }>;
-    transporteurId: number;
 
-}
 
 @Component({
   selector: 'app-tarif-mss-list',
   templateUrl: './tarif-mss-list.component.html',
   styleUrls: ['./tarif-mss-list.component.scss'],
-  encapsulation: ViewEncapsulation.None
 })
 export class TarifMssListComponent implements OnInit {
 
@@ -37,9 +17,7 @@ export class TarifMssListComponent implements OnInit {
     selectedOption : any;
     hasRole: 'Super_admin';
     id: number;
-    private routeSub: Subscription;
     name: string;
-    transporteurName : any;
     public contentHeader: object;
     transporteurs: any[] = [];
     public a : any;
@@ -47,8 +25,6 @@ export class TarifMssListComponent implements OnInit {
 
 
     constructor(private http: HttpClient,
-                private route: ActivatedRoute,
-                private f : FormBuilder,
                 private router: Router,
                 private _tarifMssNewService : TarifMssNewService) { }
 
@@ -107,7 +83,7 @@ export class TarifMssListComponent implements OnInit {
             departement.tarifs.forEach(tarif => {
                 const rangeStr = `${tarif.minKg}-${tarif.maxKg}`;
                 const propName = `range_${rangeStr.replace('-', '_')}Price`;
-                row[propName] = { id: tarif.id, prix: tarif.prix };;
+                row[propName] = { id: tarif.id, prix: tarif.prix };
             });
 
             // Add the fully populated row object to the transformedRows array

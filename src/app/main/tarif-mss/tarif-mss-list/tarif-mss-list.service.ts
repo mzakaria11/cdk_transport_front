@@ -41,26 +41,12 @@ export class TarifMssListService implements Resolve<any> {
         );
     }
 
-    getTarifMss(): Observable<TarifMss[]> {
-        return this._httpClient.get<TarifMss[]>(`${environment.api}/tarifmss`);
-    }
 
 
 
 
-    chooseTransporteur(id: number){
-        return this._httpClient.get<any>(`http://localhost:8080/api/tarifmss/list/${id}`)
-    }
 
 
-    // fetchTarifMssData(transporteurId: number) {
-    //     this.http.get<any>(`http://localhost:8080/api/tarifmss/list/${transporteurId}`).subscribe(data => {
-    //
-    //     }
-    //     this.rows = data.departements.map(departement => {
-    //         const row: any = {
-    //             departementName: departement.departementName,
-    //             departementId: departement.departementId
-    //         };
-    //     }}
+
+
 }

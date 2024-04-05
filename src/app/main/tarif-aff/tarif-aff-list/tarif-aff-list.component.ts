@@ -1,30 +1,15 @@
 
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {TarifMssListService} from "../../tarif-mss/tarif-mss-list/tarif-mss-list.service";
-import {TarifMssDetailService} from "../../tarif-mss/tarif-mss-detail/tarif-mss-detail.service";
-import {AuthenticationService} from "../../../auth/service";
 import {FormBuilder} from "@angular/forms";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
-import {Subject, Subscription} from "rxjs";
-import {Departement} from "../../departement/departement.model";
 import { ActivatedRoute } from '@angular/router';
 import {TarifMssNewService} from "../../tarif-mss/tarif-mss-new/tarif-mss-new.service";
-interface TarifAffResponse {
-    departements: Array<{
-    departementName: string;
-    departementId: number;
-    tarifs: Array<{ nbrPalette: number; prix: number; id: number}>;
-    }>;
-    transporteurId: number;
 
-}
 @Component({
   selector: 'app-tarif-aff-list',
   templateUrl: './tarif-aff-list.component.html',
   styleUrls: ['./tarif-aff-list.component.scss'],
-  encapsulation: ViewEncapsulation.None
 })
 export class TarifAffListComponent implements OnInit {
 
@@ -33,9 +18,7 @@ export class TarifAffListComponent implements OnInit {
     selectedOption : any;
     hasRole: 'Super_admin';
     id: number;
-    private routeSub: Subscription;
     name: string;
-    transporteurName : any;
     public contentHeader: object;
     transporteurs: any[] = [];
     public a : any;
@@ -43,8 +26,6 @@ export class TarifAffListComponent implements OnInit {
 
 
     constructor(private http: HttpClient,
-                private route: ActivatedRoute,
-                private f : FormBuilder,
                 private router: Router,
                 private _tarifMssNewService : TarifMssNewService) { }
 

@@ -19,13 +19,3 @@
   }
 }
 
-.datatable-container {
-  max-height: 1100px;
-  overflow-y: auto;
-
-  .ngx-datatable {
-    display: block;
-    overflow-x: auto;
-    width: 100%;
-  }
-}

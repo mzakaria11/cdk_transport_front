@@ -560,7 +560,7 @@ export const menu: CoreMenu[] = [
             translate: 'MENU.PRODUCTS.PRODUCT.LIST',
             type: 'item',
             icon: 'circle',
-            url: 'destinataires/list'
+            url: 'taxe/list'
           },
           {
             id: 'add',
@@ -569,7 +569,7 @@ export const menu: CoreMenu[] = [
             type: 'item',
             role: ['Admin', 'Super_admin'],
             icon: 'circle',
-            url: 'destinataires/new'
+            url: 'taxe/new'
           }
         ]
       }
