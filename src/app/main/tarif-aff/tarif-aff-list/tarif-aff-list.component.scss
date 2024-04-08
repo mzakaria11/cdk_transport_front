@@ -1,21 +1,40 @@
-.datatable-header-cell {
-  color: rgba(0,165,255,0.75) !important;
-}
+::ng-deep {
+  .content-wrapper {
+    overflow: hidden; /* Ensure the wrapper does not itself become scrollable */
 
-.ngx-datatable .datatable-body-cell {
-  transition: background-color 0.3s ease;
+    .datatable-container {
+      /* This is the immediate wrapper of ngx-datatable, adjust it to have a defined height or max-height as needed */
+      max-height: 1250px; /* Example; adjust based on your UI needs */
+      overflow: auto; /* This will show scrollbars when the content overflows */
+    }
 
-  .price-link {
-    display: flex;
-    justify-content: center;
-    align-items: center;/* Make the link fill the cell for a larger hover area */
-    height: 100%; /* Take full height of the cell */
-    width: 100%; /* Add some padding for visual comfort */
-    color: inherit; /* Optional: ensures the text color doesn't change on hover */
+    ngx-datatable {
+      display: block;
+      overflow: visible !important; /* Let the .datatable-container handle scrolling */
+      .datatable-header, .datatable-body, .datatable-footer {
+        overflow: visible !important; /* Prevent internal scrolling */
+      }
+    }
   }
 
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.1); /* Darken cell background on hover */
+  .datatable-header-cell {
+    color: rgba(0,165,255,0.75) !important;
+  }
+
+  .ngx-datatable .datatable-body-cell {
+    transition: background-color 0.3s ease;
+
+    .price-link {
+      display: flex;
+      justify-content: center;
+      align-items: center; // Make the link fill the cell for a larger hover area
+      height: 100%; // Take full height of the cell
+      width: 100%; // Add some padding for visual comfort
+      color: inherit; // Optional: ensures the text color doesn't change on hover
+    }
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.1); // Darken cell background on hover
+    }
   }
 }
-

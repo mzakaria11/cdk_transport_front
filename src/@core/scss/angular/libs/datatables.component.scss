@@ -148,6 +148,7 @@ $datatables-dark-active-bg-color: $theme-dark-card-bg;
       }
     }
   }
+
 }
 
 // media query for Small & Medium devices
@@ -191,6 +192,7 @@ $datatables-dark-active-bg-color: $theme-dark-card-bg;
   }
 
   .ngx-datatable.bootstrap.core-bootstrap {
+
     .datatable-footer {
       background-color: $datatables-dark-footer-bg-color !important;
       .datatable-pager ul li.disabled a {
@@ -200,6 +202,8 @@ $datatables-dark-active-bg-color: $theme-dark-card-bg;
         color: $datatables-dark-text-color;
       }
     }
+
+
   }
 
   .datatable-body-row {
