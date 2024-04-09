@@ -1,0 +1,92 @@
+<div class="card-container">
+    <!-- Existing cards -->
+    <div *ngFor="let card of cards" class="card">
+        <p>Name: {{ card.name }}</p>
+        <p>Type: {{ card.type1 ? 'Type 1' : card.type2 ? 'Type 2' : 'None' }}</p>
+        <p *ngIf="card.option3">Date: {{ card.date }}</p>
+        <div class="card-letter">{{ card.letter }}</div>
+    </div>
+
+
+    <!-- Plus card -->
+    <div class="card plus-card" (click)="open()">
+        <i class="fas fa-plus"></i>
+    </div>
+</div>
+
+<!-- Modal content -->
+<ng-template #newCardModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Add New Card</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form>
+            <!-- Name Input -->
+            <div class="form-group">
+                <label for="cardName">Name:</label>
+                <input type="text" id="cardName" class="form-control" [(ngModel)]="newCardData.name" name="name">
+            </div>
+
+            <!-- Type Selection (Checkboxes) -->
+            <div class="form-group">
+                <label>Type:</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="type1" [(ngModel)]="newCardData.type1" name="type1" (change)="typeChanged('type1')">
+                    <label class="form-check-label" for="type1">Type 1</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="type2" [(ngModel)]="newCardData.type2" name="type2" (change)="typeChanged('type2')">
+                    <label class="form-check-label" for="type2">Type 2</label>
+                </div>
+            </div>
+
+            <!-- Option 3 Checkbox -->
+            <div class="form-group">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="option3" [(ngModel)]="newCardData.option3" name="option3" (change)="optionChanged()">
+                    <label class="form-check-label" for="option3">Option 3</label>
+                </div>
+            </div>
+
+            <!-- Date Input -->
+            <div class="form-group" *ngIf="newCardData.option3">
+                <label for="cardDate">Date:</label>
+                <input type="date" id="cardDate" class="form-control" [(ngModel)]="newCardData.date" name="date">
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="modal.dismiss()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="addCard()">Save</button>
+    </div>
+</ng-template>
+
+<div class="fixed-bar">
+    <!-- File Upload Input -->
+    <!-- Hidden File Input -->
+    <input type="file" id="fileUpload" style="display: none" (change)="handleFileInput($event)" #fileInput>
+
+    <!-- Custom Button to Trigger the File Input -->
+    <button type="button" class="btn btn-primary" (click)="fileInput.click()">
+        <i class="fas fa-upload"></i> Select file
+    </button>
+
+    <!-- Display Selected File Name -->
+    <span *ngIf="fileName" class="ml-2">{{ fileName }}</span>    <!-- Formula Input -->
+
+
+
+
+    <input type="text" placeholder="Enter the formula" class="form-control" style="font-size: 18px; height: 50px; width: 550px;" id="formulaInput">
+
+
+    <!-- Ajouter Button -->
+    <button class="btn btn-primary" (click)="onAjouterClick()">Ajouter</button>
+</div>
+
+
+
+

@@ -1,0 +1,172 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <section class="app-user-edit">
+            <div class="card">
+                <div class="card-body">
+                    <ul ngbNav #nav="ngbNav" class="nav nav-pills">
+                        <li ngbNavItem>
+                            <a ngbNavLink class="d-flex align-items-center">
+                                <i data-feather="info" class="mr-sm-50"></i><span class="d-none d-sm-block">Taxe du Transporteur {{ data.transporteur.nom }} dans la Departement {{ data.departement.nom }}</span></a
+                            >
+                            <ng-template ngbNavContent>
+                                <div class="tab-pane" id="information" aria-labelledby="information-tab" role="tabpanel">
+                                    <form class="form-validate" (ngSubmit)="(taxeForm.form.valid)" #taxeForm="ngForm">
+                                        <div class="row mt-1">
+                                            <div class="col-12">
+                                                <h4 class="mb-1">
+                                                    <i data-feather="user" [size]="16" class="mr-75 font-medium-4"></i>
+                                                    <span class="align-middle">Information</span>
+                                                </h4>
+                                            </div>
+
+                                            <!--transporteur-->
+
+
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        <label for="transporteur">Transporteur</label>
+                                                        <ng-select [ngClass]="{'pointer-events-none': !edit}"
+                                                                   id="transporteur"
+                                                                   name="transporteur"
+                                                                   [items]="transporteurs"
+                                                                   bindLabel="nom"
+                                                                   bindValue="id"
+                                                                   placeholder="Select Transporteurs"
+                                                                   [(ngModel)]="transporteurId">
+                                                        </ng-select>
+                                                    </div>
+                                                </div>
+
+
+                                            <!--transporteur-->
+
+                                            <!--departement-->
+
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="departement">Departement</label>
+                                                    <ng-select [ngClass]="{'pointer-events-none': !edit}"
+                                                               id="departement"
+                                                               name="departement"
+                                                               [items]="departements"
+                                                               bindLabel="nom"
+                                                               bindValue="id"
+                                                               placeholder="Select Departement"
+                                                               [(ngModel)]="departementId"
+                                                               >
+                                                    </ng-select>
+                                                </div>
+                                            </div>
+                                            <!--departement-->
+
+
+                                            <div class="col-md-3">
+                                                <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                                                    <label for="taxeName">nom du Taxe</label>
+                                                    <input type="text" id="taxeName"  class="form-control" [(ngModel)]="data.taxeName" name="taxeName" >
+                                                    {{data.taxeName}}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
+                                                    <label for="prix">nom du Taxe</label>
+                                                    <input type="text" id="prix"  class="form-control" [(ngModel)]="data.prix" name="prix">
+                                                </div>
+                                            </div>
+
+
+
+
+
+
+
+
+                                            <div class="col-12 d-flex flex-sm-row flex-column mt-2" *ngIf="edit">
+                                                <button
+                                                        type="submit"
+                                                        (click)="submit(taxeForm)"
+                                                        class="btn btn-success mb-1 mb-sm-0 mr-0 mr-sm-1"
+                                                        rippleEffect
+                                                >
+                                                    Modifier
+                                                </button>
+
+                                                <button (click)="modalOpenForm(modalForm)" class="btn btn-outline-danger" rippleEffect>
+                                                    Supprimer
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </ng-template>
+                        </li>
+                    </ul>
+                    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+
+
+<div class="login-form">
+    <ng-template #modalForm let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="myModalLabel1">Confirmation de suppression</h4>
+            <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body" tabindex="0" ngbAutofocus>
+            <form class="form-validate" [formGroup]="ReactivePasswordConfirmationForm" (ngSubmit)="ReactiveCPFormOnSubmit()">
+                <div class="row">
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label for="password">Mot de passe</label>
+                                <input
+                                        type="password"
+                                        id="password"
+                                        formControlName="password"
+                                        class="form-control"
+                                        [ngClass]="{ 'is-invalid': ReactiveCPFormSubmitted && ReactiveCPForm.password.errors }"
+                                />
+                                <div
+                                        *ngIf="ReactiveCPFormSubmitted && ReactiveCPForm.password.errors"
+                                        class="invalid-feedback"
+                                >
+                                    <div *ngIf="ReactiveCPForm.password.errors.required">Mot de passe est requis</div>
+                                    <div *ngIf="ReactiveCPForm.password.errors.minlength">Mot de passe doit comporter au moins 6 caractères</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="width: 100%;">
+                        <button class="btn btn-primary" rippleEffect>
+                            Confirmer
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

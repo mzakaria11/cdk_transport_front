@@ -1,0 +1,68 @@
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.card {
+  border: 1px solid #ddd;
+  margin: 10px;
+  padding: 20px;
+  width: calc(100% / 4 - 20px);
+  height: 400px ;/* Adjust based on your layout */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.plus-card {
+  background-color: #f9f9f9; /* Light gray background */
+  font-size: 24px; /* Larger icon */
+}
+
+.card-content {
+  text-align: center;
+}
+
+
+
+.card-letter {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.fixed-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px;
+  background-color: #f8f9fa;
+  box-shadow: 0 -2px 5px rgba(0,0,0,.1);
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Ensure vertical alignment */
+  gap: 10px; /* Adds some space between elements */
+}
+
+.form-control {
+  width: auto;
+}
+
+.form-control-file,
+.form-control {
+  margin-right: 10px; /* Adds spacing between elements */
+}
+
+.btn-primary {
+  margin-left: 10px; /* Adds spacing after the formula input */
+}
+
+span.ml-2 {
+  font-weight: bold;
+  color: #333;
+}
