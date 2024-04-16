@@ -16,7 +16,8 @@
     "paths": {
       "@core": ["@core/"],
       "@fake-db": ["@fake-db/"],
-      "environments": ["environments/"]
+      "environments": ["environments/"],
+
     }
   },
   "angularCompilerOptions": {

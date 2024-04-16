@@ -1,11 +1,23 @@
 <div class="card-container">
     <!-- Existing cards -->
-    <div *ngFor="let card of cards" class="card">
-        <p>Name: {{ card.name }}</p>
-        <p>Type: {{ card.type1 ? 'Type 1' : card.type2 ? 'Type 2' : 'None' }}</p>
-        <p *ngIf="card.option3">Date: {{ card.date }}</p>
-        <div class="card-letter">{{ card.letter }}</div>
+    <div class="card">
+        <h1><b>Tarif de base</b> </h1>
+
+
+
+        <div class="card-letter">A</div>
     </div>
+
+    <div *ngFor="let card of cards; let i = index" class="card" (click)="openEditModal(card, i)">
+        <h1><b>Taxe Name:</b> {{ card.taxeName }}</h1>
+        <h3><b>Type:</b> {{ card.typeAddition ? 'Addition' : card.typeMultiplication ? 'Multiplication' : 'None' }}</h3>
+        <h3 *ngIf="card.isTemporal"><b>From Date:</b> {{ card.fromDate }}</h3>
+        <h3 *ngIf="card.isTemporal"><b>To Date:</b> {{ card.toDate }}</h3>
+        <div class="card-letter">{{ card.letter }}</div>
+        <button class="btn btn-danger" (click)="deleteCard(i, $event)"><i class="fas fa-times"></i></button>
+    </div>
+
+
 
 
     <!-- Plus card -->
@@ -17,7 +29,7 @@
 <!-- Modal content -->
 <ng-template #newCardModal let-modal>
     <div class="modal-header">
-        <h4 class="modal-title">Add New Card</h4>
+        <h4 class="modal-title">{{ editIndex !== null ? 'Edit Taxe' : 'Add New Taxe' }}</h4>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -26,35 +38,39 @@
         <form>
             <!-- Name Input -->
             <div class="form-group">
-                <label for="cardName">Name:</label>
-                <input type="text" id="cardName" class="form-control" [(ngModel)]="newCardData.name" name="name">
+                <label for="cardName">Taxe Name:</label>
+                <input type="text" id="cardName" class="form-control" [(ngModel)]="newCardData.taxeName" name="name">
             </div>
 
             <!-- Type Selection (Checkboxes) -->
             <div class="form-group">
                 <label>Type:</label>
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="type1" [(ngModel)]="newCardData.type1" name="type1" (change)="typeChanged('type1')">
-                    <label class="form-check-label" for="type1">Type 1</label>
+                    <input class="form-check-input" type="checkbox" id="type1" [(ngModel)]="newCardData.typeAddition" name="type1" (change)="typeChanged('type1')">
+                    <label class="form-check-label" for="type1">Addition</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="type2" [(ngModel)]="newCardData.type2" name="type2" (change)="typeChanged('type2')">
-                    <label class="form-check-label" for="type2">Type 2</label>
+                    <input class="form-check-input" type="checkbox" id="type2" [(ngModel)]="newCardData.typeMultiplication" name="type2" (change)="typeChanged('type2')">
+                    <label class="form-check-label" for="type2">Multiplication</label>
                 </div>
             </div>
 
             <!-- Option 3 Checkbox -->
             <div class="form-group">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="option3" [(ngModel)]="newCardData.option3" name="option3" (change)="optionChanged()">
-                    <label class="form-check-label" for="option3">Option 3</label>
+                    <input class="form-check-input" type="checkbox" id="option3" [(ngModel)]="newCardData.isTemporal" name="option3" (change)="optionChanged()">
+                    <label class="form-check-label" for="option3">Temporal</label>
                 </div>
             </div>
 
             <!-- Date Input -->
-            <div class="form-group" *ngIf="newCardData.option3">
-                <label for="cardDate">Date:</label>
-                <input type="date" id="cardDate" class="form-control" [(ngModel)]="newCardData.date" name="date">
+            <div class="form-group" *ngIf="newCardData.isTemporal">
+                <label for="cardDate1">From Date:</label>
+                <input type="date" id="cardDate1" class="form-control" [(ngModel)]="newCardData.fromDate" name="date">
+            </div>
+            <div class="form-group" *ngIf="newCardData.isTemporal">
+                <label for="cardDate2">To Date:</label>
+                <input type="date" id="cardDate2" class="form-control" [(ngModel)]="newCardData.toDate" name="date">
             </div>
         </form>
     </div>
@@ -64,10 +80,22 @@
     </div>
 </ng-template>
 
+
 <div class="fixed-bar">
-    <!-- File Upload Input -->
-    <!-- Hidden File Input -->
-    <input type="file" id="fileUpload" style="display: none" (change)="handleFileInput($event)" #fileInput>
+
+    <label for="selection">Select Transporteur: </label>
+    <select [(ngModel)]="selectedTransporteurId" class="form-control" id = "selection">
+        <option *ngFor="let transporteur of transporteurs" [value]="transporteur.id">
+            {{ transporteur.name }}
+        </option>
+    </select>
+
+    <!--File Input -->
+
+
+    <label for="fileSelection">Select File: </label>
+
+    <input type="file" id="fileSelection" style="display: none" (change)="handleFileInput($event)" #fileInput>
 
     <!-- Custom Button to Trigger the File Input -->
     <button type="button" class="btn btn-primary" (click)="fileInput.click()">
@@ -75,13 +103,11 @@
     </button>
 
     <!-- Display Selected File Name -->
-    <span *ngIf="fileName" class="ml-2">{{ fileName }}</span>    <!-- Formula Input -->
+    <span *ngIf="fileToUpload" class="ml-2">{{ fileToUpload?.name }}</span>
 
-
-
-
-    <input type="text" placeholder="Enter the formula" class="form-control" style="font-size: 18px; height: 50px; width: 550px;" id="formulaInput">
-
+    <!-- Formula Input -->
+    <label for="formulaEnter">Select File: </label>
+    <input type="text" placeholder="Enter the formula" id = "formulaEnter" [(ngModel)]="formula" class="form-control" style="font-size: 18px; height: 50px; width: 550px;">
 
     <!-- Ajouter Button -->
     <button class="btn btn-primary" (click)="onAjouterClick()">Ajouter</button>

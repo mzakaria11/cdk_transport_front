@@ -19,6 +19,8 @@
 .plus-card {
   background-color: #f9f9f9; /* Light gray background */
   font-size: 24px; /* Larger icon */
+  color : #1ab7ea;
+
 }
 
 .card-content {
@@ -33,6 +35,7 @@
   right: 10px;
   font-size: 20px;
   font-weight: bold;
+  color : #1ab7ea;
 }
 
 .fixed-bar {
@@ -65,4 +68,16 @@
 span.ml-2 {
   font-weight: bold;
   color: #333;
+}
+
+
+.card .btn-danger {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 0.5rem;
+  line-height: 1;
+  width: 30px; /* Set a fixed width */
+  height: 30px; /* Set a fixed height */
+  font-size: 14px; /* Adjust font size as needed */
 }

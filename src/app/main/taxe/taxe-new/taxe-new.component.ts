@@ -1,4 +1,4 @@
-import {Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, OnInit, TemplateRef, ViewChild, ViewEncapsulation} from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
@@ -8,9 +8,11 @@ import {Departement} from "../../departement/departement.model";
 import {formatDate} from "@angular/common";
 import {FileUploader} from "ng2-file-upload";
 import {ColumnMode} from "@swimlane/ngx-datatable";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../../../environments/environment";
 import {NgbCalendar, NgbDate, NgbDateParserFormatter, NgbDateStruct, NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {Observable} from "rxjs";
+import {TarifMssNewService} from "../../tarif-mss/tarif-mss-new/tarif-mss-new.service";
 
 @Component({
   selector: 'app-taxe-new',
@@ -20,11 +22,24 @@ import {NgbCalendar, NgbDate, NgbDateParserFormatter, NgbDateStruct, NgbModal} f
 
 export class TaxeNewComponent implements OnInit {
     @ViewChild('newCardModal') newCardModal: TemplateRef<any>;
+    fileToUpload: File | null = null;
 
-    cards = [];
-    newCardData = { name: '', type1: false, type2: false, option3: false, date: '' };
+    transporteurId = 3; // Hardcoded for testing
+    formula: string = '';
+    cards: any[] = [];
+    fileName: string = '';
+    transporteurs: any[] = [];
+    selectedTransporteurId: string = '';
+
+
+    newCardData = { taxeName: '', typeAddition: false, typeMultiplication: false, isTemporal: false, fromDate: '', toDate: '' };
     currentCharCode = 65; // ASCII code for 'A'
-    constructor(private modalService: NgbModal) {}
+    constructor(private modalService: NgbModal,
+                private httpClient : HttpClient,
+                private _tarifMssNewService : TarifMssNewService) {}
+
+
+
 
     open() {
         this.modalService.open(this.newCardModal).result.then(() => {
@@ -34,69 +49,143 @@ export class TaxeNewComponent implements OnInit {
         });
     }
 
+    loadTransporteurs() {
+        this._tarifMssNewService.getTransporteurs().subscribe((data: any[]) => {
+            this.transporteurs = data.map(trans => ({
+                id: trans.id,
+                name: trans.nom // Assuming each object has an 'id' and 'name' property
+            }));
+            console.log(this.transporteurs)
+        });
 
-
-    onOption3Change() {
-        // This function is optional unless you need specific logic when Option 3 changes
     }
 
-    optionChanged(optionSelected: string) {
+
+
+    optionChanged() {
 
     }
 
 
     typeChanged(selectedType: string) {
-        if (selectedType === 'type1' && this.newCardData.type1) {
-            this.newCardData.type2 = false;
-        } else if (selectedType === 'type2' && this.newCardData.type2) {
-            this.newCardData.type1 = false;
+        if (selectedType === 'type1' && this.newCardData.typeAddition) {
+            this.newCardData.typeMultiplication = false;
+        } else if (selectedType === 'type2' && this.newCardData.typeMultiplication) {
+            this.newCardData.typeAddition = false;
         }
     }
 
     addCard() {
-        if (this.newCardData.name) {
-            const card = {
-                ...this.newCardData,
-                letter: String.fromCharCode(this.currentCharCode) // Convert ASCII code to character
-            };
-            this.cards.push(card);
-            this.resetForm(); // Reset form after adding a card
-            this.currentCharCode = this.currentCharCode >= 90 ? 65 : this.currentCharCode + 1; // Reset or increment the letter
+        if (this.newCardData.taxeName) {
+            if (this.editIndex !== null) {
+                this.cards[this.editIndex] = {...this.newCardData}; // Update existing card
+                this.editIndex = null; // Reset edit index
+            } else {
+                const card = {
+                    ...this.newCardData,
+                    letter: String.fromCharCode(this.currentCharCode + 1) // Convert ASCII code to character
+                };
+                this.cards.push(card);
+                this.currentCharCode = this.currentCharCode >= 90 ? 65 : this.currentCharCode + 1; // Reset or increment the letter
+            }
             this.modalService.dismissAll(); // Optionally close the modal
+            this.resetForm(); // Reset form after adding/updating a card
         }
     }
 
+
     resetForm() {
-        this.newCardData = { name: '', type1: false, type2: false, option3: false, date: '' };
+        this.newCardData = { taxeName: '', typeAddition: false, typeMultiplication: false, isTemporal: false, fromDate: '', toDate: '' };
+        this.editIndex = null;
+    }
+
+    handleFileInput(event: Event) {
+        const element = event.target as HTMLInputElement;
+        let files: FileList | null = element.files;
+        if (files && files.length > 0) {
+            this.fileToUpload = files[0];
+        }
     }
 
     onAjouterClick() {
-        // Implement your logic here
-        // This could involve processing the uploaded file, applying the formula, etc.
-        console.log('Ajouter clicked');
+        if (!this.fileToUpload) {
+            console.error('No file selected!');
+            return;
+        }
+
+        // Create a new FormData instance
+        const formData = new FormData();
+
+        // Append the file to the FormData instance
+        formData.append('file', this.fileToUpload, this.fileName);
+
+        // Append hardcoded transporteurId and formula
+        formData.append('transporteurId', this.selectedTransporteurId);
+        formData.append('formula', this.formula);  // Adjust if it's supposed to be this.formulaInput
+
+        // Serialize taxDetails from the cards array to match backend expectations
+        const taxDetails = this.cards.map(card => {
+            let detail = {
+                taxName: card.taxeName,
+                taxType: card.typeAddition ? 'addition' : 'multiplication',
+                letter: card.letter
+            };
+            // Only include date fields if the temporal option is selected
+            if (card.isTemporal) {
+                detail['fromDate'] = card.fromDate;
+                detail['toDate'] = card.toDate;
+            }
+            return detail;
+        });
+        formData.append('taxDetails', JSON.stringify(taxDetails));
+
+        // Make the HTTP request to your server endpoint
+        this.httpClient.post(`${environment.api}/taxe/enter`, formData).subscribe({
+            next: (response) => {
+                console.log('Upload successful', response);
+                Swal.fire('Success!', 'The tax details have been uploaded.', 'success');
+                window.location.reload(); // Refresh the page to reflect the updated data
+            },
+            error: (error) => {
+                console.error('Upload failed', error);
+                Swal.fire('Error!', 'The upload failed.', 'error');
+            }
+        });
     }
 
 
 // Assuming you have declared fileToUpload somewhere in your component
-    fileToUpload: File | null = null;
-    fileName: string = ''; // To store the selected file's name
 
 
-    handleFileInput(event: Event) {
-        const element = event.currentTarget as HTMLInputElement;
-        let fileList: FileList | null = element.files;
-        if (fileList && fileList.length > 0) {
-            this.fileToUpload = fileList[0];
-            this.fileName = fileList[0].name; // Set the file name
-        }
+
+
+    editIndex: number | null = null;
+
+    openEditModal(card: any, index: number) {
+        this.newCardData = { ...card }; // Clone the data for editing
+        this.editIndex = index; // Track which card is being edited
+        this.modalService.open(this.newCardModal).result.then(() => {
+            // Save changes on modal close
+            this.cards[this.editIndex!] = {...this.newCardData};
+            this.resetForm(); // Optionally reset form
+        }, () => {
+            // Handle modal dismissal
+            this.resetForm();
+        });
     }
+
+    deleteCard(index: number, event: MouseEvent) {
+        event.stopPropagation(); // Prevent opening the edit modal
+        this.cards.splice(index, 1); // Remove the card from the array
+    }
+
 
 
 
 
 
     ngOnInit(): void {
-
+        this.loadTransporteurs();
   }
 
   protected readonly ColumnMode = ColumnMode;
