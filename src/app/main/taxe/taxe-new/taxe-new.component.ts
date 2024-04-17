@@ -22,6 +22,8 @@ import {TarifMssNewService} from "../../tarif-mss/tarif-mss-new/tarif-mss-new.se
 
 export class TaxeNewComponent implements OnInit {
     @ViewChild('newCardModal') newCardModal: TemplateRef<any>;
+    public contentHeader: Object;
+
     fileToUpload: File | null = null;
 
     transporteurId = 3; // Hardcoded for testing
@@ -32,8 +34,14 @@ export class TaxeNewComponent implements OnInit {
     selectedTransporteurId: string = '';
 
 
-    newCardData = { taxeName: '', typeAddition: false, typeMultiplication: false, isTemporal: false, fromDate: '', toDate: '' };
+    newCardData = { taxeName: '', typeAddition: false, typeMultiplication: false, isTemporal: false, fromMonth: '', fromDay: '' , toMonth: '', toDay: '' };
     currentCharCode = 65; // ASCII code for 'A'
+
+
+    months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+    days = Array.from({ length: 31 }, (_, i) => (i + 1).toString().padStart(2, '0'))
+
+    // Add your other properties and methods here
     constructor(private modalService: NgbModal,
                 private httpClient : HttpClient,
                 private _tarifMssNewService : TarifMssNewService) {}
@@ -95,7 +103,7 @@ export class TaxeNewComponent implements OnInit {
 
 
     resetForm() {
-        this.newCardData = { taxeName: '', typeAddition: false, typeMultiplication: false, isTemporal: false, fromDate: '', toDate: '' };
+        this.newCardData = { taxeName: '', typeAddition: false, typeMultiplication: false, isTemporal: false, fromMonth: '', fromDay: '' , toMonth: '', toDay: '' };
         this.editIndex = null;
     }
 
@@ -130,21 +138,25 @@ export class TaxeNewComponent implements OnInit {
                 taxType: card.typeAddition ? 'addition' : 'multiplication',
                 letter: card.letter
             };
-            // Only include date fields if the temporal option is selected
+            // Only include month and day fields if the temporal option is selected
             if (card.isTemporal) {
-                detail['fromDate'] = card.fromDate;
-                detail['toDate'] = card.toDate;
+                detail['fromMonth'] = card.fromMonth ;
+                detail['fromDay'] = card.fromDay;
+                detail['toMonth'] = card.toMonth ;
+                detail['toDay'] = card.toDay
+                console.log(card.toMonth)
             }
             return detail;
         });
         formData.append('taxDetails', JSON.stringify(taxDetails));
+        console.log(taxDetails);
 
         // Make the HTTP request to your server endpoint
         this.httpClient.post(`${environment.api}/taxe/enter`, formData).subscribe({
             next: (response) => {
                 console.log('Upload successful', response);
                 Swal.fire('Success!', 'The tax details have been uploaded.', 'success');
-                window.location.reload(); // Refresh the page to reflect the updated data
+                this.resetForm();
             },
             error: (error) => {
                 console.error('Upload failed', error);
@@ -152,6 +164,7 @@ export class TaxeNewComponent implements OnInit {
             }
         });
     }
+
 
 
 // Assuming you have declared fileToUpload somewhere in your component
@@ -186,6 +199,32 @@ export class TaxeNewComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadTransporteurs();
+
+
+        this.contentHeader = {
+            headerTitle: 'Nouveau',
+            actionButton: false,
+            breadcrumb: {
+                type: '',
+                links: [
+                    {
+                        name: 'Accueil',
+                        isLink: true,
+                        link: '/'
+                    },
+                    {
+                        name: 'Taxe',
+                        isLink: true,
+                        link: '/Taxe/list'
+                    },
+                    {
+                        name: 'Ajouter',
+                        isLink: false
+                    }
+                ]
+            }
+        };
+
   }
 
   protected readonly ColumnMode = ColumnMode;

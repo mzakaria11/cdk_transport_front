@@ -1,3 +1,9 @@
+<app-content-header [contentHeader]="contentHeader"></app-content-header>
+<div class = "header-div">
+    <div class="card-container">
+        <h2> <b> Add the taxes for the transporteur, give the formula and upload the excel file </b> </h2>
+    </div>
+</div>
 <div class="card-container">
     <!-- Existing cards -->
     <div class="card">
@@ -11,8 +17,8 @@
     <div *ngFor="let card of cards; let i = index" class="card" (click)="openEditModal(card, i)">
         <h1><b>Taxe Name:</b> {{ card.taxeName }}</h1>
         <h3><b>Type:</b> {{ card.typeAddition ? 'Addition' : card.typeMultiplication ? 'Multiplication' : 'None' }}</h3>
-        <h3 *ngIf="card.isTemporal"><b>From Date:</b> {{ card.fromDate }}</h3>
-        <h3 *ngIf="card.isTemporal"><b>To Date:</b> {{ card.toDate }}</h3>
+        <h3 *ngIf="card.isTemporal"><b>From the day:</b> {{ card.fromDay }} <b>of the Month:</b> {{ card.toMonth }}</h3>
+        <h3 *ngIf="card.isTemporal"><b>to the day:</b> {{ card.fromDay }} <b>of the Month:</b> {{ card.toMonth }}</h3>
         <div class="card-letter">{{ card.letter }}</div>
         <button class="btn btn-danger" (click)="deleteCard(i, $event)"><i class="fas fa-times"></i></button>
     </div>
@@ -64,14 +70,43 @@
             </div>
 
             <!-- Date Input -->
-            <div class="form-group" *ngIf="newCardData.isTemporal">
-                <label for="cardDate1">From Date:</label>
-                <input type="date" id="cardDate1" class="form-control" [(ngModel)]="newCardData.fromDate" name="date">
+
+
+            <div *ngIf="newCardData.isTemporal">
+                <!-- From Date Inputs -->
+                <div class="form-row">
+                    <div class="col">
+                        <label for="fromDay">From the Day:</label>
+                        <select id= "fromDay" class="form-control" [(ngModel)]="newCardData.fromDay" name="fromDay">
+                            <option *ngFor="let day of days" [value]="day">{{ day }}</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label for="fromMonth">of the Month:</label>
+                        <select id= "fromMonth" class="form-control" [(ngModel)]="newCardData.fromMonth" name="fromMonth">
+                            <option *ngFor="let month of months" [value]="month">{{ month }}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- To Date Inputs -->
+                <div class="form-row">
+                    <div class="col">
+                        <label for="toDay">To the Day:</label>
+                        <select id= "toDay" class="form-control" [(ngModel)]="newCardData.toDay" name="toDay">
+                            <option *ngFor="let day of days" [value]="day">{{ day }}</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label for="toMonth">of the Month:</label>
+                        <select id= "toMonth" class="form-control" [(ngModel)]="newCardData.toMonth" name="toMonth">
+                            <option *ngFor="let month of months" [value]="month">{{ month }}</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-            <div class="form-group" *ngIf="newCardData.isTemporal">
-                <label for="cardDate2">To Date:</label>
-                <input type="date" id="cardDate2" class="form-control" [(ngModel)]="newCardData.toDate" name="date">
-            </div>
+
+
         </form>
     </div>
     <div class="modal-footer">
@@ -93,24 +128,23 @@
     <!--File Input -->
 
 
-    <label for="fileSelection">Select File: </label>
 
     <input type="file" id="fileSelection" style="display: none" (change)="handleFileInput($event)" #fileInput>
 
     <!-- Custom Button to Trigger the File Input -->
     <button type="button" class="btn btn-primary" (click)="fileInput.click()">
-        <i class="fas fa-upload"></i> Select file
+        <i class="fas fa-upload"></i> Select Formula
     </button>
 
     <!-- Display Selected File Name -->
     <span *ngIf="fileToUpload" class="ml-2">{{ fileToUpload?.name }}</span>
 
     <!-- Formula Input -->
-    <label for="formulaEnter">Select File: </label>
-    <input type="text" placeholder="Enter the formula" id = "formulaEnter" [(ngModel)]="formula" class="form-control" style="font-size: 18px; height: 50px; width: 550px;">
+    <label for="formulaEnter">Select Formula:  </label>
+    <input type="text" placeholder="Enter the formula: (EXAMPLE : (A * B / C ... n))" id = "formulaEnter" [(ngModel)]="formula" class="form-control" style="font-size: 18px; height: 50px; width: 550px;">
 
     <!-- Ajouter Button -->
-    <button class="btn btn-primary" (click)="onAjouterClick()">Ajouter</button>
+    <button class="btn btn-success" (click)="onAjouterClick()">Ajouter</button>
 </div>
 
 

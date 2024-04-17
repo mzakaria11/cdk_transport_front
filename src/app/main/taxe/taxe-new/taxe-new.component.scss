@@ -3,6 +3,22 @@
   flex-wrap: wrap;
 }
 
+.header-div, card-container{
+
+  background-color : #ffffff;
+  border: 1px solid #ddd;
+  margin: 10px;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0.5px 0.5px 10px rgba(128, 128, 128, 0.18);
+  color : #1ab7ea;
+
+}
+
 .card {
   border: 1px solid #ddd;
   margin: 10px;

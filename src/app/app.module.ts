@@ -34,6 +34,8 @@ import { LoaderComponent } from './layout/components/loader/loader.component';
 import { MaintenanceGuard } from './auth/helpers/maintenance.guard';
 import {TarifMssNewComponent} from "./main/tarif-mss/tarif-mss-new/tarif-mss-new.component";
 import {DateTimePickerModule} from "./main/forms/form-elements/date-time-picker/date-time-picker.module";
+import { TrscriptDashboardComponent } from './script-transporteur/trscript-dashboard/trscript-dashboard.component';
+import { TrscriptHistoryComponent } from './script-transporteur/trscript-history/trscript-history.component';
 
 
 const role = JSON.parse(localStorage.getItem("currentUser"))?.role;
@@ -231,7 +233,9 @@ const appRoutes: Routes = [
     BasicCustomContextMenuComponent,
     AnimatedCustomContextMenuComponent,
     SubMenuCustomContextMenuComponent,
-    LoaderComponent
+    LoaderComponent,
+    TrscriptDashboardComponent,
+    TrscriptHistoryComponent
 
 
 
