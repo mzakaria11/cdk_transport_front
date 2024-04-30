@@ -12,6 +12,8 @@ import { CoreConfigService } from '@core/services/config.service';
 import { DocumentService } from 'app/main/documents/document.service';
 import { HttpResponse } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {ActivatedRoute, Router} from "@angular/router";
+import {TarifTotalCalculeService} from "../../tarif-total/tarif-total-calcule/tarif-total-calcule.service";
 
 @Component({
   selector: 'app-repartition-detail',
@@ -21,13 +23,15 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RepartitionDetailComponent implements OnInit {
-  
+
+
   //#region  Var
 
   @ViewChild('goalChartRef') goalChartRef: any;
 
   public goalChartoptions;
   public isMenuToggled = false;
+    isItTermine: boolean = true;
 
   // Private
   private $goalStrokeColor2 = '#51e5a8';
@@ -90,8 +94,11 @@ export class RepartitionDetailComponent implements OnInit {
     private _authenticationService: AuthenticationService,
     private _coreConfigService: CoreConfigService,
     private _documentService: DocumentService,
-    private modalService: NgbModal
-  ) { 
+    private modalService: NgbModal,
+    private _router: Router,
+    private tariffService: TarifTotalCalculeService, private router: Router,
+    private route: ActivatedRoute
+) {
     this.currDate = formatDate(new Date(), "yyyy-MM-dd", "en");
 
     this.request = new RepartitionRequest();
@@ -163,6 +170,48 @@ export class RepartitionDetailComponent implements OnInit {
   }
 
   //#region Documents
+genererTransporteur() {
+
+    const swalWithBootstrapButtons = Swal.mixin(
+        {
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger sup'
+            },
+            buttonsStyling: false
+        }
+    );
+
+    swalWithBootstrapButtons.fire(
+        {
+            title: 'Vous êtes sûr ?',
+            text: "Vous ne pourrez pas revenir en arrière !",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Oui, généré-le!',
+            cancelButtonText: 'Non, annulez!',
+            reverseButtons: true
+        }
+    )
+        .then(
+            (result) => {
+                if (result.isConfirmed) {
+
+                    this.toTransport()
+
+                }
+                else if ( result.dismiss === Swal.DismissReason.cancel )
+                {
+                    swalWithBootstrapButtons.fire(
+                        'Annulé',
+                        'Rien n\'a changé',
+                        'error'
+                    );
+                }
+            }
+        );
+
+}
 
   genererBl(): void {
     const swalWithBootstrapButtons = Swal.mixin(
@@ -382,7 +431,8 @@ export class RepartitionDetailComponent implements OnInit {
         this.request.page.count = response.size;
         this.request.page.limit = this.request.page.size;
         
-        this.repartition = response.data as any[];        
+        this.repartition = response.data as any[];
+        console.log(this.repartition)
         this.temp = this.repartition;
       }
     );
@@ -398,13 +448,39 @@ export class RepartitionDetailComponent implements OnInit {
     this.pageCallback({ offset: this.request.page.offset, pageSize: this.request.page.size, limit: this.request.page.size });
   }
 
+    unixDate: number ; // example Unix date
+    rows = [];
+    id: string;
+
+    toTransport() {
+        this.router.navigate([`/ctt/list/${this.id}`]); // Navigate to display page
+    }
   //#endregion
 
-  //#region Hooks
+  //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    // #region Hooks
 
   ngOnInit(): void {
     this.hasRole = this._authenticationService.getRoles.map(({name}) => name);
-      
+      this.route.paramMap.subscribe(params => {
+          this.id = params.get('id');
+          this.unixDate = +this.id;// Use paramMap for safer access to parameters
+          console.log('Retrieved ID:dddddddddddddddddddddddddddddddddddddddddddddddd', this.unixDate);
+      });
+
+      console.log('Retrieved ID:ddddddddddddddd', this.unixDate);
     this._repartitonDetailService.onRepartitionChanged
     .pipe(takeUntil(this._unsubscribeAll))
     .subscribe(
@@ -412,8 +488,21 @@ export class RepartitionDetailComponent implements OnInit {
         this.request.page.count = response.size;
         this.request.page.limit = this.request.page.size;
         
-        this.repartition = response.data as any[];        
+        this.repartition = response.data as any[];
+        console.log(this.repartition);
         this.temp = this.repartition;
+          for (const obj of this.repartition) {
+              if (obj['termine'] == false) {
+                  // If 'termine' property is false in any object, set the boolean variable to true
+                  console.log("hhhhhhhh" + obj['termine'])
+                  this.isItTermine = false;
+                  // Break out of the loop if you only want to know if there's at least one false 'termine' property
+                  break;
+              }
+          }
+
+// Output the result
+          console.log("isItTermine:", this.isItTermine);
       }
     ); 
 

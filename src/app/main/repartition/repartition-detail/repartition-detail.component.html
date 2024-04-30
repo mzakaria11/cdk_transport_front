@@ -146,21 +146,38 @@
                                 Stock
                             </button>
                         </div>
-                       
+
                         <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
-                            <button 
-                                type="button" 
-                                class="btn btn-success" 
+                            <button
+                                type="button"
+                                class="btn btn-success"
                                 rippleEffect
                                 (click)="modalConfirm(dateExpeditionModal)"
                             >
-                                <span 
-                                    [data-feather]="'file-plus'" 
+                                <span
+                                    [data-feather]="'file-plus'"
                                     [class]="'mr-25'"
                                 ></span>
                                 Générer BL
                             </button>
                         </div>
+
+                        <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                            <button
+                                    type="button"
+                                    class="btn btn-success"
+                                    rippleEffect
+                                    (click)="genererTransporteur()"
+                                    [disabled]="!isItTermine"
+                            >
+                                <span
+                                        [data-feather]="'truck'"
+                                        [class]="'mr-25'"
+                                ></span>
+                                Transporteur
+                            </button>
+                        </div>
+
                     </div>
                     <!-- Buttons documents Ends -->
                 </div>

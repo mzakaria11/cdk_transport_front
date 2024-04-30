@@ -36,6 +36,8 @@ import {TarifMssNewComponent} from "./main/tarif-mss/tarif-mss-new/tarif-mss-new
 import {DateTimePickerModule} from "./main/forms/form-elements/date-time-picker/date-time-picker.module";
 import { TrscriptDashboardComponent } from './script-transporteur/trscript-dashboard/trscript-dashboard.component';
 import { TrscriptHistoryComponent } from './script-transporteur/trscript-history/trscript-history.component';
+import { TarifTotalCalculeComponent } from './main/tarif-total/tarif-total-calcule/tarif-total-calcule.component';
+import {NgxDatatableModule} from "@swimlane/ngx-datatable";
 
 
 const role = JSON.parse(localStorage.getItem("currentUser"))?.role;
@@ -216,6 +218,12 @@ const appRoutes: Routes = [
   },
 
   {
+    path: 'ctt',
+    loadChildren: () => import('./main/tarif-total/tarif-total.module').then(m => m.TarifTotalModule),
+
+  },
+
+  {
     path: '',
     redirectTo: redirectToPath,
     pathMatch: 'full',
@@ -235,36 +243,38 @@ const appRoutes: Routes = [
     SubMenuCustomContextMenuComponent,
     LoaderComponent,
     TrscriptDashboardComponent,
-    TrscriptHistoryComponent
+    TrscriptHistoryComponent,
+
 
 
 
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    HttpClientInMemoryWebApiModule.forRoot(FakeDbService, {
-      delay: 0,
-      passThruUnknownUrl: true
-    }),
-    RouterModule.forRoot(appRoutes, {
-      scrollPositionRestoration: 'enabled',
-      relativeLinkResolution: 'legacy',
-      // initialNavigation: 'disabled'
-    }),
-    NgbModule,
-    ToastrModule.forRoot(),
-    TranslateModule.forRoot(),
-    ContextMenuModule,
-    CoreModule.forRoot(coreConfig),
-    CoreCommonModule,
-    CoreSidebarModule,
-    CoreThemeCustomizerModule,
-    CardSnippetModule,
-    LayoutModule,
-    ContentHeaderModule
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        HttpClientModule,
+        HttpClientInMemoryWebApiModule.forRoot(FakeDbService, {
+            delay: 0,
+            passThruUnknownUrl: true
+        }),
+        RouterModule.forRoot(appRoutes, {
+            scrollPositionRestoration: 'enabled',
+            relativeLinkResolution: 'legacy',
+            // initialNavigation: 'disabled'
+        }),
+        NgbModule,
+        ToastrModule.forRoot(),
+        TranslateModule.forRoot(),
+        ContextMenuModule,
+        CoreModule.forRoot(coreConfig),
+        CoreCommonModule,
+        CoreSidebarModule,
+        CoreThemeCustomizerModule,
+        CardSnippetModule,
+        LayoutModule,
+        ContentHeaderModule,
+        NgxDatatableModule
+    ],
   providers: [
     LoaderService,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

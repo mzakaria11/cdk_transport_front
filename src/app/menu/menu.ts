@@ -573,6 +573,33 @@ export const menu: CoreMenu[] = [
           }
         ]
       }
+      ,
+      {
+        id: 'ctt',
+        title: 'Calcule Tarif Total',
+        type: 'collapsible',
+        role: ['Admin', 'Super_admin', 'User'],
+        icon: 'plus',
+        children: [
+          {
+            id: 'list',
+            title: 'List',
+            translate: 'MENU.PRODUCTS.PRODUCT.LIST',
+            type: 'item',
+            icon: 'circle',
+            url: 'ctt/list'
+          },
+          {
+            id: 'add',
+            title: 'Add',
+            translate: 'MENU.PRODUCTS.PRODUCT.ADD',
+            type: 'item',
+            role: ['Admin', 'Super_admin'],
+            icon: 'circle',
+            url: 'taxe/new'
+          }
+        ]
+      }
     ]
   }
 

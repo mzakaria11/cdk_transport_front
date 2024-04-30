@@ -4,6 +4,8 @@ import { Subject } from 'rxjs';
 import { AuthenticationService } from 'app/auth/service';
 import { RepartitionRequest } from '../repartition.model';
 import { RepartitionHistoryService } from './repartition-history.service';
+import {TarifTotalCalculeService } from "../../tarif-total/tarif-total-calcule/tarif-total-calcule.service";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-repartition-history',
@@ -46,8 +48,10 @@ export class RepartitionHistoryComponent implements OnInit {
 
   constructor(
     private _repartitonHistoryService: RepartitionHistoryService,
-    private _authenticationService: AuthenticationService
-  ) { 
+    private _authenticationService: AuthenticationService,
+    private tariffService: TarifTotalCalculeService, private router: Router,
+    private route: ActivatedRoute
+  ) {
     this.request = new RepartitionRequest();
     console.log(this.request);
     
@@ -80,9 +84,13 @@ export class RepartitionHistoryComponent implements OnInit {
         
         this.repartitionHistrories = response.content as any[];
         this.temp = this.repartitionHistrories;
+        console.log(this.repartitionHistrories)
       }
     );
   }
+
+
+
 
   //#endregion
 
@@ -90,7 +98,8 @@ export class RepartitionHistoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.hasRole = this._authenticationService.getRoles.map(({name}) => name);
-   
+
+
     this.reloadTable();
     
     this.contentHeader = {
@@ -110,8 +119,12 @@ export class RepartitionHistoryComponent implements OnInit {
           }
         ]
       }
-    }; 
+    };
+
+
   }
+
+
 
   ngOnDestroy(): void {
     this._unsubscribeAll.next();
