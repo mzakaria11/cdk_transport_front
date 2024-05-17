@@ -14,15 +14,20 @@
   margin: 20px 0; // Space around the card
 
   .card-header {
-    background: linear-gradient(to left, #37bad9, #3598fd);
-    color: white; // White text for the header
-    font-size: 18px; // Larger text for the header
+    background: linear-gradient(to left, #d6ebff, #d0eaff);
+    color: #3598fd; // White text for the header
+    font-weight: bold;
+    font-size: 16px; // Larger text for the header
     padding: 10px 15px; // Padding inside the header
     border-radius: 6px 6px 0 0; // Rounded corners on the top of the header
   }
 
   .card-body {
-    padding: 20px 15px; // Spacious padding for breathing room inside the card
+    padding: 20px 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    color: #333;
+    border-radius: 4px;// Spacious padding for breathing room inside the card
 
     input[type="text"] {
       width: 100%; // Full width for input fields
@@ -42,7 +47,6 @@
 
 
     .card-body , button {
-      background: linear-gradient(to left, #37bad9, #3598fd);
       color: white; // White text for contrast
       padding: 10px 15px; // Generous padding for a better click area
       font-size: 16px; // Readable font size
@@ -71,8 +75,8 @@
     }
 
     .ngx-datatable .datatable-header {
-      background: linear-gradient(to left, #37bad9, #3598fd);
-      color: #ffffff;
+      background: linear-gradient(to left, #d6ebff, #d0eaff);
+      color: #3598fd;
       font-weight: bold;
       font-size: 16px;
       line-height: 24px;
@@ -99,8 +103,8 @@
     }
 
     .ngx-datatable .datatable-footer {
-      background: linear-gradient(to left, #37bad9, #3598fd);
-      color: #ffffff;
+      background: linear-gradient(to left, #d6ebff, #d0eaff);
+      color: #3598fd;
       padding: 8px 20px;
       font-size: 14px;
     }

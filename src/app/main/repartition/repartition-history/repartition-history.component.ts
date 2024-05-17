@@ -6,7 +6,15 @@ import { RepartitionRequest } from '../repartition.model';
 import { RepartitionHistoryService } from './repartition-history.service';
 import {TarifTotalCalculeService } from "../../tarif-total/tarif-total-calcule/tarif-total-calcule.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {APiResponse} from "../../../api-response";
 
+
+class APiResponses{
+
+  content: any[];
+  // Add other fields if necessary
+
+}
 @Component({
   selector: 'app-repartition-history',
   templateUrl: './repartition-history.component.html',
@@ -75,19 +83,44 @@ export class RepartitionHistoryComponent implements OnInit {
     this.reloadTable();
   }
 
-  reloadTable() {
-    this._repartitonHistoryService.getRepartitionHistoryDataRows(this.request).then(
-      (response: any) => {
-        this.request.page.count = response.content.length;
-        this.request.page.limit = this.request.page.size;
-        console.log(response);
-        
-        this.repartitionHistrories = response.content as any[];
-        this.temp = this.repartitionHistrories;
-        console.log(this.repartitionHistrories)
-      }
-    );
+
+
+  async reloadTable() {
+    try {
+      // Fetch the repartition history data
+      const response: any = await this._repartitonHistoryService.getRepartitionHistoryDataRows(this.request);
+      this.request.page.count = response.content.length;
+      this.request.page.limit = this.request.page.size;
+      this.repartitionHistrories = response.content as any[];
+      this.temp = this.repartitionHistrories;
+
+      // Fetch the grouped confirmed data
+      const groupedConfirmedData: any = await this._repartitonHistoryService.getGroupedConfirmedData();
+      console.log('Grouped Confirmed Data:', groupedConfirmedData);
+
+      // Map the grouped confirmed data to a format easy to lookup
+      const expeditionStatusMap = new Map(groupedConfirmedData.map((item: any) => [item.chorodatage, item.hasUnconfirmedExpedition]));
+      console.log('Expedition Status Map:', expeditionStatusMap);
+
+      // Add hasUnconfirmedExpedition to each history item based on matching date
+      this.repartitionHistrories.forEach(history => {
+        const hasUnconfirmedExpedition = expeditionStatusMap.get(history.dateC) ? 1 : 0;
+        console.log("Matched Status:", expeditionStatusMap.get(history.dateC));
+        console.log('History Date:', history.dateC, 'Has Unconfirmed Expedition:', hasUnconfirmedExpedition);
+        history.hasUnconfirmedExpedition = hasUnconfirmedExpedition;
+        console.log('Updated History:', history);
+      });
+
+      // This ensures Angular change detection picks up the updates
+      this.repartitionHistrories = [...this.repartitionHistrories];
+
+      console.log('Final Repartition Histories:', this.repartitionHistrories);
+    } catch (error) {
+      console.error('Error loading data', error);
+    }
   }
+
+
 
 
 

@@ -134,9 +134,6 @@ export class TarifMssListComponent implements OnInit {
             this.setMessageValueAfterDelay()
         });
 
-
-
-
     }
 
     navigateToDetail(tarifId: number) {

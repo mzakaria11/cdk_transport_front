@@ -110,7 +110,7 @@ export class TarifAffNewComponent implements OnInit {
 
                         let body = {
                             transporteur: this.transporteurs.find(obj => obj.id === form.transporteur),
-                            departement: this.transporteurs.find(obj => obj.id === form.departement),
+                            departement: this.departements.find(obj => obj.id === form.departement),
                             nbrPalette : form.nbrPalette,
 
                             prix : form.prix

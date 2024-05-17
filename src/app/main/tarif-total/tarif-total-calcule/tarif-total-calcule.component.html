@@ -1,4 +1,7 @@
+
 <div class="content-wrapper container-xxl p-0">
+    <app-content-header [contentHeader]="contentHeader"></app-content-header>
+
     <div class="card">
     <div class="card-header">Test Inputs</div>
     <div class="card-body">
@@ -9,29 +12,66 @@
     </div>
 
     <br/>
+        <br/>
+        <br/>
 
         <div class="row mb-1" style="width: 100%; margin: auto; justify-content: center;">
 
         <!-- Buttons documents -->
         <div class="col-md-10 col-12 d-flex justify-content-start justify-content-md-end" style="justify-content: center !important">
             <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
-                <button type="button" class="btn btn-primary" rippleEffect>
+                <button type="button" class="btn btn-primary" rippleEffect (click)="generateCsv()">
                     <span [data-feather]="'printer'" [class]="'mr-25'"></span>
                     Générer Fichier csv
                 </button>
             </div>
 
-            <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
-                <button type="button" class="btn btn-outline-success" rippleEffect>
+
+
+
+
+            <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0 mr-2">
+                <button type="button" class="btn btn-outline-success" rippleEffect (click)="generateExcel()">
                     <span [data-feather]="'printer'" [class]="'mr-25'"></span>
-                    Générer Rapport
+                    Générer Rapports
                 </button>
             </div>
 
-            <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
-                <button type="button" class="btn btn-outline-primary" rippleEffect>
+            <form class="form-inline">
+                <div class="form-group">
+                    <div class="input-group">
+                        <label for="selection">Select Date For Emails: </label>
+                        <input
+                                class="form-control ml-1"
+                                placeholder="yyyy-mm-dd"
+                                name="Basic Date Picker"
+                                [(ngModel)]="basicDPdata"
+                                ngbDatepicker
+                                #basicDP="ngbDatepicker"
+                                id="selection"
+                        />
+                        <div class="input-group-append">
+                            <button
+                                    class="btn btn-outline-secondary feather icon-calendar"
+                                    (click)="basicDP.toggle()"
+                                    type="button"
+                                    rippleEffect
+                            ></button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0 ml-1">
+                <button type="button" class="btn btn-outline-primary" rippleEffect (click)="envoieEmail()">
                     <span [data-feather]="'mail'" [class]="'mr-25'"></span>
-                    Envoiyer Des Emails
+                    Envoyer Des Emails
+                </button>
+            </div>
+            <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0 ml-1">
+                <button type="button" class="btn btn-success" rippleEffect (click)="confirmExpedition()">
+                    <span [data-feather]="'check-square'" [class]="'mr-25'"></span>
+                    Confirmer L'expedition
                 </button>
             </div>
         </div>
@@ -40,7 +80,7 @@
 
 
         <br/>
-            <h2>Best Transporteur Table</h2>
+            <h2>Transporteurs :</h2>
         <br/>
         <br/>
         <ngx-datatable
@@ -55,22 +95,6 @@
                 [scrollbarH]="true"
                 [limit]="10" style="height: 1000px;">
         </ngx-datatable>
-
-        <ngx-datatable-column name="Best Transporteur" prop="bestTransporteur">
-            <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
-                <div class="best-transporteur-cell">
-                    {{ value }}
-                </div>
-            </ng-template>
-        </ngx-datatable-column>
-
-        <ngx-datatable-column name="Total Tarif" prop="cheapestTariff">
-            <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
-                <div class="total-tarif-cell">
-                    {{ value }}
-                </div>
-            </ng-template>
-        </ngx-datatable-column>
 
 
 

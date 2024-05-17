@@ -14,6 +14,12 @@ import { DestinataireNewService } from './destinataire-new.service';
 })
 export class DestinataireNewComponent implements OnInit {
 
+    transporteurs: any[] = [];
+    public a : any;
+    public b : boolean = true;
+
+
+
   public contentHeader: Object;
 
   public data: Destinataire;
@@ -52,6 +58,15 @@ export class DestinataireNewComponent implements OnInit {
   get GetReactiveDestinataireForm() {
     return this.ReactiveDestinataireForm.controls;
   }
+
+    do(b){
+        if (b == true){
+            b = false;
+        }
+        else {
+            b = true;
+        }
+    }
 
   ReactiveDestinataireFormOnSubmit() {
     this.ReactiveDestinataireFormSubmitted = true;

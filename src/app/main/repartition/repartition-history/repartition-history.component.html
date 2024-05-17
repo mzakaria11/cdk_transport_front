@@ -224,8 +224,30 @@
                         </ng-template>
                     </ngx-datatable-column>
                     <!-- qte insuffisante Ends -->
+
+                    <!-- expedition confirmée -->
+                    <ngx-datatable-column
+                            name="Expedition Confirmée"
+                            prop="hasUnconfirmedExpedition"
+                            [width]="150"
+                    >
+                        <ng-template let-hasUnconfirmedExpedition="value" ngx-datatable-cell-template>
+                            <div
+                                    class="badge badge-pill"
+                                    [ngClass]="{
+                    'badge-light-success': hasUnconfirmedExpedition === 0,
+                    'badge-light-danger': hasUnconfirmedExpedition === 1
+                }"
+                            >
+                                {{ hasUnconfirmedExpedition === 1 ? 'Non Confirmée' : 'Confirmée' }}
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <!-- qte insuffisante Ends -->
                     
                 </ngx-datatable>
+
+
             </div>
         </section>
     </div>

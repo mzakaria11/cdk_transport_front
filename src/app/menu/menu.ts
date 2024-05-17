@@ -588,15 +588,6 @@ export const menu: CoreMenu[] = [
             type: 'item',
             icon: 'circle',
             url: 'ctt/list'
-          },
-          {
-            id: 'add',
-            title: 'Add',
-            translate: 'MENU.PRODUCTS.PRODUCT.ADD',
-            type: 'item',
-            role: ['Admin', 'Super_admin'],
-            icon: 'circle',
-            url: 'taxe/new'
           }
         ]
       }

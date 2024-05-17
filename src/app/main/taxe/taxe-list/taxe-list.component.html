@@ -1,18 +1,58 @@
-<div class="card">
-    <div class="card-header">Freight Details</div>
-    <div class="card-body">
-        <input type="text" [(ngModel)]="currentInput.weight" placeholder="Weight" class="form-control mb-2">
-        <input type="text" [(ngModel)]="currentInput.nombrePalette" placeholder="Nombre Palette" class="form-control mb-2">
-        <input type="text" [(ngModel)]="currentInput.destinataireId" placeholder="Destinataire ID" class="form-control mb-2">
-        <button (click)="submitRow()" class="btn btn-primary mb-2">Submit</button>
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <section class="users-list-wrapper">
+            <div class="card">
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <div class="d-flex justify-content-between align-items-center m-1">
+                            <label class="d-flex align-items-center">Select Transporteur
+                                <select  class="form-control" id="basicSelect " [(ngModel)]="a" name="unique" (change)="onTransporteurSelect(a.id)">
+                                    <option value="" disabled selected>Select a Transporteur</option>
+                                    <option  *ngFor="let transporteur of transporteurs" [ngValue]="transporteur" >
+                                        {{ transporteur.name }}
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end">
+                        <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                            <button class="btn btn-primary ml-1" routerLink="/taxe/new">
+                                <i class="fas fa-plus d-sm-none d-inline-block mr-0 mr-sm-1"></i>
+                                <span class="d-none d-sm-inline-block">Add New Tax</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="datatable-container">
+                    <ngx-datatable
+                            class="bootstrap core-bootstrap"
+                            [rows]="rows"
+                            [columnMode]="'force'"
+                            [rowHeight]="'auto'"
+                            [headerHeight]="50"
+                            [footerHeight]="50"
+                            [limit]="selectedOption"
+                            [scrollbarH]="true"
+                            [messages]="{emptyMessage: notFoundMessage, totalMessage: 'Total Taxes'}">
 
-        <ngx-datatable #table class="bootstrap" [rows]="rows" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'">
-            <ngx-datatable-column name="Weight" prop="weight"></ngx-datatable-column>
-            <ngx-datatable-column name="Nombre Palette" prop="nombrePalette"></ngx-datatable-column>
-            <ngx-datatable-column name="Destinataire ID" prop="destinataireId"></ngx-datatable-column>
-            <ngx-datatable-column name="Tarif Total" prop="tarifTotal"></ngx-datatable-column>
-            <ngx-datatable-column name="Best Transporteur" prop="bestTransporteur"></ngx-datatable-column>
+                        <ngx-datatable-column name="Department Name" prop="departementName" [width]="150">
+                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                <span style="font-weight: bolder;">{{ value }}</span>
+                            </ng-template>
+                        </ngx-datatable-column>
 
-        </ngx-datatable>
+                        <!-- Dynamically generated columns for each unique tax type -->
+                        <ngx-datatable-column *ngFor="let taxName of uniqueTaxNames"
+                                              [name]="taxName"
+                                              [prop]="taxName"
+                                              [width]="120">
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <span>{{ value.value }}</span> <!-- Adjusted to display value only -->
+                            </ng-template>
+                        </ngx-datatable-column>
+                    </ngx-datatable>
+                </div>
+            </div>
+        </section>
     </div>
 </div>

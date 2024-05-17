@@ -1,33 +1,27 @@
 <app-content-header [contentHeader]="contentHeader"></app-content-header>
-<div class = "header-div">
+<div class="header-div">
     <div class="card-container">
-        <h2> <b> Add the taxes for the transporteur, give the formula and upload the excel file </b> </h2>
+        <h2><b>Add the taxes for the transporteur, give the formula and upload the excel file</b></h2>
     </div>
 </div>
 <div class="card-container">
     <!-- Existing cards -->
     <div class="card">
-        <h1><b>Tarif de base</b> </h1>
-
-
-
+        <h1><b>Tarif de base</b></h1>
         <div class="card-letter">A</div>
     </div>
 
     <div *ngFor="let card of cards; let i = index" class="card" (click)="openEditModal(card, i)">
         <h1><b>Taxe Name:</b> {{ card.taxeName }}</h1>
         <h3><b>Type:</b> {{ card.typeAddition ? 'Addition' : card.typeMultiplication ? 'Multiplication' : 'None' }}</h3>
-        <h3 *ngIf="card.isTemporal"><b>From the day:</b> {{ card.fromDay }} <b>of the Month:</b> {{ card.toMonth }}</h3>
-        <h3 *ngIf="card.isTemporal"><b>to the day:</b> {{ card.fromDay }} <b>of the Month:</b> {{ card.toMonth }}</h3>
+        <h3 *ngIf="card.isTemporal"><b>From the day:</b> {{ card.fromDay }} <b>of the Month:</b> {{ card.fromMonth }}</h3>
+        <h3 *ngIf="card.isTemporal"><b>to the day:</b> {{ card.toDay }} <b>of the Month:</b> {{ card.toMonth }}</h3>
         <div class="card-letter">{{ card.letter }}</div>
         <button class="btn btn-danger" (click)="deleteCard(i, $event)"><i class="fas fa-times"></i></button>
     </div>
 
-
-
-
     <!-- Plus card -->
-    <div class="card plus-card" (click)="open()">
+    <div class="card plus-card" (click)="openNewModal()">
         <i class="fas fa-plus"></i>
     </div>
 </div>
@@ -36,7 +30,7 @@
 <ng-template #newCardModal let-modal>
     <div class="modal-header">
         <h4 class="modal-title">{{ editIndex !== null ? 'Edit Taxe' : 'Add New Taxe' }}</h4>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+        <button type="button" class="close" aria-label="Close" (click)="closeModal()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
@@ -69,21 +63,18 @@
                 </div>
             </div>
 
-            <!-- Date Input -->
-
-
             <div *ngIf="newCardData.isTemporal">
                 <!-- From Date Inputs -->
                 <div class="form-row">
                     <div class="col">
                         <label for="fromDay">From the Day:</label>
-                        <select id= "fromDay" class="form-control" [(ngModel)]="newCardData.fromDay" name="fromDay">
+                        <select id="fromDay" class="form-control" [(ngModel)]="newCardData.fromDay" name="fromDay">
                             <option *ngFor="let day of days" [value]="day">{{ day }}</option>
                         </select>
                     </div>
                     <div class="col">
                         <label for="fromMonth">of the Month:</label>
-                        <select id= "fromMonth" class="form-control" [(ngModel)]="newCardData.fromMonth" name="fromMonth">
+                        <select id="fromMonth" class="form-control" [(ngModel)]="newCardData.fromMonth" name="fromMonth">
                             <option *ngFor="let month of months" [value]="month">{{ month }}</option>
                         </select>
                     </div>
@@ -93,60 +84,80 @@
                 <div class="form-row">
                     <div class="col">
                         <label for="toDay">To the Day:</label>
-                        <select id= "toDay" class="form-control" [(ngModel)]="newCardData.toDay" name="toDay">
+                        <select id="toDay" class="form-control" [(ngModel)]="newCardData.toDay" name="toDay">
                             <option *ngFor="let day of days" [value]="day">{{ day }}</option>
                         </select>
                     </div>
                     <div class="col">
                         <label for="toMonth">of the Month:</label>
-                        <select id= "toMonth" class="form-control" [(ngModel)]="newCardData.toMonth" name="toMonth">
+                        <select id="toMonth" class="form-control" [(ngModel)]="newCardData.toMonth" name="toMonth">
                             <option *ngFor="let month of months" [value]="month">{{ month }}</option>
                         </select>
                     </div>
                 </div>
             </div>
 
+            <!-- Option 4 Checkbox -->
 
+                <div class="form-group">
+                    <label for="allValue">Value :</label>
+                    <input type="text" id="allValue" class="form-control" [(ngModel)]="newCardData.allValue" name="allValue">
+                </div>
+
+
+            <div class="form-group">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="specifier" [(ngModel)]="newCardData.specifier" name="specifier" (change)="specifierChanged()">
+                    <label class="form-check-label" for="specifier">Specifier</label>
+                </div>
+            </div>
+
+            <div *ngIf="newCardData.specifier">
+                <div *ngFor="let departement of newCardData.departements; let i = index" class="form-row">
+                    <div class="form-group">
+                        <label for="departement-{{i}}">Departement</label>
+                        <select id="departement-{{i}}" class="form-control" [(ngModel)]="departement.id" name="departement-{{i}}" >
+                            <option *ngFor="let dep of departements" [value]="dep.id">{{dep.name}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="value-{{i}}">Value</label>
+                        <input type="text" id="value-{{i}}" class="form-control" [(ngModel)]="departement.value" name="value-{{i}}" >
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary form-row" (click)="addDepartement()">+</button>
+            </div>
         </form>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-light" (click)="modal.dismiss()">Close</button>
+        <button type="button" class="btn btn-light" (click)="closeModal()">Close</button>
         <button type="button" class="btn btn-primary" (click)="addCard()">Save</button>
     </div>
 </ng-template>
 
-
 <div class="fixed-bar">
-
     <label for="selection">Select Transporteur: </label>
-    <select [(ngModel)]="selectedTransporteurId" class="form-control" id = "selection">
+    <select [(ngModel)]="selectedTransporteurId" class="form-control" id="selection">
         <option *ngFor="let transporteur of transporteurs" [value]="transporteur.id">
             {{ transporteur.name }}
         </option>
     </select>
 
-    <!--File Input -->
+    <!-- File Input -->
+<!--    <input type="file" id="fileSelection" style="display: none" (change)="handleFileInput($event)" #fileInput>-->
 
-
-
-    <input type="file" id="fileSelection" style="display: none" (change)="handleFileInput($event)" #fileInput>
-
-    <!-- Custom Button to Trigger the File Input -->
-    <button type="button" class="btn btn-primary" (click)="fileInput.click()">
-        <i class="fas fa-upload"></i> Select Formula
-    </button>
+<!--    &lt;!&ndash; Custom Button to Trigger the File Input &ndash;&gt;-->
+<!--    <button type="button" class="btn btn-primary" (click)="fileInput.click()">-->
+<!--        <i class="fas fa-upload"></i> Select Formula-->
+<!--    </button>-->
 
     <!-- Display Selected File Name -->
     <span *ngIf="fileToUpload" class="ml-2">{{ fileToUpload?.name }}</span>
 
     <!-- Formula Input -->
-    <label for="formulaEnter">Select Formula:  </label>
-    <input type="text" placeholder="Enter the formula: (EXAMPLE : (A * B / C ... n))" id = "formulaEnter" [(ngModel)]="formula" class="form-control" style="font-size: 18px; height: 50px; width: 550px;">
+    <label for="formulaEnter">Select Formula: </label>
+    <input type="text" placeholder="Enter the formula: (EXAMPLE: (A * B / C ... n))" id="formulaEnter" [(ngModel)]="formula" class="form-control" style="font-size: 18px; height: 50px; width: 550px;">
 
     <!-- Ajouter Button -->
     <button class="btn btn-success" (click)="onAjouterClick()">Ajouter</button>
 </div>
-
-
-
-

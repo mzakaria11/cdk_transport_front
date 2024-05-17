@@ -47,4 +47,11 @@ export class RepartitionHistoryService implements Resolve<any> {
     );
   }
 
+
+
+
+    getGroupedConfirmedData() {
+        return this._httpClient.get(`${environment.api}/grouped/confirmed`).toPromise();
+    }
+
 }

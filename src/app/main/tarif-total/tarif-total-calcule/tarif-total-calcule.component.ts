@@ -4,6 +4,9 @@ import {environment} from "../../../../environments/environment";
 import {DatatableComponent} from "@swimlane/ngx-datatable";
 import {TarifTotalCalculeService} from "./tarif-total-calcule.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {formatDate} from "@angular/common";
+import {NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
+import Swal from "sweetalert2";
 
 @Component({
   selector: 'app-tarif-total-calcule',
@@ -41,14 +44,14 @@ export class TarifTotalCalculeComponent implements OnInit {
     this.http.post<any>(url, formData).subscribe({
       next: (response) => {
         const newRow = {
-          UnixDate: this.unixDate,
-          DestinataireId: this.currentInput.destinataireId,
-          IdBcs : 'test',
-          Weight: this.currentInput.weight,
-          NombrePalette: this.currentInput.nombrePalette,
-          TarifTotal: response.cheapestTariff,
-          BestTransporteur: response.cheapestTransporteurName,
-          TypeTransporteur : response.type
+          unixDate: this.unixDate,
+          Destinataire : response.destinataire,
+          idBcs : 'test',
+          weight: this.currentInput.weight,
+          palette: this.currentInput.nombrePalette,
+          cheapestTariff: response.cheapestTariff,
+          cheapestTransporteurName: response.cheapestTransporteurName,
+          typeTransporteur : response.type
 
         };
         console.log(newRow);
@@ -65,13 +68,13 @@ export class TarifTotalCalculeComponent implements OnInit {
   }
     columns = [
         { prop: 'unixDate', name: 'Date' , width: '130' },
-        { prop: 'idDestinataire', name: 'Destinataire' , width: '110' },
+        { prop: 'destinataire', name: 'Destinataire' , width: '150' },
         { prop: 'idBcs', name: 'ID BCS' , width: '80' },
-        { prop: 'weight', name: 'Weight' , width: '75' },
+        { prop: 'weight', name: 'Poids' , width: '75' },
         { prop: 'palette', name: 'Palettes' , width: '85' },
-        { prop: 'cheapestTransporteurName', name: 'Best Transporteur' , width: undefined },
+        { prop: 'cheapestTransporteurName', name: 'Transporteur' , width: undefined },
         { prop: 'cheapestTariff', name: 'Tarif Total' , width: '90' },
-        { prop: 'typeTransporteur', name: 'Type Transporteur' , width: '150' }
+        { prop: 'typeTransporteur', name: 'Type de Transporteur' , width: '150' }
     ];
   setColumns(data: any[]) {
     if (data.length > 0) {
@@ -88,10 +91,31 @@ export class TarifTotalCalculeComponent implements OnInit {
 
   unixDate: number ; // example Unix date
   id: string;
+    basicDPdata: NgbDateStruct;
+
+    envoieEmail() {
+        if (!this.basicDPdata) {
+            alert('Please select a date first!');
+            return;
+        }
+
+        // Create a Date object from the NgbDateStruct
+        const dateToSend = new Date(this.basicDPdata.year, this.basicDPdata.month - 1, this.basicDPdata.day);
+        const formattedDate = `${this.basicDPdata.year}-${this.basicDPdata.month}-${this.basicDPdata.day}`;
+
+        // HTTP GET request
+        const apiUrl = `${environment.api}/tariffs/sendEmail?unixDate=${this.unixDate}&date=${formattedDate}`;
+        console.log(this.unixDate, formattedDate);
+        this.http.get(apiUrl).subscribe({
+            next: (response) => console.log('Emails sent successfully', response),
+            error: (error) => console.error('Error sending emails', error)
+        });
+    }
 
     toTransport() {
         this.tariffService.getTariffDataByDate(this.unixDate).subscribe({
             next: (data) => {
+
                 // This callback should update rows, not columns
                 this.rows = [...this.rows, ...data]; // Append new data to existing rows, ensuring no modification to columns.
                 this.forceTableRedraw();
@@ -114,8 +138,67 @@ export class TarifTotalCalculeComponent implements OnInit {
     return 'cell-ok';
   }
 
-  ngOnInit(): void {
-    this.tariffService.getTariffData().subscribe(data => {
+
+  generateCsv(){
+    const url = `${environment.api}/tariffs/generate-csv/?unixDate=${this.unixDate}`;
+      return this.http.get(url, { responseType: 'blob' as 'json' }).subscribe((response: any) => {
+        const blob = new Blob([response], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'messagerie.csv';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      });
+
+  }
+
+  generateExcel() {
+    const url = `${environment.api}/tariffs/generate-excel/?unixDate=${this.unixDate}`;
+    return this.http.get(url, { responseType: 'blob' }).subscribe(
+        (response: Blob) => {
+          const blob = new Blob([response], { type: 'application/zip' });
+          const downloadUrl = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = downloadUrl;
+          a.download = 'RapportTransporteurs.zip';
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(downloadUrl);
+          document.body.removeChild(a);
+        },
+        (error) => {
+          console.error('Error downloading the file.', error);
+          // Implement further error handling here (e.g., user notifications)
+        }
+    );
+  }
+    public contentHeader: Object;
+
+    ngOnInit(): void {
+        this.contentHeader = {
+            headerTitle: 'Liste',
+            actionButton: false,
+            breadcrumb: {
+                type: '',
+                links: [
+                    {
+                        name: 'Accueil',
+                        isLink: true,
+                        link: '/'
+                    },
+                    {
+                        name: 'Calcule',
+                        isLink: true,
+                        link: `/ctt/list/${this.unixDate}`
+                    }
+                ]
+            }
+        };
+
+      this.tariffService.getTariffData().subscribe(data => {
       this.rows = data;
       this.setColumns(data);
     });
@@ -134,4 +217,82 @@ export class TarifTotalCalculeComponent implements OnInit {
 
 
 
+    confirmExpedition() {
+
+        const swalWithBootstrapButtons = Swal.mixin(
+            {
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger sup'
+                },
+                buttonsStyling: false
+            }
+        );
+
+        swalWithBootstrapButtons.fire(
+            {
+                title: 'Vous voulez Vraiment Confirmer L\'expedition ?',
+                text: "Vous ne pourrez pas revenir en arrière !",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Oui, Confirmez!',
+                cancelButtonText: 'Non, annulez!',
+                reverseButtons: true
+            }
+        )
+            .then(
+                (result) => {
+                    if (result.isConfirmed) {
+
+                        this.confirm()
+
+                    }
+                    else if ( result.dismiss === Swal.DismissReason.cancel )
+                    {
+                        swalWithBootstrapButtons.fire(
+                            'Annulé',
+                            'Rien n\'a été confirmer',
+                            'error'
+                        );
+                    }
+                }
+            );
+
+    }
+
+
+
+
+
+
+
+    confirm() {
+
+
+
+        const url = `${environment.api}/grouped/confirme/?unixDate=${this.unixDate}`;
+
+
+            this.http.post(url, null) // Pass null as the body
+                .subscribe(
+                    response => {
+                        console.log('Update successful', response);
+                    },
+                    error => {
+                        console.error('Error updating', error);
+                    }
+                );
+
+        this.router.navigate(['/repartition/historique']);
+        }
+
+
+
+
+
 }
+
+
+
+
+

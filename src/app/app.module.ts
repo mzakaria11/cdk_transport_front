@@ -56,6 +56,12 @@ const appRoutes: Routes = [
   },
 
   {
+    path: 'checkbox',
+    loadChildren: () => import('./main/forms/form-elements/checkbox/checkbox.module').then(m => m.CheckboxModule),
+
+  },
+
+  {
     path: 'dashboard',
     loadChildren: () => import('./main/dashboard/dashboard.module').then(m => m.DashboardModule),
     canActivateChild: [AuthGuard],

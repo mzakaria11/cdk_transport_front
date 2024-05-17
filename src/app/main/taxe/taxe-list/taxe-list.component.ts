@@ -3,6 +3,8 @@ import {TaxeNewService} from "../taxe-new/taxe-new.service";
 import { Router} from "@angular/router";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../../environments/environment";
+import {TaxeListService} from "./taxe-list.service";
+import {TarifMssNewService} from "../../tarif-mss/tarif-mss-new/tarif-mss-new.service";
 
 
 
@@ -13,59 +15,130 @@ import {environment} from "../../../../environments/environment";
 })
 export class TaxeListComponent implements OnInit {
 
-  constructor(private cdr: ChangeDetectorRef,
-              private http: HttpClient) { }
-  rows = [];
-  currentInput = this.createEmptyRow();
-
-  submitRow() {
-    const url = `${environment.api}/tariffs/cheapest-transporteur`; // Use your API URL
-
-
-    const formData = new FormData();
-
-    formData.append('id', "1");
-    formData.append('weight', this.currentInput.weight);
-    formData.append('palette', this.currentInput.nombrePalette);
-    formData.append('destinataire', this.currentInput.destinataireId);
+  rows: any[] = [];
+  columns: any[] = [];
+  selectedOption: any;
+  hasRole: 'Super_admin';
+  id: number;
+  name: string;
+  public contentHeader: object;
+  transporteurs: any[] = [];
+  public a: any;
+  notFoundMessage = ""
 
 
-    this.http.post<any>(url, formData).subscribe({
+  constructor(
+      private http: HttpClient,
+      private router: Router,
+      private taxeListService: TaxeListService,
+      private tarifmss : TarifMssNewService// Assuming the service handles fetching tax data
+  ) {}
 
-      next: (response) => {
-        // Assume response includes { tarifTotal: number, bestTransporteur: string }
-        console.log('Response from server:', response);
+  uniqueTaxNames: string[] = [];
 
-        // Create a new row with received data and add it to the table
-        const newRow = {
-          ...this.currentInput, // Current input values
-          tarifTotal: response.cheapestTariff, // Response tarifTotal
-          bestTransporteur: response.cheapestTransporteurName // Response bestTransporteur
-        };
+  fetchTaxData(transporteurId: number) {
+    this.http.get<{departements: any[], transporteurId: number}>(`${environment.api}/taxe/list/${transporteurId}`).subscribe(data => {
+      const taxNameSet = new Set<string>();
+      data.departements.forEach(departement => {
+        departement.taxes.forEach(taxe => {
+          taxNameSet.add(taxe.taxName);
+        });
+      });
 
-        // Add the new row to the table
-        this.rows.push(newRow);
+      // Convert the Set to an array for ngx-datatable column generation
+      this.uniqueTaxNames = Array.from(taxNameSet).sort();
 
-        // Optionally, reset the input form for next entries
-        this.currentInput = this.createEmptyRow();
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.error('Error:', error);
-        // Handle errors, perhaps show a user-friendly message
-      }
+      // Transform the fetched data to fit the ngx-datatable format
+      this.rows = this.transformDataForTable(data);
+
+      this.generateColumns();
+    });
+  }
+
+  transformDataForTable(data: any): any[] {
+    let transformedRows = [];
+
+    data.departements.forEach(departement => {
+      let row = {
+        departementName: departement.departementName,
+        departementId: departement.departementId
+      };
+
+      // Initialize properties for each unique tax type with default values
+      this.uniqueTaxNames.forEach(taxName => {
+        const propName = `${taxName}`; // We'll store both value and ID in an object
+        row[propName] = { value: null, id: null }; // Initialize with null values
+      });
+
+      // Populate the row object with tax objects containing value and ID
+      departement.taxes.forEach(taxe => {
+        const propName = `${taxe.taxName}`; // Same property name as above
+        row[propName] = { value: taxe.taxValue, id: taxe.id }; // Assign the value and ID
+      });
+
+      transformedRows.push(row);
     });
 
-
+    return transformedRows;
   }
 
+  generateColumns() {
+    // Start with fixed columns like 'departementName'
+    this.columns = [
+      { prop: 'departementName', name: 'Nom du departement', width: 150 }
+    ];
 
-  createEmptyRow() {
-    return { weight: '', nombrePalette: '', destinataireId: '', tarifTotal: '', bestTransporteur: '' };
+    // Dynamically add columns for each unique tax type
+    this.uniqueTaxNames.forEach(taxName => {
+      this.columns.push({
+        prop: `${taxName}`, // Match the property names in the transformed rows
+        name: `${taxName}`,
+        width: 120
+      });
+    });
   }
 
-  ngOnInit(): void {
-  }}
+  loadTransporteurs() {
+    this.tarifmss.getTransporteurs().subscribe((data: any[]) => {
+      this.transporteurs = data.map(trans => ({
+        id: trans.id,
+        name: trans.nom // Assuming each object has an 'id' and 'name' property
+      }));
+
+      this.a = this.transporteurs[0];
+      this.onTransporteurSelect(this.a.id);
+    });
+  }
+
+  onTransporteurSelect(t: any) {
+    console.log(t);
+    this.fetchTaxData(t + 0);  // Ensure the ID is treated as a number
+  }
+
+  ngOnInit() {
+    this.loadTransporteurs();
+    this.contentHeader = {
+      headerTitle: 'List of Taxes',
+      actionButton: false,
+      breadcrumb: {
+        type: '',
+        links: [
+          {
+            name: 'Home',
+            isLink: true,
+            link: '/'
+          },
+          {
+            name: 'Tax List',
+            isLink: false
+          }
+        ]
+      }
+    };
+  }
+
+  protected readonly console = console;
+}
 
 
 
