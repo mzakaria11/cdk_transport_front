@@ -148,4 +148,11 @@ export class RepartitionDetailService implements Resolve<any> {
     return this._httpClient.get(`${environment.api}/script/generate/bls/${this.ts}/${dateExpedition}`);
   }
 
+
+
+    isItTermine(unixDate: number){
+        const url = `${environment.api}/tariffs/true?unixDate=${unixDate}`;
+        return this._httpClient.get<any>(url);
+    }
+
 }

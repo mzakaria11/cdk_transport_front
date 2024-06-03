@@ -16,14 +16,12 @@ import { ContentHeaderModule } from 'app/layout/components/content-header/conten
 import { FileUploadModule } from 'ng2-file-upload';
 
 const routes: Routes = [
-  // {
-  //   path: 'new',
-  //   component: LettrevoituresortieNewComponent,
-  //   resolve: {
-  //     lvens: LettrevoituresortieNewService
-  //   },
-  //   data: { roles: [Role.Admin, Role.SUPER_ADMIN, Role.User] }
-  // }
+  {
+    path: 'new',
+    component: LettrevoituresortieNewComponent,
+
+    data: { roles: [Role.Admin, Role.SUPER_ADMIN, Role.User] }
+  }
 ];
 
 @NgModule({

@@ -405,16 +405,8 @@ export const menu: CoreMenu[] = [
             type: 'item',
              icon: 'circle',
             url: 'lvs/new'
-         },
-         {
-          id: 'add',
-          title: 'Add',
-          translate: 'MENU.PRODUCTS.PRODUCT.ADD',
-          type: 'item',
-          role: ['Admin', 'Super_admin', 'User'],
-          icon: 'circle',
-          url: 'lve/new'
-        }
+         }
+
        ]
      }
     ]

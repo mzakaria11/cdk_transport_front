@@ -27,6 +27,15 @@
             </div>
 
 
+            <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
+                <button type="button" class="btn btn-primary" rippleEffect (click)="generateTable()">
+                    <span [data-feather]="'printer'" [class]="'mr-25'"></span>
+                    Exporter Le Tableau
+                </button>
+            </div>
+
+
+
 
 
 
@@ -68,6 +77,18 @@
                     Envoyer Des Emails
                 </button>
             </div>
+
+
+
+            <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0 ml-1">
+                <button type="button" class="btn btn-primary" (click)="openGenerateLvsModal(newCardModal)">
+                    <span [data-feather]="'file'" class="mr-25"></span>
+                    Generate LVS
+                </button>
+            </div>
+
+
+
             <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0 ml-1">
                 <button type="button" class="btn btn-success" rippleEffect (click)="confirmExpedition()">
                     <span [data-feather]="'check-square'" [class]="'mr-25'"></span>
@@ -86,18 +107,75 @@
         <ngx-datatable
                 class="material"
                 [rows]="rows"
-                [columns]="columns"
                 [columnMode]="'force'"
                 [headerHeight]="50"
                 [footerHeight]="50"
                 [rowHeight]="50"
                 [scrollbarV]="true"
                 [scrollbarH]="true"
-                [limit]="10" style="height: 1000px;">
+                [limit]="10"
+                style="height: 1000px;"
+        >
+            <!-- Other columns -->
+            <ngx-datatable-column *ngFor="let column of columns" [prop]="column.prop" [name]="column.name" [width]="column.width">
+            </ngx-datatable-column>
+
+            <!-- Custom template for the 'cheapestTariff' column -->
+            <ngx-datatable-column prop="cheapestTariff" name="Tarif Total" [width]="90">
+                <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                    {{ value }} €
+                </ng-template>
+            </ngx-datatable-column>
         </ngx-datatable>
 
 
 
 
-</div>
+
+<ng-template #newCardModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Generate LVS</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
+    <div class="modal-body">
+        <form>
+            <div class="mb-3">
+                <label for="transporteur" class="form-label">Transporteur</label>
+                <select class="form-control" id="transporteur" [(ngModel)]="modalInput.transporteur" name="transporteur">
+                    <!-- Modified section to display transporteurs correctly -->
+                    <option *ngFor="let transporteur of transporteurs" [ngValue]="transporteur">
+                        {{ transporteur }}
+                    </option>
+                    <!-- End of modified section -->
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="input1" class="form-label">Numero Lettre Voiture </label>
+                <input type="text" class="form-control" id="input1" [(ngModel)]="modalInput.nlvs" name="input1">
+            </div>
+            <div class="mb-3">
+                <label for="input3" class="form-label">Poids</label>
+                <input type="text" class="form-control" id="input3" [(ngModel)]="modalInput.weight" name="input3">
+            </div>
+            <div class="mb-3">
+                <label for="input2" class="form-label">Palettes</label>
+                <input type="text" class="form-control" id="input2" [(ngModel)]="modalInput.palettes" name="input2">
+            </div>
+            Réclamation
+            <div class="mb-3">
+                <label for="bigText1" class="form-label">Réclamation</label>
+                <textarea class="form-control" id="bigText1" [(ngModel)]="modalInput.reclamation" name="bigText1"></textarea>
+            </div>
+
+
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Cross click')">Close</button>
+        <button type="button" class="btn btn-success" (click)="submitLvsForm()">Générer</button>
+    </div>
+</ng-template>
+</div>
+</div>
+
+

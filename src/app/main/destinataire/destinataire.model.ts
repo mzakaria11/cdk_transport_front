@@ -40,4 +40,15 @@ export class Destinataire {
     delaiPeremption: number;
 
     ordreTri: number;
+
+    isAffretement : boolean;
+
+    isMessagerie : boolean;
+
+    isDelta : boolean;
+
+    delta : String ;
+
+
+
 }

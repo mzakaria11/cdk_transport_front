@@ -1,444 +1,443 @@
-<script src="destinataire-new.component.ts"></script>
+<script src="../destinataire-list/destinataire-list.component.ts"></script>
 <app-content-header [contentHeader]="contentHeader"></app-content-header>
 
 <div class="content-wrapper container-xxl p-0">
     <div class="content-body">
-      <section class="app-user-edit">
-        <div class="card">
-          <div class="card-body">
-            <ul ngbNav #nav="ngbNav" class="nav nav-pills">
-              <li ngbNavItem>
-                <a ngbNavLink class="d-flex align-items-center"
-                  ><i data-feather="box" class="mr-sm-50"></i><span class="d-none d-sm-block">Ajouter destinataire</span></a
-                >
-                <ng-template ngbNavContent>
-                  <div class="tab-pane active" id="account" aria-labelledby="account-tab" role="tabpanel">
+        <section class="app-user-edit">
+            <div class="card">
+                <div class="card-body">
+                    <ul ngbNav #nav="ngbNav" class="nav nav-pills">
+                        <li ngbNavItem>
+                            <a ngbNavLink class="d-flex align-items-center"
+                            ><i data-feather="box" class="mr-sm-50"></i><span class="d-none d-sm-block">Ajouter destinataire</span></a
+                            >
+                            <ng-template ngbNavContent>
+                                <div class="tab-pane active" id="account" aria-labelledby="account-tab" role="tabpanel">
 
-                    <form class="form-validate" [formGroup]="ReactiveDestinataireForm" (ngSubmit)="ReactiveDestinataireFormOnSubmit()">
+                                    <form class="form-validate" [formGroup]="ReactiveDestinataireForm" (ngSubmit)="ReactiveDestinataireFormOnSubmit()">
 
-                      <div class="row">
-                        <div class="col-12">
-                            <h4 class="mb-1">
-                                <i data-feather="user" [size]="16" class="mr-75 font-medium-4"></i>
-                                <span class="align-middle">Information</span>
-                            </h4>
-                        </div>
-                        <div class="col-md-4">
-                          <div class="form-group">
-                            <div class="form-group">
-                                <label for="UDEmail">Email</label>
-                                <input
-                                  type="text"
-                                  id="UDEmail"
-                                  formControlName="email"
-                                  class="form-control"
-                                  [ngClass]="{ 'is-invalid': ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.email.errors }"
-                                />
-                                <div
-                                  *ngIf="ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.email.errors"
-                                  class="invalid-feedback"
-                                >
-                                  <div *ngIf="GetReactiveDestinataireForm.email.errors.required">Email est requis</div>
-                                  <div *ngIf="GetReactiveDestinataireForm.email.errors.email">format incorrect</div>
-                                </div>
-                              </div>
-                          </div>
-                        </div>
-
-
-                        <div class="col-md-4">
-                          <div class="form-group">
-                            <div class="form-group">
-                                <label for="UDNom">Nom</label>
-                                <input
-                                  type="text"
-                                  id="UDNom"
-                                  formControlName="nom"
-                                  class="form-control"
-                                  [ngClass]="{ 'is-invalid': ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.nom.errors }"
-                                />
-                                <div
-                                  *ngIf="ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.nom.errors"
-                                  class="invalid-feedback"
-                                >
-                                  <div *ngIf="GetReactiveDestinataireForm.nom.errors.required">Nom est requis</div>
-                                </div>
-                              </div>
-                          </div>
-                        </div>
-
-                        <div class="col-md-4">
-                          <div class="form-group">
-                            <div class="form-group">
-                                <label for="UDTelephone">Telephone</label>
-                                <input
-                                  type="text"
-                                  id="UDTelephone"
-                                  formControlName="telephone"
-                                  class="form-control"
-                                  [ngClass]="{ 'is-invalid': ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.telephone.errors }"
-                                />
-                                <div
-                                  *ngIf="ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.telephone.errors"
-                                  class="invalid-feedback"
-                                >
-                                  <div *ngIf="GetReactiveDestinataireForm.telephone.errors.required">Telephone est requis</div>
-                                </div>
-                              </div>
-                          </div>
-                        </div>
-
-                        <div class="col-md-4">
-                          <div class="form-group">
-                            <div class="form-group">
-                                <label for="UDCommentaire">Contact</label>
-                                <input
-                                  type="text"
-                                  id="UDCommentaire"
-                                  formControlName="commentaire"
-                                  class="form-control"
-                                />
-                                <!-- <div
-                                  *ngIf="ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.commentaire.errors"
-                                  class="invalid-feedback"
-                                >
-                                  <div *ngIf="GetReactiveDestinataireForm.commentaire.errors.required">Contact est requis</div>
-                                </div> -->
-                              </div>
-                          </div>
-                        </div>
-                        <div class="col-md-4">
-                          <div class="form-group">
-                            <div class="form-group">
-                                <label for="UDdelaiPeremption">Délai peremption</label>
-                                <input
-                                  type="text"
-                                  id="UDdelaiPeremption"
-                                  formControlName="delaiPeremption"
-                                  class="form-control"
-                                  [ngClass]="{ 'is-invalid': ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.delaiPeremption.errors }"
-                                />
-                                <div
-                                  *ngIf="ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.delaiPeremption.errors"
-                                  class="invalid-feedback"
-                                >
-                                  <div *ngIf="GetReactiveDestinataireForm.delaiPeremption.errors.required">Délai peremption est requis</div>
-                                </div>
-                              </div>
-                          </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-group">
-                              <div class="form-group">
-                                  <label for="UDCodeUM">Code UM</label>
-                                  <input
-                                    type="text"
-                                    id="UDCodeUM"
-                                    formControlName="codeUM"
-                                    class="form-control"
-                                    [ngClass]="{ 'is-invalid': ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.codeUM.errors }"
-                                  />
-                                  <div
-                                    *ngIf="ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.codeUM.errors"
-                                    class="invalid-feedback"
-                                  >
-                                    <div *ngIf="GetReactiveDestinataireForm.codeUM.errors.required">Code UM est requis</div>
-                                  </div>
-                                </div>
-                            </div>
-                          </div>
-
-                          <div class="col-12">
-                            <h4 class="mb-1 mt-2">
-                              <i data-feather="map-pin" [size]="16" class="mr-75 font-medium-4"></i>
-                              <span class="align-middle">Adresse</span>
-                            </h4>
-                          </div>
-
-                          <div class="col-md-4">
-                            <div class="form-group">
-                              <div class="form-group">
-                                  <label for="UDadresselivraisonNumero">Numéro</label>
-                                  <input
-                                    type="text"
-                                    id="UDadresselivraisonNumero"
-                                    formControlName="adresselivraisonNumero"
-                                    class="form-control"
-                                  />
-                                </div>
-                            </div>
-                          </div>
-                          
-                          <div class="col-md-4">
-                            <div class="form-group">
-                              <div class="form-group">
-                                  <label for="UDadresselivraisonRue">Rue</label>
-                                  <input
-                                    type="text"
-                                    id="UDadresselivraisonRue"
-                                    formControlName="adresselivraisonRue"
-                                    class="form-control"
-                                  />
-                                  <!-- <div
-                                    *ngIf="ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.adresselivraisonRue.errors"
-                                    class="invalid-feedback"
-                                  >
-                                    <div *ngIf="GetReactiveDestinataireForm.adresselivraisonRue.errors.required">Rue est requis</div>
-                                  </div> -->
-                                </div>
-                            </div>
-                          </div>
-                          
-                          <div class="col-md-4">
-                            <div class="form-group">
-                              <div class="form-group">
-                                  <label for="UDadresselivraisonLocalite">Ville</label>
-                                  <input
-                                    type="text"
-                                    id="UDadresselivraisonLocalite"
-                                    formControlName="adresselivraisonLocalite"
-                                    class="form-control"
-                                  />
-                                  <!-- <div
-                                    *ngIf="ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.adresselivraisonLocalite.errors"
-                                    class="invalid-feedback"
-                                  >
-                                    <div *ngIf="GetReactiveDestinataireForm.adresselivraisonLocalite.errors.required">Ville est requis</div>
-                                  </div> -->
-                                </div>
-                            </div>
-                          </div>
-                                                    
-                          <div class="col-md-4">
-                            <div class="form-group">
-                              <div class="form-group">
-                                  <label for="UDdepartement">Département</label>
-                                  <input
-                                    type="text"
-                                    id="UDdepartement"
-                                    formControlName="departement"
-                                    class="form-control"
-                                  />
-                                </div>
-                            </div>
-                          </div>
-                          
-                          <div class="col-md-4">
-                            <div class="form-group">
-                              <div class="form-group">
-                                  <label for="UDadresselivraisonCodepostal">Code postal</label>
-                                  <input
-                                    type="text"
-                                    id="UDadresselivraisonCodepostal"
-                                    formControlName="adresselivraisonCodepostal"
-                                    class="form-control"
-                                    [ngClass]="{ 'is-invalid': ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.adresselivraisonCodepostal.errors }"
-                                  />
-                                  <div
-                                    *ngIf="ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.adresselivraisonCodepostal.errors"
-                                    class="invalid-feedback"
-                                  >
-                                    <div *ngIf="GetReactiveDestinataireForm.adresselivraisonCodepostal.errors.required">Code postal est requis</div>
-                                  </div>
-                                </div>
-                            </div>
-
-                          </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h4 class="mb-1">
+                                                    <i data-feather="user" [size]="16" class="mr-75 font-medium-4"></i>
+                                                    <span class="align-middle">Information</span>
+                                                </h4>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="form-group">
+                                                        <label for="UDEmail">Email</label>
+                                                        <input
+                                                                type="text"
+                                                                id="UDEmail"
+                                                                formControlName="email"
+                                                                class="form-control"
+                                                                [ngClass]="{ 'is-invalid': ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.email.errors }"
+                                                        />
+                                                        <div
+                                                                *ngIf="ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.email.errors"
+                                                                class="invalid-feedback"
+                                                        >
+                                                            <div *ngIf="GetReactiveDestinataireForm.email.errors.required">Email est requis</div>
+                                                            <div *ngIf="GetReactiveDestinataireForm.email.errors.email">format incorrect</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
 
 
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="form-group">
+                                                        <label for="UDNom">Nom</label>
+                                                        <input
+                                                                type="text"
+                                                                id="UDNom"
+                                                                formControlName="nom"
+                                                                class="form-control"
+                                                                [ngClass]="{ 'is-invalid': ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.nom.errors }"
+                                                        />
+                                                        <div
+                                                                *ngIf="ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.nom.errors"
+                                                                class="invalid-feedback"
+                                                        >
+                                                            <div *ngIf="GetReactiveDestinataireForm.nom.errors.required">Nom est requis</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="form-group">
+                                                        <label for="UDTelephone">Telephone</label>
+                                                        <input
+                                                                type="text"
+                                                                id="UDTelephone"
+                                                                formControlName="telephone"
+                                                                class="form-control"
+                                                                [ngClass]="{ 'is-invalid': ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.telephone.errors }"
+                                                        />
+                                                        <div
+                                                                *ngIf="ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.telephone.errors"
+                                                                class="invalid-feedback"
+                                                        >
+                                                            <div *ngIf="GetReactiveDestinataireForm.telephone.errors.required">Telephone est requis</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="form-group">
+                                                        <label for="UDCommentaire">Contact</label>
+                                                        <input
+                                                                type="text"
+                                                                id="UDCommentaire"
+                                                                formControlName="commentaire"
+                                                                class="form-control"
+                                                        />
+                                                        <!-- <div
+                                                          *ngIf="ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.commentaire.errors"
+                                                          class="invalid-feedback"
+                                                        >
+                                                          <div *ngIf="GetReactiveDestinataireForm.commentaire.errors.required">Contact est requis</div>
+                                                        </div> -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="form-group">
+                                                        <label for="UDdelaiPeremption">Délai peremption</label>
+                                                        <input
+                                                                type="text"
+                                                                id="UDdelaiPeremption"
+                                                                formControlName="delaiPeremption"
+                                                                class="form-control"
+                                                                [ngClass]="{ 'is-invalid': ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.delaiPeremption.errors }"
+                                                        />
+                                                        <div
+                                                                *ngIf="ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.delaiPeremption.errors"
+                                                                class="invalid-feedback"
+                                                        >
+                                                            <div *ngIf="GetReactiveDestinataireForm.delaiPeremption.errors.required">Délai peremption est requis</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="form-group">
+                                                        <label for="UDCodeUM">Code UM</label>
+                                                        <input
+                                                                type="text"
+                                                                id="UDCodeUM"
+                                                                formControlName="codeUM"
+                                                                class="form-control"
+                                                                [ngClass]="{ 'is-invalid': ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.codeUM.errors }"
+                                                        />
+                                                        <div
+                                                                *ngIf="ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.codeUM.errors"
+                                                                class="invalid-feedback"
+                                                        >
+                                                            <div *ngIf="GetReactiveDestinataireForm.codeUM.errors.required">Code UM est requis</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <h4 class="mb-1 mt-2">
+                                                    <i data-feather="map-pin" [size]="16" class="mr-75 font-medium-4"></i>
+                                                    <span class="align-middle">Adresse</span>
+                                                </h4>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="form-group">
+                                                        <label for="UDadresselivraisonNumero">Numéro</label>
+                                                        <input
+                                                                type="text"
+                                                                id="UDadresselivraisonNumero"
+                                                                formControlName="adresselivraisonNumero"
+                                                                class="form-control"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="form-group">
+                                                        <label for="UDadresselivraisonRue">Rue</label>
+                                                        <input
+                                                                type="text"
+                                                                id="UDadresselivraisonRue"
+                                                                formControlName="adresselivraisonRue"
+                                                                class="form-control"
+                                                        />
+                                                        <!-- <div
+                                                          *ngIf="ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.adresselivraisonRue.errors"
+                                                          class="invalid-feedback"
+                                                        >
+                                                          <div *ngIf="GetReactiveDestinataireForm.adresselivraisonRue.errors.required">Rue est requis</div>
+                                                        </div> -->
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="form-group">
+                                                        <label for="UDadresselivraisonLocalite">Ville</label>
+                                                        <input
+                                                                type="text"
+                                                                id="UDadresselivraisonLocalite"
+                                                                formControlName="adresselivraisonLocalite"
+                                                                class="form-control"
+                                                        />
+                                                        <!-- <div
+                                                          *ngIf="ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.adresselivraisonLocalite.errors"
+                                                          class="invalid-feedback"
+                                                        >
+                                                          <div *ngIf="GetReactiveDestinataireForm.adresselivraisonLocalite.errors.required">Ville est requis</div>
+                                                        </div> -->
+                                                    </div>
+                                                </div>
+                                            </div>
 
 
-                          <div class="col-md-4">
-                            <div class="form-group">
-                              <label for="UDpays">Pays</label>
-                              <select
-                                id="UDpays"
-                                formControlName="pays"
-                                class="form-control"
-                                [ngClass]="{ 'is-invalid': ReactiveArticlesFormSubmitted && ReactiveArticleForm.pays.errors }"
-                              >
-                                <option value="">Tous</option>
-                                <option value="1">France</option>
-                              </select>
-                              <div
-                                *ngIf="ReactiveArticlesFormSubmitted && ReactiveArticleForm.pays.errors"
-                                class="invalid-feedback"
-                              >
-                                <div *ngIf="ReactiveArticleForm.pays.errors.required">pays est requis</div>
-                              </div>
-                            </div>
-                          </div>
-                        
-                          <div class="col-md-6 pd-12">
-                            <fieldset class="form-label-group mb-0">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="departement">Département</label>
+                                                    <select
+                                                            id="departement"
+                                                            formControlName="departement"
+                                                            class="form-control"
+                                                            [ngClass]="{ 'is-invalid': ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.departement.errors }"
+                                                    >
+                                                        <option *ngFor="let departement of departements" [value]="departement.id">
+                                                            {{ departement.name }}
+                                                        </option>
+                                                    </select>
+                                                    <div
+                                                            *ngIf="ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.departement.errors"
+                                                            class="invalid-feedback"
+                                                    >
+                                                        <div *ngIf="GetReactiveDestinataireForm.departement.errors.required">Département est requis</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="form-group">
+                                                        <label for="UDadresselivraisonCodepostal">Code postal</label>
+                                                        <input
+                                                                type="text"
+                                                                id="UDadresselivraisonCodepostal"
+                                                                formControlName="adresselivraisonCodepostal"
+                                                                class="form-control"
+                                                                [ngClass]="{ 'is-invalid': ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.adresselivraisonCodepostal.errors }"
+                                                        />
+                                                        <div
+                                                                *ngIf="ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.adresselivraisonCodepostal.errors"
+                                                                class="invalid-feedback"
+                                                        >
+                                                            <div *ngIf="GetReactiveDestinataireForm.adresselivraisonCodepostal.errors.required">Code postal est requis</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="UDpays">Pays</label>
+                                                    <select
+                                                            id="UDpays"
+                                                            formControlName="pays"
+                                                            class="form-control"
+                                                            [ngClass]="{ 'is-invalid': ReactiveArticlesFormSubmitted && ReactiveArticleForm.pays.errors }"
+                                                    >
+                                                        <option value="">Tous</option>
+                                                        <option value="1">France</option>
+                                                    </select>
+                                                    <div
+                                                            *ngIf="ReactiveArticlesFormSubmitted && ReactiveArticleForm.pays.errors"
+                                                            class="invalid-feedback"
+                                                    >
+                                                        <div *ngIf="ReactiveArticleForm.pays.errors.required">pays est requis</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6 pd-12">
+                                                <fieldset class="form-label-group mb-0">
                               <textarea
-                                #adresse1
-                                [maxlength]="120"
-                                class="form-control char-textarea"
-                                id="adresselivraisonComplement1"
-                                formControlName="adresselivraisonComplement1"
-                                rows="2"
-                                placeholder="adresse livraison Complement 1"
+                                  #adresse1
+                                  [maxlength]="120"
+                                  class="form-control char-textarea"
+                                  id="adresselivraisonComplement1"
+                                  formControlName="adresselivraisonComplement1"
+                                  rows="2"
+                                  placeholder="adresse livraison Complement 1"
                               ></textarea>
-                              <label for="adresselivraisonComplement1">adresse livraison Complement 1</label>
-                            </fieldset>
-                            <small class="textarea-counter-value float-right"
-                              ><span *ngIf="adresse1" class="char-count">{{ adresse1.value.length }}</span>
-                              <span *ngIf="!adresse1" class="char-count">0 </span> / 120
-                            </small>
-                          </div>
+                                                    <label for="adresselivraisonComplement1">adresse livraison Complement 1</label>
+                                                </fieldset>
+                                                <small class="textarea-counter-value float-right"
+                                                ><span *ngIf="adresse1" class="char-count">{{ adresse1.value.length }}</span>
+                                                    <span *ngIf="!adresse1" class="char-count">0 </span> / 120
+                                                </small>
+                                            </div>
 
-                          <div class="col-md-6 pd-12">
-                            <fieldset class="form-label-group mb-0">
+                                            <div class="col-md-6 pd-12">
+                                                <fieldset class="form-label-group mb-0">
                               <textarea
-                                #adresse2
-                                [maxlength]="120"
-                                class="form-control char-textarea"
-                                id="adresselivraisonComplement2"
-                                formControlName="adresselivraisonComplement2"
-                                rows="2"
-                                placeholder="adresse livraison Complement 2"
+                                  #adresse2
+                                  [maxlength]="120"
+                                  class="form-control char-textarea"
+                                  id="adresselivraisonComplement2"
+                                  formControlName="adresselivraisonComplement2"
+                                  rows="2"
+                                  placeholder="adresse livraison Complement 2"
                               ></textarea>
-                              <label for="adresselivraisonComplement2">adresse livraison Complement 2</label>
-                            </fieldset>
-                            <small class="textarea-counter-value float-right"
-                              ><span *ngIf="adresse2" class="char-count">{{ adresse2.value.length }}</span>
-                              <span *ngIf="!adresse2" class="char-count">0 </span> / 120
-                            </small>
-                          </div>
+                                                    <label for="adresselivraisonComplement2">adresse livraison Complement 2</label>
+                                                </fieldset>
+                                                <small class="textarea-counter-value float-right"
+                                                ><span *ngIf="adresse2" class="char-count">{{ adresse2.value.length }}</span>
+                                                    <span *ngIf="!adresse2" class="char-count">0 </span> / 120
+                                                </small>
+                                            </div>
 
-                          <div class="col-md-12 pd-12">
-                            <fieldset class="form-label-group mb-0">
+                                            <div class="col-md-12 pd-12">
+                                                <fieldset class="form-label-group mb-0">
                               <textarea
-                                #facturation
-                                [maxlength]="120"
-                                class="form-control char-textarea"
-                                id="adresseFacturation"
-                                formControlName="adresseFacturation"
-                                rows="2"
-                                placeholder="Adresse de commande"
+                                  #facturation
+                                  [maxlength]="120"
+                                  class="form-control char-textarea"
+                                  id="adresseFacturation"
+                                  formControlName="adresseFacturation"
+                                  rows="2"
+                                  placeholder="Adresse de commande"
                               ></textarea>
-                              <label for="adresseFacturation">Adresse de commande</label>
-                            </fieldset>
-                            <small class="textarea-counter-value float-right"
-                              ><span *ngIf="facturation" class="char-count">{{ facturation.value.length }}</span>
-                              <span *ngIf="!facturation" class="char-count">0 </span> / 120
-                            </small>
-                          </div>
+                                                    <label for="adresseFacturation">Adresse de commande</label>
+                                                </fieldset>
+                                                <small class="textarea-counter-value float-right"
+                                                ><span *ngIf="facturation" class="char-count">{{ facturation.value.length }}</span>
+                                                    <span *ngIf="!facturation" class="char-count">0 </span> / 120
+                                                </small>
+                                            </div>
 
-                          <div class="col-md-12 pd-12">
-                            <fieldset class="form-label-group mb-0">
+                                            <div class="col-md-12 pd-12">
+                                                <fieldset class="form-label-group mb-0">
                               <textarea
-                                class="form-control char-textarea"
-                                id="adresseLivraison"
-                                formControlName="adresseLivraison"
-                                rows="2"
-                                [value]="GetReactiveDestinataireForm.nom.value + '  ' + GetReactiveDestinataireForm.adresselivraisonNumero.value  + '  ' + GetReactiveDestinataireForm.adresselivraisonRue.value+ '  ' + GetReactiveDestinataireForm.adresselivraisonComplement1.value  + '  ' + GetReactiveDestinataireForm.adresselivraisonCodepostal.value + '  ' + GetReactiveDestinataireForm.adresselivraisonLocalite.value"
+                                      class="form-control char-textarea"
+                                      id="adresseLivraison"
+                                      formControlName="adresseLivraison"
+                                      rows="2"
+                                      [value]="GetReactiveDestinataireForm.nom.value + '  ' + GetReactiveDestinataireForm.adresselivraisonNumero.value  + '  ' + GetReactiveDestinataireForm.adresselivraisonRue.value+ '  ' + GetReactiveDestinataireForm.adresselivraisonComplement1.value  + '  ' + GetReactiveDestinataireForm.adresselivraisonCodepostal.value + '  ' + GetReactiveDestinataireForm.adresselivraisonLocalite.value"
                               ></textarea>
-                              <label for="adresseLivraison">Adresse de livraison</label>
-                            </fieldset>
-                          </div>
-
-
-
-
-                          <!----- transport part -->
-
-
-                          <div class="card-body pb-0">
-                              <div class="divider divider-primary">
-                                  <div class="divider-text font-medium-3">
-                                      <i data-feather="truck" [size]="16" class="mr-75 font-medium-4"></i>
-                                      Transport
-                                  </div>
-                              </div>
-                          </div>
-
-
-
-                        <div class="col-md-12 pd-12">
-                          <div class="col-md-12 pd-12">
-                            <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="customCheck1"  />
-                                <label class="custom-control-label" for="customCheck1">isAffretement</label>
-                            </div>
-                          </div>
+                                                    <label for="adresseLivraison">Adresse de livraison</label>
+                                                </fieldset>
+                                            </div>
 
 
 
 
 
-                            <div class="col-md-12 pd-12">
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="customCheck2"  />
-                                    <label class="custom-control-label" for="customCheck2">isMessagerie</label>
+
+
+
+
+
+
+
+
+
+
+
+
+                                            <!-- New Transport Section -->
+                                            <div class="col-12">
+                                                <h4 class="mb-1 mt-2">
+                                                    <i data-feather="truck" [size]="16" class="mr-75 font-medium-4"></i>
+                                                    <span class="align-middle">Transport</span>
+                                                </h4>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="isAffretement">Affretement</label>
+                                                    <input
+                                                            type="checkbox"
+                                                            id="isAffretement"
+                                                            formControlName="isAffretement"
+                                                            class="form-control"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="isMessagerie">Messagerie</label>
+                                                    <input
+                                                            type="checkbox"
+                                                            id="isMessagerie"
+                                                            formControlName="isMessagerie"
+                                                            class="form-control"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="isDelta">Delta</label>
+                                                    <input
+                                                            type="checkbox"
+                                                            id="isDelta"
+                                                            formControlName="isDelta"
+                                                            class="form-control"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4" *ngIf="ReactiveDestinataireForm.get('isDelta').value">
+                                                <div class="form-group">
+                                                    <label for="delta">Delta</label>
+                                                    <input
+                                                            type="text"
+                                                            id="delta"
+                                                            formControlName="delta"
+                                                            class="form-control"
+                                                            [ngClass]="{ 'is-invalid': ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.delta.errors }"
+                                                    />
+                                                    <div
+                                                            *ngIf="ReactiveDestinataireFormSubmitted && GetReactiveDestinataireForm.delta.errors"
+                                                            class="invalid-feedback"
+                                                    >
+                                                        <div *ngIf="GetReactiveDestinataireForm.delta.errors.required">Delta est requis</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Submit button -->
+                                            <div class="col-12 d-flex flex-sm-row flex-column mt-2">
+                                                <button class="btn btn-outline-success" rippleEffect>Ajouter</button>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
-                            </div>
-                        </div>
-
-                          <div class="col-md-12 pd-12">
-                              <div class="col-md-12 pd-12">
-
-
-                                      <div class="custom-control custom-checkbox">
-                                          <input type="checkbox" class="custom-control-input" id="customCheck3"  />
-                                          <label class="custom-control-label" for="customCheck3"  [(ngModel)]="b" (change)="do(b)">isDelta</label>
-                                      </div>
-
-
-                              <div class="col-md-12 pd-12">
-                          <div *ngIf= b class="col-md-4">
-                              <div class="form-group">
-                                  <div class="form-group">
-                                      <label for="a">Delta</label>
-                                      <input
-                                              type="text"
-                                              id="a"
-                                              formControlName="adresselivraisonNumero"
-                                              class="form-control"
-                                      />
-
-                                  </div>
-                              </div>
-                          </div>
-
-                        </div>
-                   </div>
-
-
-
-                      </div>
-
-
-                          <div class="col-md-6 col-12">
-                              <div class="d-flex justify-content-between align-items-center m-1">
-                                  <label class="d-flex align-items-center">Transporteur Exclus !
-                                      <select  class="form-control" id="basicSelect " [(ngModel)]="a" name="unique">
-                                          <option value="" disabled selected>Select a Transporteur</option>
-                                          <option  *ngFor="let transporteur of transporteurs" [ngValue]="transporteur" >
-                                              {{ transporteur.name }}
-                                      </select>
-                                  </label>
-                              </div>
-                          </div>
-
-                          <!----- transport part -->
-
-                        <div class="col-12 d-flex flex-sm-row flex-column mt-2">
-                            <button class="btn btn-outline-success" rippleEffect>
-                              Ajouter
-                            </button>
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-                </ng-template>
-              </li>
-            </ul>
-            <div [ngbNavOutlet]="nav" class="mt-2"></div>
-          </div>
-        </div>
-      </section>
+                            </ng-template>
+                        </li>
+                    </ul>
+                    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+                </div>
+            </div>
+        </section>
     </div>
-  </div>
+</div>

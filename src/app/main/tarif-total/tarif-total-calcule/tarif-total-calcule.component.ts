@@ -5,8 +5,9 @@ import {DatatableComponent} from "@swimlane/ngx-datatable";
 import {TarifTotalCalculeService} from "./tarif-total-calcule.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {formatDate} from "@angular/common";
-import {NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
+import {NgbDateStruct, NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 import Swal from "sweetalert2";
+import {any} from "codelyzer/util/function";
 
 @Component({
   selector: 'app-tarif-total-calcule',
@@ -20,7 +21,9 @@ export class TarifTotalCalculeComponent implements OnInit {
               private http: HttpClient,
               private tariffService: TarifTotalCalculeService,
               private router : Router,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              private modalService: NgbModal,
+  ) { }
   rows = [];
     currentInput = this.createEmptyRow();
 
@@ -64,17 +67,19 @@ export class TarifTotalCalculeComponent implements OnInit {
   }
 
   createEmptyRow() {
-    return { unixDate: '' , destinataireId: '', idBcs : '',  weight: '', nombrePalette: '', tarifTotal: '' , bestTransporteur: '', typeTransporteur: '' };
+    return { unixDate: '', expeditionDate: '', destinataireId: '', idBcs : '',  weight: '', nombrePalette: '', tarifTotal: '' , bestTransporteur: '', typeTransporteur: '' };
   }
     columns = [
         { prop: 'unixDate', name: 'Date' , width: '130' },
+        { prop: 'dateExpedition', name: 'Date dexpedition' , width: '150' },
         { prop: 'destinataire', name: 'Destinataire' , width: '150' },
         { prop: 'idBcs', name: 'ID BCS' , width: '80' },
         { prop: 'weight', name: 'Poids' , width: '75' },
         { prop: 'palette', name: 'Palettes' , width: '85' },
         { prop: 'cheapestTransporteurName', name: 'Transporteur' , width: undefined },
-        { prop: 'cheapestTariff', name: 'Tarif Total' , width: '90' },
         { prop: 'typeTransporteur', name: 'Type de Transporteur' , width: '150' }
+
+
     ];
   setColumns(data: any[]) {
     if (data.length > 0) {
@@ -112,19 +117,36 @@ export class TarifTotalCalculeComponent implements OnInit {
         });
     }
 
+    dataa : any;
+
+    transporteurs : any[];
     toTransport() {
         this.tariffService.getTariffDataByDate(this.unixDate).subscribe({
             next: (data) => {
+                // Map to get the cheapestTransporteurName and then filter unique values
+                this.transporteurs = data
+                    .map((item: any) => item.cheapestTransporteurName)
+                    .filter((value, index, self) => self.indexOf(value) === index);
 
-                // This callback should update rows, not columns
-                this.rows = [...this.rows, ...data]; // Append new data to existing rows, ensuring no modification to columns.
-                this.forceTableRedraw();
-                // Call to force redraw after updating rows.
+                // Append new data to existing rows, ensuring no modification to columns.
+                this.rows = [...this.rows, ...data];
+                this.forceTableRedraw(); // Call to force redraw after updating rows.
             },
             error: (error) => console.error('Error fetching data:', error)
         });
+
+        console.log(this.transporteurs); // Log transporteurs to check the output
     }
-  reateRow(response: any) {
+
+
+
+
+
+
+
+
+
+    reateRow(response: any) {
     const newRow = {
       ...response,
       className: this.determineClass(response.cheapestTariff)
@@ -154,6 +176,23 @@ export class TarifTotalCalculeComponent implements OnInit {
       });
 
   }
+
+
+    generateTable(){
+        const url = `${environment.api}/tariffs/excel-table/?unixDate=${this.unixDate}`;
+        return this.http.get(url, { responseType: 'blob' as 'json' }).subscribe((response: any) => {
+            const blob = new Blob([response], { type: 'text/xlsx' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'table.xlsx';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        });
+
+    }
 
   generateExcel() {
     const url = `${environment.api}/tariffs/generate-excel/?unixDate=${this.unixDate}`;
@@ -285,6 +324,57 @@ export class TarifTotalCalculeComponent implements OnInit {
 
         this.router.navigate(['/repartition/historique']);
         }
+
+    @ViewChild('newCardModal') newCardModal!: TemplateRef<any>;
+    modalRef: NgbModalRef | undefined;
+
+
+
+
+
+    openGenerateLvsModal(content: TemplateRef<any>) {
+        this.modalRef = this.modalService.open(content, { size: 'lg' });
+    }
+
+    modalInput = {
+        transporteur: '',
+        nlvs: '',
+        weight: '',
+        palettes: '',
+        reclamation: ''
+    };
+
+    submitLvsForm() {
+        // Handle form submission
+        console.log(this.modalInput);
+        // this.http.post(`${environment.api}/lvs/generate`, this.modalInput, { responseType: 'blob' as 'json' }).subscribe(
+        //     (response: any) => {
+        //         const blob = new Blob([response], { type: 'application/pdf' });
+        //         const url = window.URL.createObjectURL(blob);
+        //         const a = document.createElement('a');
+        //         a.href = url;
+        //         a.download = 'LvsReport.pdf'; // Corrected the filename to have .pdf extension
+        //         document.body.appendChild(a);
+        //         a.click();
+        //         window.URL.revokeObjectURL(url);
+        //         document.body.removeChild(a);
+        //     },
+        //     error => {
+        //         console.log("Error generating PDF:", error);
+        //     }
+        // );
+
+        this.http.get(`${environment.api}/lvs/pdf`, { responseType: 'blob' }).subscribe((response) => {
+            const blob = new Blob([response], { type: 'application/pdf' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'lettre_voiture.pdf';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        });
+        this.modalRef?.close();
+    }
 
 
 

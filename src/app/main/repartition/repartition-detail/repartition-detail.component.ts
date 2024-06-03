@@ -14,6 +14,8 @@ import { HttpResponse } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {ActivatedRoute, Router} from "@angular/router";
 import {TarifTotalCalculeService} from "../../tarif-total/tarif-total-calcule/tarif-total-calcule.service";
+import {environment} from "../../../../environments/environment";
+import {data} from "autoprefixer";
 
 @Component({
   selector: 'app-repartition-detail',
@@ -168,6 +170,10 @@ export class RepartitionDetailComponent implements OnInit {
       }
     }; 
   }
+
+
+
+
 
   //#region Documents
 genererTransporteur() {
@@ -472,13 +478,26 @@ genererTransporteur() {
     //
     // #region Hooks
 
+
+    isItTrue : boolean;
+    issItTerminee(){
+
+
+        this._repartitonDetailService.isItTermine(this.unixDate).subscribe(
+            data => this.isItTrue= data
+        )
+
+    }
+
   ngOnInit(): void {
+
     this.hasRole = this._authenticationService.getRoles.map(({name}) => name);
       this.route.paramMap.subscribe(params => {
           this.id = params.get('id');
           this.unixDate = +this.id;// Use paramMap for safer access to parameters
           console.log('Retrieved ID:dddddddddddddddddddddddddddddddddddddddddddddddd', this.unixDate);
       });
+      this.issItTerminee();
 
       console.log('Retrieved ID:ddddddddddddddd', this.unixDate);
     this._repartitonDetailService.onRepartitionChanged
