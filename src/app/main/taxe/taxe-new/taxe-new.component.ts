@@ -26,7 +26,7 @@ export class TaxeNewComponent implements OnInit {
 
     newCardData: any = {
         taxeName: '',
-        typeAddition: false,
+        typeAddition: true,
         typeMultiplication: false,
         isTemporal: false,
         fromDay: '',
@@ -48,12 +48,34 @@ export class TaxeNewComponent implements OnInit {
 
     editIndex: number | null = null;
 
+    constantCharacter: string = '#';
+
     constructor(
         private modalService: NgbModal,
         private httpClient: HttpClient,
         private _tarifMssNewService: TarifMssNewService,
         private _tarifAffNewService: TarifAffNewService
-    ) {}
+    ) {
+        this.newCardData.typeAddition = false;
+        this.newCardData.typeMultiplication = false;
+    }
+
+    addConstantCharacter() {
+        if (!this.newCardData.allValue.endsWith(this.constantCharacter)) {
+            this.newCardData.allValue = this.newCardData.allValue.replace(/[%€]$/, '') + this.constantCharacter;
+        }
+    }
+
+    updateConstantCharacter() {
+        if (this.newCardData.typeAddition) {
+            this.constantCharacter = '€';
+        } else if (this.newCardData.typeMultiplication) {
+            this.constantCharacter = '%';
+        } else {
+            this.constantCharacter = '';
+        }
+        this.addConstantCharacter();
+    }
 
     ngOnInit(): void {
         this.loadTransporteurs();
@@ -81,6 +103,8 @@ export class TaxeNewComponent implements OnInit {
                 ]
             }
         };
+        this.updateConstantCharacter();
+
     }
 
     loadTransporteurs() {
@@ -110,6 +134,7 @@ export class TaxeNewComponent implements OnInit {
         } else if (selectedType === 'type2' && this.newCardData.typeMultiplication) {
             this.newCardData.typeAddition = false;
         }
+        this.updateConstantCharacter();
     }
 
     optionChanged() {
@@ -220,7 +245,6 @@ export class TaxeNewComponent implements OnInit {
         formData.append('transporteurId', this.selectedTransporteurId);
 
         const defaultToZero = (value: any) => (value == null || value === '' || value === undefined) ? 0 : value;
-
 
         // Collect tax details
         let taxDetails: any[] = [];

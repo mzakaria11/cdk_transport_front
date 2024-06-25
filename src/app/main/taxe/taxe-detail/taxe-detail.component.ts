@@ -13,6 +13,8 @@ import {TaxeNewService} from "../taxe-new/taxe-new.service";
 import {Transporteur} from "../../transporteur/transporteur.model";
 import {Departement} from "../../departement/departement.model";
 import {TarifAffNewService} from "../../tarif-aff/tarif-aff-new/tarif-aff-new.service";
+import {environment} from "../../../../environments/environment";
+import {HttpClient} from "@angular/common/http";
 @Component({
   selector: 'app-taxe-detail',
   templateUrl: './taxe-detail.component.html',
@@ -58,7 +60,8 @@ export class TaxeDetailComponent implements OnInit {
         private _authService: AuthenticationService,
         private formBuilder: UntypedFormBuilder,
         private _router: Router,
-        private _taxeNewService: TarifAffNewService
+        private _taxeNewService: TarifAffNewService,
+        private http: HttpClient
     ) {
         this._unsubscribeAll = new Subject();
         this.edit = _taxeDetailService.editable;
@@ -181,10 +184,14 @@ export class TaxeDetailComponent implements OnInit {
                             this.taxeRequest = {
                                 "id": this.data.id,
 
-                                "transporteurId": this.transporteurId,
-                                "departementId": this.departementId,
-                                "taxeName": form.value.taxeName,
-                                "prix": form.value.prix,
+                                "transporteurId": this.data.transporteur.id,
+                                "departementId": this.data.departement.id,
+                                "taxName": this.data.taxName,
+                                "taxValue": this.data.taxValue,
+                                "letter": this.data.letter,
+                                "taxType": this.data.taxType,
+                                "fromDate": this.data.fromDate,
+                                "toDate": this.data.toDate,
 
 
 
@@ -209,7 +216,7 @@ export class TaxeDetailComponent implements OnInit {
                                     ).then(
                                         () => {
 
-                                            this._router.navigate([`taxe/detail/${this.data.id}`]);
+                                            this._router.navigate([`taxe/list`]);
                                         }
                                     )
                                 },
@@ -273,12 +280,22 @@ export class TaxeDetailComponent implements OnInit {
 
 
 
+
+
+
     ngOnInit(): void {
 
         this.loadDepartements();
         this.loadTransporteurs();
 
-
+        this._taxeDetailService.onTaxeDetailChanged
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(
+                response => {
+                    this.data = response;
+                    console.log(response)
+                }
+            );
 
 
 
@@ -329,6 +346,5 @@ export class TaxeDetailComponent implements OnInit {
     }
 
 
-
-
+    protected readonly console = console;
 }

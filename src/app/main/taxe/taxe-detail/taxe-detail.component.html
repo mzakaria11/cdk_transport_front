@@ -32,7 +32,7 @@
                                                                    bindLabel="nom"
                                                                    bindValue="id"
                                                                    placeholder="Select Transporteurs"
-                                                                   [(ngModel)]="transporteurId">
+                                                                   [(ngModel)]="data.transporteur.id">
                                                         </ng-select>
                                                     </div>
                                                 </div>
@@ -52,7 +52,7 @@
                                                                bindLabel="nom"
                                                                bindValue="id"
                                                                placeholder="Select Departement"
-                                                               [(ngModel)]="departementId"
+                                                               [(ngModel)]="data.departement.id"
                                                                >
                                                     </ng-select>
                                                 </div>
@@ -62,16 +62,15 @@
 
                                             <div class="col-md-3">
                                                 <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
-                                                    <label for="taxeName">nom du Taxe</label>
-                                                    <input type="text" id="taxeName"  class="form-control" [(ngModel)]="data.taxeName" name="taxeName" >
-                                                    {{data.taxeName}}
+                                                    <label for="taxName">nom du Taxe</label>
+                                                    <input type="text" id="taxName"  class="form-control" [(ngModel)]="data.taxName" name="taxName" >
                                                 </div>
                                             </div>
 
                                             <div class="col-md-3">
                                                 <div class="form-group" [ngClass]="{'pointer-events-none': !edit}">
-                                                    <label for="prix">nom du Taxe</label>
-                                                    <input type="text" id="prix"  class="form-control" [(ngModel)]="data.prix" name="prix">
+                                                    <label for="taxValue">nom du Taxe</label>
+                                                    <input type="text" id="taxValue"  class="form-control" [(ngModel)]="data.taxValue" name="taxValue">
                                                 </div>
                                             </div>
 

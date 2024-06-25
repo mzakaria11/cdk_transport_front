@@ -12,6 +12,7 @@ import {TarifMssNewService} from "../tarif-mss-new/tarif-mss-new.service";
 import {Transporteur} from "../../transporteur/transporteur.model";
 import {Departement} from "../../departement/departement.model";
 import {TarifAffNewService} from "../../tarif-aff/tarif-aff-new/tarif-aff-new.service";
+import {Location} from "@angular/common";
 
 @Component({
   selector: 'app-tarif-mss-detail',
@@ -59,7 +60,8 @@ export class TarifMssDetailComponent implements OnInit {
         private _authService: AuthenticationService,
         private formBuilder: UntypedFormBuilder,
         private _router: Router,
-        private _tarifMssNewService: TarifAffNewService
+        private _tarifMssNewService: TarifAffNewService,
+        private location: Location
     ) {
         this._unsubscribeAll = new Subject();
         this.edit = _tarifMssDetailService.editable;
@@ -116,8 +118,7 @@ export class TarifMssDetailComponent implements OnInit {
                             }
                         ).then(
                             () => {
-                              this._router.navigate(['/taxe/list']);
-                            }
+                                this.location.back();                            }
                         );
                       }
                   );
@@ -208,8 +209,7 @@ export class TarifMssDetailComponent implements OnInit {
                         ).then(
                             () => {
 
-                              this._router.navigate([`tarifmss/detail/${this.data.id}`]);
-                            }
+                                this.location.back();                            }
                         )
                       },
                       err => {
@@ -274,6 +274,8 @@ export class TarifMssDetailComponent implements OnInit {
 
     ngOnInit(): void {
 
+
+
         this.loadDepartements();
         this.loadTransporteurs();
 
@@ -320,14 +322,15 @@ export class TarifMssDetailComponent implements OnInit {
         ]
       }
     };
-  }
+        this.transporteurId = this.data.transporteur.id
+        this.departementId = this.data.departement.id
+
+    }
 
   ngOnDestroy(): void {
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();
   }
-
-
-
+    protected readonly console = console;
 }
 

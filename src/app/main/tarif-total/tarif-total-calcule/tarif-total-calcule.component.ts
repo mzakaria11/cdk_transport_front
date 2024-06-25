@@ -1,220 +1,62 @@
-import {ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../../environments/environment";
 import {DatatableComponent} from "@swimlane/ngx-datatable";
 import {TarifTotalCalculeService} from "./tarif-total-calcule.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {formatDate} from "@angular/common";
-import {NgbDateStruct, NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
+import {NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
 import Swal from "sweetalert2";
-import {any} from "codelyzer/util/function";
+
+interface DisplayData {
+    unixDate: number;
+    destinataire: string;
+    idBcs: string;
+    weight: string;
+    palette: string;
+    cheapestTariff: string;
+    cheapestTransporteurName: string;
+    typeTransporteur: string;
+}
+
+interface SendData {
+    weight: string;
+    nombrePalette: string;
+    destinataireId: string;
+}
 
 @Component({
-  selector: 'app-tarif-total-calcule',
-  templateUrl: './tarif-total-calcule.component.html',
-  styleUrls: ['./tarif-total-calcule.component.scss']
+    selector: 'app-tarif-total-calcule',
+    templateUrl: './tarif-total-calcule.component.html',
+    styleUrls: ['./tarif-total-calcule.component.scss']
 })
 export class TarifTotalCalculeComponent implements OnInit {
-  @ViewChild(DatatableComponent) table: DatatableComponent;
+    @ViewChild(DatatableComponent) table: DatatableComponent;
 
-  constructor(private cdr: ChangeDetectorRef,
-              private http: HttpClient,
-              private tariffService: TarifTotalCalculeService,
-              private router : Router,
-              private route: ActivatedRoute,
-              private modalService: NgbModal,
-  ) { }
-  rows = [];
+    constructor(private cdr: ChangeDetectorRef,
+                private http: HttpClient,
+                private tariffService: TarifTotalCalculeService,
+                private router: Router,
+                private route: ActivatedRoute
+                ) { }
+
+    rows = [];
     currentInput = this.createEmptyRow();
+    page: number = 0;
+    size: number = 5;
+    totalElements: number;
 
-  forceTableRedraw() {
-    // Attempt to force refresh
-    this.table.recalculate();
-    setTimeout(() => {
-      this.rows = [...this.rows]; // Reassign rows to trigger change detection
-      this.cdr.detectChanges();
-
-    }, 0);
-  }
-
-  submitRow() {
-    const url = `${environment.api}/tariffs/cheapest-transporteur`;
-    const formData = new FormData();
-    formData.append('weight', this.currentInput.weight);
-    formData.append('palette', this.currentInput.nombrePalette);
-    formData.append('destinataireId', this.currentInput.destinataireId);
-
-    this.http.post<any>(url, formData).subscribe({
-      next: (response) => {
-        const newRow = {
-          unixDate: this.unixDate,
-          Destinataire : response.destinataire,
-          idBcs : 'test',
-          weight: this.currentInput.weight,
-          palette: this.currentInput.nombrePalette,
-          cheapestTariff: response.cheapestTariff,
-          cheapestTransporteurName: response.cheapestTransporteurName,
-          typeTransporteur : response.type
-
-        };
-        console.log(newRow);
-        this.rows.push(newRow);
-        this.currentInput = this.createEmptyRow();
-        this.forceTableRedraw(); // Call to force redraw after updating rows
-      },
-      error: (error) => console.error('Error:', error)
-    });
-  }
-
-  createEmptyRow() {
-    return { unixDate: '', expeditionDate: '', destinataireId: '', idBcs : '',  weight: '', nombrePalette: '', tarifTotal: '' , bestTransporteur: '', typeTransporteur: '' };
-  }
-    columns = [
-        { prop: 'unixDate', name: 'Date' , width: '130' },
-        { prop: 'dateExpedition', name: 'Date dexpedition' , width: '150' },
-        { prop: 'destinataire', name: 'Destinataire' , width: '150' },
-        { prop: 'idBcs', name: 'ID BCS' , width: '80' },
-        { prop: 'weight', name: 'Poids' , width: '75' },
-        { prop: 'palette', name: 'Palettes' , width: '85' },
-        { prop: 'cheapestTransporteurName', name: 'Transporteur' , width: undefined },
-        { prop: 'typeTransporteur', name: 'Type de Transporteur' , width: '150' }
-
-
-    ];
-  setColumns(data: any[]) {
-    if (data.length > 0) {
-      // Dynamically create columns based on the first item keys
-      this.columns = Object.keys(data[0]).map(key => ({
-        prop: key,
-        name: key.replace(/([A-Z])/g, ' $1').trim(),
-          width: 'auto'// Add space before capital letters and trim
-      }));
-    }
-  }
-
-
-
-  unixDate: number ; // example Unix date
-  id: string;
+    unixDate: number;
+    id: string;
     basicDPdata: NgbDateStruct;
 
-    envoieEmail() {
-        if (!this.basicDPdata) {
-            alert('Please select a date first!');
-            return;
-        }
-
-        // Create a Date object from the NgbDateStruct
-        const dateToSend = new Date(this.basicDPdata.year, this.basicDPdata.month - 1, this.basicDPdata.day);
-        const formattedDate = `${this.basicDPdata.year}-${this.basicDPdata.month}-${this.basicDPdata.day}`;
-
-        // HTTP GET request
-        const apiUrl = `${environment.api}/tariffs/sendEmail?unixDate=${this.unixDate}&date=${formattedDate}`;
-        console.log(this.unixDate, formattedDate);
-        this.http.get(apiUrl).subscribe({
-            next: (response) => console.log('Emails sent successfully', response),
-            error: (error) => console.error('Error sending emails', error)
-        });
-    }
-
-    dataa : any;
-
-    transporteurs : any[];
-    toTransport() {
-        this.tariffService.getTariffDataByDate(this.unixDate).subscribe({
-            next: (data) => {
-                // Map to get the cheapestTransporteurName and then filter unique values
-                this.transporteurs = data
-                    .map((item: any) => item.cheapestTransporteurName)
-                    .filter((value, index, self) => self.indexOf(value) === index);
-
-                // Append new data to existing rows, ensuring no modification to columns.
-                this.rows = [...this.rows, ...data];
-                this.forceTableRedraw(); // Call to force redraw after updating rows.
-            },
-            error: (error) => console.error('Error fetching data:', error)
-        });
-
-        console.log(this.transporteurs); // Log transporteurs to check the output
-    }
-
-
-
-
-
-
-
-
-
-    reateRow(response: any) {
-    const newRow = {
-      ...response,
-      className: this.determineClass(response.cheapestTariff)
-    };
-    return newRow;
-  }
-
-  determineClass(tariff: number): string {
-    if (tariff < 50) return 'cell-critical';
-    if (tariff >= 50 && tariff < 75) return 'cell-warning';
-    return 'cell-ok';
-  }
-
-
-  generateCsv(){
-    const url = `${environment.api}/tariffs/generate-csv/?unixDate=${this.unixDate}`;
-      return this.http.get(url, { responseType: 'blob' as 'json' }).subscribe((response: any) => {
-        const blob = new Blob([response], { type: 'text/csv' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'messagerie.csv';
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-      });
-
-  }
-
-
-    generateTable(){
-        const url = `${environment.api}/tariffs/excel-table/?unixDate=${this.unixDate}`;
-        return this.http.get(url, { responseType: 'blob' as 'json' }).subscribe((response: any) => {
-            const blob = new Blob([response], { type: 'text/xlsx' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'table.xlsx';
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
-        });
-
-    }
-
-  generateExcel() {
-    const url = `${environment.api}/tariffs/generate-excel/?unixDate=${this.unixDate}`;
-    return this.http.get(url, { responseType: 'blob' }).subscribe(
-        (response: Blob) => {
-          const blob = new Blob([response], { type: 'application/zip' });
-          const downloadUrl = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = downloadUrl;
-          a.download = 'RapportTransporteurs.zip';
-          document.body.appendChild(a);
-          a.click();
-          window.URL.revokeObjectURL(downloadUrl);
-          document.body.removeChild(a);
-        },
-        (error) => {
-          console.error('Error downloading the file.', error);
-          // Implement further error handling here (e.g., user notifications)
-        }
-    );
-  }
-    public contentHeader: Object;
+    columns = [
+        { prop: 'destinataire', name: 'Destinataire', width: 150 },
+        { prop: 'idBcs', name: 'ID BCS', width: 80 },
+        { prop: 'weight', name: 'Poids', width: 75 },
+        { prop: 'palette', name: 'Palettes', width: 85 },
+        { prop: 'cheapestTransporteurName', name: 'Transporteur', width: undefined },
+        { prop: 'typeTransporteur', name: 'Type de Transporteur', width: 150 }
+    ];
 
     ngOnInit(): void {
         this.contentHeader = {
@@ -223,166 +65,201 @@ export class TarifTotalCalculeComponent implements OnInit {
             breadcrumb: {
                 type: '',
                 links: [
-                    {
-                        name: 'Accueil',
-                        isLink: true,
-                        link: '/'
-                    },
-                    {
-                        name: 'Calcule',
-                        isLink: true,
-                        link: `/ctt/list/${this.unixDate}`
-                    }
+                    { name: 'Accueil', isLink: true, link: '/' },
+                    { name: 'Calcule', isLink: true, link: `/ctt/list/${this.unixDate}` }
                 ]
             }
         };
 
-      this.tariffService.getTariffData().subscribe(data => {
-      this.rows = data;
-      this.setColumns(data);
-    });
+        this.route.paramMap.subscribe(params => {
+            this.id = params.get('id');
+            this.unixDate = +this.id;
+        });
 
-    this.route.paramMap.subscribe(params => {
-      this.id = params.get('id');
-      this.unixDate = +this.id;
-      console.log('Retrieved ID:dddddddddddddddddddddddddddddddddddddddddddddddd', this.unixDate);
-    });
+        this.toTransport(this.page, this.size);
+    }
 
-    console.log('Retrieved ID:ddddddddddddddd', this.unixDate);
+    forceTableRedraw() {
+        this.table.recalculate();
+        setTimeout(() => {
+            this.rows = [...this.rows];
+            this.cdr.detectChanges();
+        }, 0);
+    }
 
-    this.toTransport();
-  }
+    submitRow() {
+        const url = `${environment.api}/tariffs/cheapest-transporteur`;
+        const formData = new FormData();
+        formData.append('weight', this.currentInput.weight);
+        formData.append('palette', this.currentInput.nombrePalette);
+        formData.append('destinataireId', this.currentInput.destinataireId);
 
+        this.http.post<any>(url, formData).subscribe({
+            next: (response) => {
+                const newRow = {
+                    unixDate: this.unixDate,
+                    destinataire: response.destinataire,
+                    idBcs: 'test',
+                    weight: this.currentInput.weight,
+                    palette: this.currentInput.nombrePalette,
+                    cheapestTariff: response.cheapestTariff,
+                    cheapestTransporteurName: response.cheapestTransporteurName,
+                    typeTransporteur: response.type
+                };
+                this.rows.push(newRow);
+                this.currentInput = this.createEmptyRow();
+                this.forceTableRedraw();
+            },
+            error: (error) => console.error('Error:', error)
+        });
+    }
 
+    createEmptyRow() {
+        return { unixDate: '', expeditionDate: '', destinataireId: '', idBcs: '', weight: '', nombrePalette: '', tarifTotal: '', bestTransporteur: '', typeTransporteur: '' };
+    }
 
+    toTransport(page: number, size: number) {
+        this.tariffService.getTariffDataByDate(this.unixDate, page, size).subscribe({
+            next: (response) => {
+                this.rows = response.content;
+                this.totalElements = response.totalElements;
+                this.forceTableRedraw();
+            },
+            error: (error) => console.error('Error fetching data:', error)
+        });
+    }
+
+    setPage(pageInfo: any) {
+        this.page = pageInfo.offset;
+        this.toTransport(this.page, this.size);
+    }
+
+    onPageSizeChanged(event: any) {
+        this.size = +event.target.value;
+        this.page = 0;
+        this.toTransport(this.page, this.size);
+    }
+
+    envoieEmail() {
+        if (!this.basicDPdata) {
+            alert('Please select a date first!');
+            return;
+        }
+        const dateToSend = new Date(this.basicDPdata.year, this.basicDPdata.month - 1, this.basicDPdata.day);
+        const formattedDate = `${this.basicDPdata.year}-${this.basicDPdata.month}-${this.basicDPdata.day}`;
+        const apiUrl = `${environment.api}/tariffs/sendEmail?unixDate=${this.unixDate}&date=${formattedDate}`;
+        this.http.get(apiUrl).subscribe({
+            next: (response) => console.log('Emails sent successfully', response),
+            error: (error) => console.error('Error sending emails', error)
+        });
+    }
 
     confirmExpedition() {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: { confirmButton: 'btn btn-success', cancelButton: 'btn btn-danger sup' },
+            buttonsStyling: false
+        });
 
-        const swalWithBootstrapButtons = Swal.mixin(
-            {
-                customClass: {
-                    confirmButton: 'btn btn-success',
-                    cancelButton: 'btn btn-danger sup'
-                },
-                buttonsStyling: false
+        swalWithBootstrapButtons.fire({
+            title: 'Vous voulez Vraiment Confirmer L\'expedition ?',
+            text: "Vous ne pourrez pas revenir en arrière !",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Oui, Confirmez!',
+            cancelButtonText: 'Non, annulez!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                this.confirm();
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                swalWithBootstrapButtons.fire('Annulé', 'Rien n\'a été confirmer', 'error');
             }
-        );
-
-        swalWithBootstrapButtons.fire(
-            {
-                title: 'Vous voulez Vraiment Confirmer L\'expedition ?',
-                text: "Vous ne pourrez pas revenir en arrière !",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Oui, Confirmez!',
-                cancelButtonText: 'Non, annulez!',
-                reverseButtons: true
-            }
-        )
-            .then(
-                (result) => {
-                    if (result.isConfirmed) {
-
-                        this.confirm()
-
-                    }
-                    else if ( result.dismiss === Swal.DismissReason.cancel )
-                    {
-                        swalWithBootstrapButtons.fire(
-                            'Annulé',
-                            'Rien n\'a été confirmer',
-                            'error'
-                        );
-                    }
-                }
-            );
-
+        });
     }
-
-
-
-
-
-
 
     confirm() {
-
-
-
         const url = `${environment.api}/grouped/confirme/?unixDate=${this.unixDate}`;
-
-
-            this.http.post(url, null) // Pass null as the body
-                .subscribe(
-                    response => {
-                        console.log('Update successful', response);
-                    },
-                    error => {
-                        console.error('Error updating', error);
-                    }
-                );
-
+        this.http.post(url, null).subscribe(
+            response => console.log('Update successful', response),
+            error => console.error('Error updating', error)
+        );
         this.router.navigate(['/repartition/historique']);
-        }
-
-    @ViewChild('newCardModal') newCardModal!: TemplateRef<any>;
-    modalRef: NgbModalRef | undefined;
-
-
-
-
-
-    openGenerateLvsModal(content: TemplateRef<any>) {
-        this.modalRef = this.modalService.open(content, { size: 'lg' });
     }
 
-    modalInput = {
-        transporteur: '',
-        nlvs: '',
-        weight: '',
-        palettes: '',
-        reclamation: ''
-    };
+    sendData: SendData[] = [];
 
-    submitLvsForm() {
-        // Handle form submission
-        console.log(this.modalInput);
-        // this.http.post(`${environment.api}/lvs/generate`, this.modalInput, { responseType: 'blob' as 'json' }).subscribe(
-        //     (response: any) => {
-        //         const blob = new Blob([response], { type: 'application/pdf' });
-        //         const url = window.URL.createObjectURL(blob);
-        //         const a = document.createElement('a');
-        //         a.href = url;
-        //         a.download = 'LvsReport.pdf'; // Corrected the filename to have .pdf extension
-        //         document.body.appendChild(a);
-        //         a.click();
-        //         window.URL.revokeObjectURL(url);
-        //         document.body.removeChild(a);
-        //     },
-        //     error => {
-        //         console.log("Error generating PDF:", error);
-        //     }
-        // );
-
-        this.http.get(`${environment.api}/lvs/pdf`, { responseType: 'blob' }).subscribe((response) => {
-            const blob = new Blob([response], { type: 'application/pdf' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'lettre_voiture.pdf';
-            a.click();
-            window.URL.revokeObjectURL(url);
+    generateAndSendLvs() {
+        this.sendData = this.rows.map(row => ({
+            weight: row.weight,
+            nombrePalette: row.palette,
+            destinataireId: row.destinataire
+        }));
+        const url = `${environment.api}/lvs/generate-lvs`;
+        this.http.post(url, this.sendData, { responseType: 'blob' }).subscribe({
+            next: (response: Blob) => {
+                const blob = new Blob([response], { type: 'application/zip' });
+                const downloadUrl = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = downloadUrl;
+                a.download = 'LVS.zip';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(downloadUrl);
+                document.body.removeChild(a);
+            },
+            error: (error) => console.error('Error generating LVS:', error)
         });
-        this.modalRef?.close();
     }
 
+    generateCsv() {
+        const url = `${environment.api}/tariffs/generate-csv/?unixDate=${this.unixDate}`;
+        this.http.get(url, { responseType: 'blob' }).subscribe((response: any) => {
+            const blob = new Blob([response], { type: 'text/csv' });
+            const downloadUrl = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = downloadUrl;
+            a.download = 'messagerie.csv';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(downloadUrl);
+            document.body.removeChild(a);
+        });
+    }
 
+    generateTable() {
+        const url = `${environment.api}/tariffs/excel-table/?unixDate=${this.unixDate}`;
+        this.http.get(url, { responseType: 'blob' }).subscribe((response: any) => {
+            const blob = new Blob([response], { type: 'text/xlsx' });
+            const downloadUrl = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = downloadUrl;
+            a.download = 'table.xlsx';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(downloadUrl);
+            document.body.removeChild(a);
+        });
+    }
 
+    generateExcel() {
+        const url = `${environment.api}/tariffs/generate-excel/?unixDate=${this.unixDate}`;
+        this.http.get(url, { responseType: 'blob' }).subscribe(
+            (response: Blob) => {
+                const blob = new Blob([response], { type: 'application/zip' });
+                const downloadUrl = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = downloadUrl;
+                a.download = 'RapportTransporteurs.zip';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(downloadUrl);
+                document.body.removeChild(a);
+            },
+            (error) => {
+                console.error('Error downloading the file.', error);
+            }
+        );
+    }
 
-
+    public contentHeader: Object;
 }
-
-
-
-
-

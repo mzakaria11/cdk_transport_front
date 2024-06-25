@@ -1,10 +1,17 @@
+.ngx-datatable {
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  color: #333;
+  height: 1000px; /* Fixed height for the datatable */
+}
+
 .ngx-datatable .datatable-header {
   position: sticky;
   top: 0;
   z-index: 10;
-
 }
-
 
 .card {
   background-color: #f8f9fa; // A soft background color for the card
@@ -44,9 +51,7 @@
       }
     }
 
-
-
-    .card-body , button {
+    button {
       color: white; // White text for contrast
       padding: 10px 15px; // Generous padding for a better click area
       font-size: 16px; // Readable font size
@@ -62,16 +67,43 @@
   }
 }
 
-
-
 :host {
   ::ng-deep {
+
+    .datatable-body .datatable-row-odd {
+      background-color: #f9f9f9;
+    }
+
+    .datatable-body .datatable-row-even {
+      background-color: #ffffff;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f0f0f0;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: #b0b0b0;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: #787878;
+    }
+
     .ngx-datatable {
       font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
       border-radius: 8px;
       overflow: hidden;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       color: #333;
+      height: 1000px; /* Fixed height for the datatable */
     }
 
     .ngx-datatable .datatable-header {
@@ -136,5 +168,13 @@
       font-weight: bold;
       color: #856404;
     }
+    .datatable-body .datatable-row-odd {
+      background-color: black !important; /* Light grey for odd rows */
+    }
+
+    .datatable-body .datatable-row-even {
+      background-color: white; /* White for even rows */
+    }
+
   }
 }

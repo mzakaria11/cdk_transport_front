@@ -6,13 +6,13 @@ export class Taxe {
     id: number;
     departement : Departement;
     transporteur: Transporteur;
+    taxName: string;
+    taxValue: number
     taxeName: string;
-    prix: number
-    startDate: string;
-    endDate: string;
-    taxeAfrettement : boolean;
-    isCurrency : boolean;
-    acceptedDate : boolean;
+    letter: string;
+    taxType: string;
+    fromDate: number;
+    toDate: number;
 
 }
 
@@ -21,7 +21,12 @@ export class TaxeRequest {
     id: number;
     transporteurId: number;
     departementId : number;
-    taxeName: string;
-    prix: number
+    taxName: string;
+    taxValue: number;
+    letter: string;
+
+    taxType: string;
+    fromDate: number;
+    toDate: number;
 
 }

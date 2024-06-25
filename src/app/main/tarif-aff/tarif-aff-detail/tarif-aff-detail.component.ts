@@ -12,6 +12,7 @@ import {Departement} from "../../departement/departement.model";
 import {TarifAff, TarifAffRequest} from "../tarif-aff.model";
 import {TarifAffDetailService} from "./tarif-aff-detail.service";
 import {TarifAffNewService} from "../tarif-aff-new/tarif-aff-new.service";
+import {Location} from "@angular/common";
 
 @Component({
     selector: 'app-tarif-aff-detail',
@@ -59,7 +60,8 @@ export class TarifAffDetailComponent implements OnInit {
         private _authService: AuthenticationService,
         private formBuilder: UntypedFormBuilder,
         private _router: Router,
-        private _tarifAffNewService: TarifAffNewService
+        private _tarifAffNewService: TarifAffNewService,
+        private location: Location
     ) {
         this._unsubscribeAll = new Subject();
         this.edit = _tarifAffDetailService.editable;
@@ -116,7 +118,7 @@ export class TarifAffDetailComponent implements OnInit {
                                         }
                                     ).then(
                                         () => {
-                                            this._router.navigate(['/tarifaff/list']);
+                                            this.location.back();
                                         }
                                     );
                                 }
@@ -191,7 +193,6 @@ export class TarifAffDetailComponent implements OnInit {
                             console.log(this.transporteurId);
                             console.log(this.departementId);
 
-
                             this._tarifAffDetailService.updateTarifAff(this.tarifAffRequest).subscribe(
                                 response => {
                                     console.log(this.tarifAffRequest)
@@ -207,8 +208,7 @@ export class TarifAffDetailComponent implements OnInit {
                                         }
                                     ).then(
                                         () => {
-
-                                            this._router.navigate([`tarifaff/detail/${this.data.id}`]);
+                                            this.location.back();
                                         }
                                     )
                                 },
@@ -293,8 +293,7 @@ export class TarifAffDetailComponent implements OnInit {
                 response => {
                     this.data = response;
 
-                    this.transporteurId = this.data.transporteur.id;
-                    this.departementId = this.data.departement.id;
+
                 }
             );
 
@@ -323,6 +322,8 @@ export class TarifAffDetailComponent implements OnInit {
                 ]
             }
         };
+        this.transporteurId = this.data.transporteur.id
+        this.departementId = this.data.departement.id
     }
 
     ngOnDestroy(): void {

@@ -1,109 +1,66 @@
-
 <div class="content-wrapper container-xxl p-0">
     <app-content-header [contentHeader]="contentHeader"></app-content-header>
 
     <div class="card">
-    <div class="card-header">Test Inputs</div>
-    <div class="card-body">
-        <input type="text" [(ngModel)]="currentInput.weight" placeholder="Weight" class="form-control mb-2">
-        <input type="text" [(ngModel)]="currentInput.nombrePalette" placeholder="Nombre Palette" class="form-control mb-2">
-        <input type="text" [(ngModel)]="currentInput.destinataireId" placeholder="Destinataire ID" class="form-control mb-2">
-        <button (click)="submitRow()" class="btn btn-primary mb-2">Submit</button>
-    </div>
-
-    <br/>
+        <div class="card-header bg-primary text-white">Test Inputs</div>
+        <div class="card-body">
+            <div class="form-group">
+                <input type="text" [(ngModel)]="currentInput.weight" placeholder="Weight" class="form-control mb-2">
+            </div>
+            <div class="form-group">
+                <input type="text" [(ngModel)]="currentInput.nombrePalette" placeholder="Nombre Palette" class="form-control mb-2">
+            </div>
+            <div class="form-group">
+                <input type="text" [(ngModel)]="currentInput.destinataireId" placeholder="Destinataire ID" class="form-control mb-2">
+            </div>
+            <button (click)="submitRow()" class="btn btn-primary mb-2">Submit</button>
+        </div>
         <br/>
         <br/>
-
-        <div class="row mb-1" style="width: 100%; margin: auto; justify-content: center;">
+        <br/>
 
         <!-- Buttons documents -->
-        <div class="col-md-10 col-12 d-flex justify-content-start justify-content-md-end" style="justify-content: center !important">
-            <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
-                <button type="button" class="btn btn-primary" rippleEffect (click)="generateCsv()">
-                    <span [data-feather]="'printer'" [class]="'mr-25'"></span>
+        <div class="row mb-2">
+            <div class="col-md-2">
+                <button type="button" class="btn btn-primary w-100" rippleEffect (click)="generateCsv()">
+                    <span data-feather="printer" class="mr-1"></span>
                     Générer Fichier csv
                 </button>
             </div>
-
-
-            <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
-                <button type="button" class="btn btn-primary" rippleEffect (click)="generateTable()">
-                    <span [data-feather]="'printer'" [class]="'mr-25'"></span>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-primary w-100" rippleEffect (click)="generateTable()">
+                    <span data-feather="printer" class="mr-1"></span>
                     Exporter Le Tableau
                 </button>
             </div>
-
-
-
-
-
-
-            <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0 mr-2">
-                <button type="button" class="btn btn-outline-success" rippleEffect (click)="generateExcel()">
-                    <span [data-feather]="'printer'" [class]="'mr-25'"></span>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-outline-success w-100" rippleEffect (click)="generateExcel()">
+                    <span data-feather="printer" class="mr-1"></span>
                     Générer Rapports
                 </button>
             </div>
-
-            <form class="form-inline">
-                <div class="form-group">
-                    <div class="input-group">
-                        <label for="selection">Select Date For Emails: </label>
-                        <input
-                                class="form-control ml-1"
-                                placeholder="yyyy-mm-dd"
-                                name="Basic Date Picker"
-                                [(ngModel)]="basicDPdata"
-                                ngbDatepicker
-                                #basicDP="ngbDatepicker"
-                                id="selection"
-                        />
-                        <div class="input-group-append">
-                            <button
-                                    class="btn btn-outline-secondary feather icon-calendar"
-                                    (click)="basicDP.toggle()"
-                                    type="button"
-                                    rippleEffect
-                            ></button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-
-            <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0 ml-1">
-                <button type="button" class="btn btn-outline-primary" rippleEffect (click)="envoieEmail()">
-                    <span [data-feather]="'mail'" [class]="'mr-25'"></span>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-outline-primary w-100" rippleEffect (click)="envoieEmail()">
+                    <span data-feather="mail" class="mr-1"></span>
                     Envoyer Des Emails
                 </button>
             </div>
-
-
-
-            <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0 ml-1">
-                <button type="button" class="btn btn-primary" (click)="openGenerateLvsModal(newCardModal)">
-                    <span [data-feather]="'file'" class="mr-25"></span>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-primary w-100" (click)="generateAndSendLvs()">
+                    <span data-feather="file" class="mr-1"></span>
                     Generate LVS
                 </button>
             </div>
-
-
-
-            <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0 ml-1">
-                <button type="button" class="btn btn-success" rippleEffect (click)="confirmExpedition()">
-                    <span [data-feather]="'check-square'" [class]="'mr-25'"></span>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-success w-100" rippleEffect (click)="confirmExpedition()">
+                    <span data-feather="check-square" class="mr-1"></span>
                     Confirmer L'expedition
                 </button>
             </div>
         </div>
-        </div>
 
+        <h2>Transporteurs :</h2>
 
-
-        <br/>
-            <h2>Transporteurs :</h2>
-        <br/>
-        <br/>
         <ngx-datatable
                 class="material"
                 [rows]="rows"
@@ -113,69 +70,39 @@
                 [rowHeight]="50"
                 [scrollbarV]="true"
                 [scrollbarH]="true"
-                [limit]="10"
-                style="height: 1000px;"
+                [limit]="size"
         >
-            <!-- Other columns -->
+            <ngx-datatable-column prop="dateExpedition" name="Date Expedition" [width]="90">
+                <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                    {{ value | date: 'dd-MM-yyyy'}}
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column prop="unixDate" name="Date" [width]="90">
+                <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                    {{ value | date: 'dd-MM-yyyy'}}
+                </ng-template>
+            </ngx-datatable-column>
             <ngx-datatable-column *ngFor="let column of columns" [prop]="column.prop" [name]="column.name" [width]="column.width">
             </ngx-datatable-column>
-
-            <!-- Custom template for the 'cheapestTariff' column -->
             <ngx-datatable-column prop="cheapestTariff" name="Tarif Total" [width]="90">
                 <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
                     {{ value }} €
                 </ng-template>
             </ngx-datatable-column>
         </ngx-datatable>
-
-
-
-
-
-<ng-template #newCardModal let-modal>
-    <div class="modal-header">
-        <h5 class="modal-title">Generate LVS</h5>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
-    <div class="modal-body">
-        <form>
-            <div class="mb-3">
-                <label for="transporteur" class="form-label">Transporteur</label>
-                <select class="form-control" id="transporteur" [(ngModel)]="modalInput.transporteur" name="transporteur">
-                    <!-- Modified section to display transporteurs correctly -->
-                    <option *ngFor="let transporteur of transporteurs" [ngValue]="transporteur">
-                        {{ transporteur }}
-                    </option>
-                    <!-- End of modified section -->
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="input1" class="form-label">Numero Lettre Voiture </label>
-                <input type="text" class="form-control" id="input1" [(ngModel)]="modalInput.nlvs" name="input1">
-            </div>
-            <div class="mb-3">
-                <label for="input3" class="form-label">Poids</label>
-                <input type="text" class="form-control" id="input3" [(ngModel)]="modalInput.weight" name="input3">
-            </div>
-            <div class="mb-3">
-                <label for="input2" class="form-label">Palettes</label>
-                <input type="text" class="form-control" id="input2" [(ngModel)]="modalInput.palettes" name="input2">
-            </div>
-            Réclamation
-            <div class="mb-3">
-                <label for="bigText1" class="form-label">Réclamation</label>
-                <textarea class="form-control" id="bigText1" [(ngModel)]="modalInput.reclamation" name="bigText1"></textarea>
-            </div>
 
-
-        </form>
+    <div class="row mb-3" style="width: 100%; margin: auto; justify-content: center;">
+        <div class="col-md-2">
+            <label for="pageSize">Page Size</label>
+            <select id="pageSize" class="form-control" (change)="onPageSizeChanged($event)">
+                <option *ngFor="let size of [5, 10, 20, 50]" [value]="size">{{size}}</option>
+            </select>
+        </div>
+        <div class="col-md-4 d-flex justify-content-between align-items-center">
+            <button class="btn btn-outline-primary" (click)="setPage({offset: page - 1})" [disabled]="page === 0">Previous</button>
+            <span>Page {{page + 1}}</span>
+            <button class="btn btn-outline-primary" (click)="setPage({offset: page + 1})" [disabled]="(page + 1) * size >= totalElements">Next</button>
+        </div>
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Cross click')">Close</button>
-        <button type="button" class="btn btn-success" (click)="submitLvsForm()">Générer</button>
-    </div>
-</ng-template>
 </div>
-</div>
-
-

@@ -37,7 +37,7 @@ export class TarifMssDetailService implements Resolve<any> {
   getApiData(id: number): Promise<TarifMss[]> {
     return new Promise(
         (resolve, reject) => {
-          this._httpClient.get(`${environment.api}/taxe/1`)
+          this._httpClient.get(`${environment.api}/tarifmss/${id}`)
               .subscribe(
 
                   (response: TarifMss) => {
@@ -54,7 +54,7 @@ export class TarifMssDetailService implements Resolve<any> {
   updateTarifMss(body): Observable<TarifMss> {
       console.log(body)
       console.log("n")
-    return this._httpClient.post<TarifMss>(`${environment.api}/taxe/update`, body);
+    return this._httpClient.post<TarifMss>(`${environment.api}/tarifmss/update`, body);
   }
 
   deleteTarifMss(id: number = this.currentId): Observable<String> {
@@ -62,7 +62,7 @@ export class TarifMssDetailService implements Resolve<any> {
       responseType: 'text'
     };
 
-    return this._httpClient.post<String>(`${environment.api}/taxe/delete/${id}`, requestOptions);
+    return this._httpClient.post<String>(`${environment.api}/tarifmss/delete/${id}`, requestOptions);
   }
 
 

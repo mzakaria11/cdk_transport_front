@@ -15,6 +15,13 @@
         overflow: visible !important; /* Prevent internal scrolling */
       }
     }
+    .datatable-body .datatable-row-odd {
+      background-color: #ececec !important; /* Light grey for odd rows */
+    }
+
+    .datatable-body .datatable-row-even {
+      background-color: white; /* White for even rows */
+    }
   }
 
   .datatable-header-cell {
@@ -37,4 +44,5 @@
       background-color: rgba(0, 0, 0, 0.1); // Darken cell background on hover
     }
   }
+
 }

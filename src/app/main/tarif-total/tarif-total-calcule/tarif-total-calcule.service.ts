@@ -20,8 +20,8 @@ export class TarifTotalCalculeService {
   getTariffData(): Observable<any[]> {
     return this.tariffData.asObservable();
   }
-  getTariffDataByDate(unixDate: number): Observable<any> {
-    const url = `${environment.api}/tariffs/input?unixDate=${unixDate}`;
+  getTariffDataByDate(unixDate: number, page: number, size: number): Observable<any> {
+    const url = `${environment.api}/tariffs/input?unixDate=${unixDate/1000}&page=${page}&size=${size}`;
     return this.http.get<any>(url);
   }
 

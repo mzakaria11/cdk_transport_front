@@ -8,10 +8,11 @@
                     <div class="col-md-6 col-12">
                         <div class="d-flex justify-content-between align-items-center m-1">
                             <label class="d-flex align-items-center">Select Transporteur
-                                <select  class="form-control" id="basicSelect " [(ngModel)]="a" name="unique" (change)="onTransporteurSelect(a.id)">
+                                <select class="form-control" id="basicSelect" [(ngModel)]="a" name="unique" (change)="onTransporteurSelect(a.id)">
                                     <option value="" disabled selected>Select a Transporteur</option>
-                                    <option  *ngFor="let transporteur of transporteurs" [ngValue]="transporteur" >
+                                    <option *ngFor="let transporteur of transporteurs" [ngValue]="transporteur">
                                         {{ transporteur.name }}
+                                    </option>
                                 </select>
                             </label>
                         </div>
@@ -26,7 +27,6 @@
                     </div>
                 </div>
                 <div class="datatable-container">
-
                     <ngx-datatable
                             class="bootstrap core-bootstrap"
                             [rows]="rows"
@@ -37,23 +37,23 @@
                             [limit]="selectedOption"
                             [scrollbarH]="true"
                             [messages]="{emptyMessage: notFoundMessage , totalMessage: 'tarifAffs'}"
+                            [sortType]="'multi'"
+                            (sort)="onSort($event)"
                     >
-                        <ngx-datatable-column name="Nom du departement" prop="departementName" [width]="150" >
+                        <ngx-datatable-column name="Nom du departement" prop="departementName" [width]="150" [sortable]="true">
                             <ng-template let-value="value" ngx-datatable-cell-template>
                                 <span style="font-weight: bolder;">{{ value }}</span>
                             </ng-template>
                         </ngx-datatable-column>
 
-
-                        <!-- Dynamically generated columns for each nbrPalette -->
+                        <!-- Dynamically generated columns for each weight range -->
                         <ngx-datatable-column *ngFor="let range of uniqueWeightRanges"
                                               [name]="'Kg ' + range"
                                               [prop]="'range_' + range.replace('-', '_') + 'Price'"
-                                              [width]="120">
-
+                                              [width]="120"
+                                              [sortable]="true">
                             <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                                <a (click)="navigateToDetail(value.id)" class="price-link" style="cursor: pointer;">{{ value.prix  }}</a>
-
+                                <a (click)="navigateToDetail(value.id)" class="price-link" style="cursor: pointer;">{{ value.prix }}</a>
                             </ng-template>
                         </ngx-datatable-column>
                     </ngx-datatable>

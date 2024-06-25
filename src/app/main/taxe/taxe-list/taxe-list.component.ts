@@ -110,13 +110,54 @@ export class TaxeListComponent implements OnInit {
     });
   }
 
+  n = 3 ;
   onTransporteurSelect(t: any) {
     console.log(t);
-    this.fetchTaxData(t + 0);  // Ensure the ID is treated as a number
+    this.fetchTaxData(t + 0);
+    this.n= t + 0
+    this.getFormula()// Ensure the ID is treated as a number
   }
 
+
+
+  navigateToDetail(id : any){
+    this.router.navigate([`/taxe/edit/${id}`]);
+}
+
+  mdate: string;
+
+  getDate(): void {
+    const apiUrl = `${environment.api}/taxe/getmdate`;
+    this.http.get(apiUrl, { responseType: 'text' }).subscribe({
+      next: (response) => {
+        this.mdate = response;
+        console.log(this.mdate);
+      },
+      error: (error) => {
+        console.error('Error fetching date:', error);
+      }
+    });
+  }
+
+  formula : string;
+
+  getFormula(): void {
+    console.log("hahaha");
+    const apiUrl = `${environment.api}/taxe/getformula?formula=${this.n}`;
+    this.http.get(apiUrl, { responseType: 'text' }).subscribe({
+      next: (response) => {
+        this.formula = response;
+        console.log("hahaha" + this.formula);
+      },
+      error: (error) => {
+        console.error('Error fetching date:', error);
+      }
+    });
+  }
   ngOnInit() {
     this.loadTransporteurs();
+    this.getDate()
+
     this.contentHeader = {
       headerTitle: 'List of Taxes',
       actionButton: false,
@@ -135,9 +176,11 @@ export class TaxeListComponent implements OnInit {
         ]
       }
     };
+    this.getFormula()
   }
 
   protected readonly console = console;
+
 }
 
 

@@ -1,42 +1,29 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import {TarifMssNewService} from "../tarif-mss-new/tarif-mss-new.service";
-import {Router} from "@angular/router";
-import {HttpClient} from "@angular/common/http";
-
-
+import { Component, OnInit } from '@angular/core';
+import { TarifMssNewService } from "../tarif-mss-new/tarif-mss-new.service";
+import { Router } from "@angular/router";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
-  selector: 'app-tarif-mss-list',
-  templateUrl: './tarif-mss-list.component.html',
-  styleUrls: ['./tarif-mss-list.component.scss'],
+    selector: 'app-tarif-mss-list',
+    templateUrl: './tarif-mss-list.component.html',
+    styleUrls: ['./tarif-mss-list.component.scss'],
 })
 export class TarifMssListComponent implements OnInit {
-
     rows: any[] = [];
     columns: any[] = [];
-    selectedOption : any;
+    selectedOption: any;
     hasRole: 'Super_admin';
     id: number;
     name: string;
     public contentHeader: object;
     transporteurs: any[] = [];
-    public a : any;
-    notFoundMessage = ""
-
+    public a: any;
+    notFoundMessage = "";
+    uniqueWeightRanges: string[] = [];
 
     constructor(private http: HttpClient,
                 private router: Router,
-                private _tarifMssNewService : TarifMssNewService) { }
-
-
-
-
-
-
-
-
-
-    uniqueWeightRanges: string[] = [];
+                private _tarifMssNewService: TarifMssNewService) { }
 
     fetchTarifMssData(transporteurId: number) {
         this.http.get<any>(`http://localhost:8080/api/tarifmss/list/${transporteurId}`).subscribe(data => {
@@ -44,76 +31,62 @@ export class TarifMssListComponent implements OnInit {
 
             data.departements.forEach(departement => {
                 departement.tarifs.forEach(tarif => {
-                    // Format the range string as 'minKg-maxKg', e.g., '1-9'
                     const rangeStr = `${tarif.minKg}-${tarif.maxKg}`;
                     weightRanges.add(rangeStr);
                 });
             });
 
-            // Convert the Set to an array and store it for use in the template
             this.uniqueWeightRanges = Array.from(weightRanges);
-
-            // Now, process the data to fit the ngx-datatable format
             this.rows = this.transformDataForTable(data);
-
-            // Generate columns based on unique weight ranges
             this.generateColumns();
         });
     }
 
     transformDataForTable(data: any): any[] {
-        // Initialize an empty array to hold the transformed rows
         let transformedRows = [];
 
-        // Iterate over each departement in the data
         data.departements.forEach(departement => {
-            // Create a base object for the departement row, including its name and ID
             let row = {
                 departementName: departement.departementName,
                 departementId: departement.departementId
             };
 
-            // Initialize properties for each unique weight range with default values (e.g., null or 0)
             this.uniqueWeightRanges.forEach(range => {
                 const propName = `range_${range.replace('-', '_')}Price`;
-                row[propName] = null; // Initialize with null or a suitable default value
+                row[propName] = null;
             });
 
-            // Populate the row object with actual prices for each tarif's weight range
             departement.tarifs.forEach(tarif => {
                 const rangeStr = `${tarif.minKg}-${tarif.maxKg}`;
                 const propName = `range_${rangeStr.replace('-', '_')}Price`;
                 row[propName] = { id: tarif.id, prix: tarif.prix };
             });
 
-            // Add the fully populated row object to the transformedRows array
             transformedRows.push(row);
         });
 
-        // Return the array of transformed row objects
         return transformedRows;
     }
 
     generateColumns() {
-        // Start with fixed columns
         this.columns = [
-            { prop: 'departementName', name: 'Nom du departement', width: 150 }
+            { prop: 'departementName', name: 'Nom du departement', width: 150, sortable: true }
         ];
 
-        // Add a column for each unique weight range
         this.uniqueWeightRanges.forEach(range => {
-            const propName = 'range_' + range.replace('-', '_') + 'Price'; // Ensure the transformed data has properties that match this naming convention
+            const propName = 'range_' + range.replace('-', '_') + 'Price';
             this.columns.push({
                 prop: propName,
                 name: `Kg ${range}`,
-                width: 120
+                width: 120,
+                sortable: true
             });
         });
     }
 
     setMessageValueAfterDelay() {
         setTimeout(() => {
-            this.notFoundMessage= "Aucun tarif messagerie n'a été trouvé"; // Set the variable to "hello" after 5 seconds
+            this.notFoundMessage = "Aucun tarif messagerie n'a été trouvé";
         }, 5000);
     }
 
@@ -121,35 +94,38 @@ export class TarifMssListComponent implements OnInit {
         this._tarifMssNewService.getTransporteurs().subscribe((data: any[]) => {
             this.transporteurs = data.map(trans => ({
                 id: trans.id,
-                name: trans.nom // Assuming each object has an 'id' and 'name' property
+                name: trans.nom
             }));
 
-            console.log(this.transporteurs)
             this.a = this.transporteurs[0];
-            this.onTransporteurSelect(this.a.id)
-
-            console.log(this.a)
-
-            this.onTransporteurSelect(this.a.id)
-            this.setMessageValueAfterDelay()
+            this.onTransporteurSelect(this.a.id);
+            this.setMessageValueAfterDelay();
         });
-
     }
 
     navigateToDetail(tarifId: number) {
         this.router.navigate([`/tarifmss/edit/${tarifId}`]);
     }
 
-    onTransporteurSelect(t: any){
-        console.log(t);
-        this.fetchTarifMssData(t+0);
+    onTransporteurSelect(t: any) {
+        this.fetchTarifMssData(t + 0);
+    }
+
+    onSort(event: any) {
+        const sort = event.sorts[0];
+        const prop = sort.prop;
+        const dir = sort.dir;
+
+        this.rows.sort((a, b) => {
+            const valA = a[prop]?.prix || a[prop];
+            const valB = b[prop]?.prix || b[prop];
+
+            return (valA < valB ? -1 : 1) * (dir === 'asc' ? 1 : -1);
+        });
     }
 
     ngOnInit() {
-
         this.loadTransporteurs();
-
-
 
         this.contentHeader = {
             headerTitle: 'Liste',
@@ -169,10 +145,7 @@ export class TarifMssListComponent implements OnInit {
                 ]
             }
         };
-
-        console.log(this.a)
     }
 
     protected readonly console = console;
 }
-
